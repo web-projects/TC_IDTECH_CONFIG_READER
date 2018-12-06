@@ -6,7 +6,7 @@ This an application to test IDTech Augusta Devices.
 
 * Quick summary
 * Version
-* git remote add origin git@github.com:web-projects/TC_IDTECH_CONFIG_READER .git
+* git remote add origin git@github.com:web-projects/TC_IDTECH_CONFIG_READER.git
 
 ### How do I get set up? ###
 
