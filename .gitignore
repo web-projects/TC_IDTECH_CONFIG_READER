@@ -17,15 +17,9 @@
 /.vs
 
 # Ignore build files
-/bin/*
-/obj/*
-DAL/bin/
-DAL/obj/
-IdTechCfg/bin/
-IdTechCfg/obj/
+IDTechConfigReader/bin/
+IDTechConfigReader/obj/
 CommonInterface/bin/
 CommonInterface/obj/
-DeviceConfiguration/bin/
-DeviceConfiguration/obj/
 
 run/TerminalData.*

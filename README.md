@@ -4,8 +4,8 @@ This an application to test IDTech Augusta Devices.
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
+* JSON File reader utility
+* 1.00.0.(100)
 * git remote add origin git@github.com:web-projects/TC_IDTECH_CONFIG_READER.git
 
 ### How do I get set up? ###
@@ -23,13 +23,16 @@ This an application to test IDTech Augusta Devices.
 * Code review
 * Other guidelines
 
-### NOTES ###
-
-GIT
+### GIT NOTES ###
 
 *  AUTO-CONVERTING CRLF line endings into LF
    $ git config --global core.autocrlf true
 
+* MERGE TO MASTER 
+  $ git fetch origin master
+  $ git merge master
+  $ git push origin development:master
+   
 ### HISTORY ###
 
 * 20181205 - Initial repository.

@@ -27,7 +27,16 @@ namespace IPA.CommonInterface
         private AIDList aid = new AIDList();
         private CapKList capk = new CapKList();
         private TerminalSettings termSettings = new TerminalSettings();
-        private TransactionValues mappings = new TransactionValues();
+        private TransactionValues transactionValues = new TransactionValues();
+
+        private void DisplayCollection(List<string> collection, string name)
+        {
+            Debug.WriteLine("device configuration: {0} ----------------------------------- ", (object) name);
+            foreach(var item in collection)
+            {
+                Debug.WriteLine("{0}", (object) item);
+            }
+        }
 
         private void DisplayCollection(string [] collection, string name)
         {
@@ -118,7 +127,11 @@ namespace IPA.CommonInterface
                     // TransactionTagsRequested
                     DisplayCollection(termSettings.TransactionTags, "TransactionTagsRequested");
                     // TransactionValues
-                    mappings = termSettings.TransactionValues;
+                    transactionValues = termSettings.TransactionValues;
+                    DisplayCollection(transactionValues.EMVKernelMapping, "EMVKernelMapping");
+                    DisplayCollection(transactionValues.TransactionStartTags, "TransactionStartTags");
+                    DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");
+                    DisplayCollection(transactionValues.TransactionCompleteTags, "TransactionCompleteTags");
                 }
             }
             catch(Exception ex)

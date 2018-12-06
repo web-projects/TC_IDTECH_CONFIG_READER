@@ -56,7 +56,7 @@ namespace IPA.CommonInterface
     {
         [JsonProperty(PropertyName = "MajorConfiguration", Order = 1)]
         public string MajorConfiguration { get; set; }
-        public List<String> MajorConfigurationChecksum { get; set; }
+        public List<string> MajorConfigurationChecksum { get; set; }
         [JsonProperty(PropertyName = "SerialNumberTag", Order = 2)]
         public string SerialNumberTag { get; set; }
         [JsonProperty(PropertyName = "TerminalData", Order = 3)]
@@ -71,9 +71,12 @@ namespace IPA.CommonInterface
     public class TransactionValues
     {
         [JsonProperty(PropertyName = "EMVKernelMapping", Order = 1)]
-        public string [] EMVKernelMapping { get; set; }
-        //TransactionStartTags
-        //TransactionAuthenticateTags
-        //TransactionCompleteTags
+        public Dictionary<string, string> EMVKernelMapping { get; set; }
+        [JsonProperty(PropertyName = "TransactionStartTags", Order = 2)]
+        public List<string> TransactionStartTags { get; set; }
+        [JsonProperty(PropertyName = "TransactionAuthenticateTags", Order = 3)]
+        public List<string> TransactionAuthenticateTags { get; set; }
+        [JsonProperty(PropertyName = "TransactionCompleteTags", Order = 4)]
+        public List<string> TransactionCompleteTags { get; set; }
     }
 }
