@@ -85,13 +85,14 @@ namespace IPA.CommonInterface
                 }
             }
         }
-        public string GetTerminalData()
+        public string[] GetTerminalData()
         {
-            string data = "";
+            List<string> collection = new List<string>();
             foreach(var item in termSettings.TerminalData)
             {
-                data += string.Format("{0}:{1}\r\n", item.Key, item.Value);
+                collection.Add(string.Format("{0}:{1}", item.Key, item.Value).ToUpper());
             }
+            string [] data = collection.ToArray();
             return data;
         }
 

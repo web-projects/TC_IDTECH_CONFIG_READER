@@ -75,7 +75,7 @@ namespace IPA.DAL.RBADAL
 
       serializer = new ConfigSerializer();
       serializer.ReadConfig();
-      message[0] = serializer.GetTerminalData();
+      message = serializer.GetTerminalData();
       NotificationRaise(new NotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA, Message = message });
     }
 

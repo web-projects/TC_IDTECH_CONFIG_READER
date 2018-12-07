@@ -31,9 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.txtTerminalData = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -45,28 +47,18 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 53);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(700, 544);
+            this.tabControl1.Size = new System.Drawing.Size(700, 607);
             this.tabControl1.TabIndex = 14;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.txtTerminalData);
+            this.tabPage1.Controls.Add(this.listView1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(692, 518);
+            this.tabPage1.Size = new System.Drawing.Size(692, 581);
             this.tabPage1.TabIndex = 4;
             this.tabPage1.Text = "Terminal Data";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // txtTerminalData
-            // 
-            this.txtTerminalData.Location = new System.Drawing.Point(32, 26);
-            this.txtTerminalData.Multiline = true;
-            this.txtTerminalData.Name = "txtTerminalData";
-            this.txtTerminalData.ReadOnly = true;
-            this.txtTerminalData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtTerminalData.Size = new System.Drawing.Size(628, 464);
-            this.txtTerminalData.TabIndex = 0;
             // 
             // panel1
             // 
@@ -84,11 +76,33 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // listView1
+            // 
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listView1.FullRowSelect = true;
+            this.listView1.GridLines = true;
+            this.listView1.Location = new System.Drawing.Point(20, 14);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(652, 553);
+            this.listView1.TabIndex = 1;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "TAG";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "VALUE";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(727, 625);
+            this.ClientSize = new System.Drawing.Size(727, 680);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -97,7 +111,6 @@
             this.Load += new System.EventHandler(this.OnFormLoad);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -106,10 +119,12 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TextBox txtTerminalData;
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
     }
 }
 

@@ -97,7 +97,17 @@ namespace IDTechConfigReader
                 try
                 {
                     string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
-                    this.txtTerminalData.Text = data[0];
+
+                    foreach(string val in data)
+                    {
+                        string [] tlv = val.Split(':');
+                        ListViewItem item1 = new ListViewItem(tlv[0], 0);
+                        item1.SubItems.Add(tlv[1]);
+                        listView1.Items.Add(item1);
+                    }
+
+                    listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
                 }
                 catch (Exception exp)
                 {
