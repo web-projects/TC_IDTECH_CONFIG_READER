@@ -21,9 +21,13 @@ namespace IPA.CommonInterface
     }
 
     [Serializable]
-    public class DeviceNotificationEventArgs
+    public class NotificationEventArgs : EventArgs
     {
         public NOTIFICATION_TYPE NotificationType { get; set; }
         public object [] Message { get; set; }
+
+        public NotificationEventArgs()
+        {
+        }
     }
 }

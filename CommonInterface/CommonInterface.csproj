@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\TerminalConfiguration.cs" />
-    <Compile Include="DeviceNotificationEventArgs.cs" />
+    <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="IConfigurationWrapper.cs" />
     <Compile Include="Configuration\Msr.cs" />
     <Compile Include="Configuration\Aid.cs" />

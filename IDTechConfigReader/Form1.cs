@@ -1,12 +1,15 @@
 ﻿using IPA.CommonInterface;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,19 +29,90 @@ namespace IDTechConfigReader
         private const UInt32 SWP_NOMOVE = 0x0002;
         private const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
 
-        private ConfigSerializer serializer;
+        IDevicePlugIn devicePlugin;
 
         public Form1()
         {
             InitializeComponent();
+            InitalizeDevice();
         }
 
         private void OnFormLoad(object sender, EventArgs e)
         {
-            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
 
-            serializer = new ConfigSerializer();
-            serializer.ReadConfig();
+            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+        }
+
+        private void InitalizeDevice()
+        {
+            try
+            {
+                devicePlugin = new IPA.DAL.RBADAL.DeviceCfg() as IDevicePlugIn;
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    Debug.WriteLine("\nmain: new device detected! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
+                    devicePlugin.OnDeviceNotification += new EventHandler<NotificationEventArgs>(this.OnDeviceNotificationUI);
+                    devicePlugin.DeviceInit();
+                }).Start();
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine("main: Initalize() - exception={0}", (object) exp.Message);
+            }
+        }
+
+        protected void OnDeviceNotificationUI(object sender, NotificationEventArgs args)
+        {
+            Debug.WriteLine("device: notification type={0}", args.NotificationType);
+
+            switch (args.NotificationType)
+            {
+                case NOTIFICATION_TYPE.NT_INITIALIZE_DEVICE:
+                {
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA:
+                {
+                    ShowTerminalDataUI(sender, args);
+                    break;
+                }
+            }
+        }
+
+        private void ShowTerminalDataUI(object sender, NotificationEventArgs e)
+        {
+            ShowTerminalData(e.Message);
+        }
+
+        private void ShowTerminalData(object payload)
+        {
+            // Invoker with Parameter(s)
+            MethodInvoker mi = () =>
+            {
+                try
+                {
+                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                    this.txtTerminalData.Text = data[0];
+                }
+                catch (Exception exp)
+                {
+                    Debug.WriteLine("main: ShowJsonConfig() - exception={0}", (object) exp.Message);
+                }
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
         }
     }
 }

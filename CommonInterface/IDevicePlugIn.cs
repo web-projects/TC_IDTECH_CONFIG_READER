@@ -9,7 +9,7 @@ namespace IPA.CommonInterface
   public interface IDevicePlugIn
   {
     // Device Events back to Main Form
-    event EventHandler<DeviceNotificationEventArgs> OnDeviceNotification;
+    event EventHandler<NotificationEventArgs> OnDeviceNotification;
 
     // INITIALIZATION
     string PluginName { get; }

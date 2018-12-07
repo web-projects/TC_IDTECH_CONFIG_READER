@@ -36,3 +36,4 @@ This an application to test IDTech Augusta Devices.
 ### HISTORY ###
 
 * 20181205 - Initial repository.
+* 20181207 - Added complete JSON processing.

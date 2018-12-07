@@ -85,6 +85,15 @@ namespace IPA.CommonInterface
                 }
             }
         }
+        public string GetTerminalData()
+        {
+            string data = "";
+            foreach(var item in termSettings.TerminalData)
+            {
+                data += string.Format("{0}:{1}\r\n", item.Key, item.Value);
+            }
+            return data;
+        }
 
         public void ReadConfig()
         {
