@@ -37,3 +37,4 @@ This an application to test IDTech Augusta Devices.
 
 * 20181205 - Initial repository.
 * 20181207 - Added complete JSON processing.
+* 20181218 - Added CRC16 Method.
