@@ -9,7 +9,7 @@ namespace IPA.CommonInterface
   public interface IDevicePlugIn
   {
     // Device Events back to Main Form
-    event EventHandler<NotificationEventArgs> OnDeviceNotification;
+    event EventHandler<DeviceNotificationEventArgs> OnDeviceNotification;
 
     // INITIALIZATION
     string PluginName { get; }
@@ -29,5 +29,9 @@ namespace IPA.CommonInterface
     string DeviceCommand(string command, bool notify);
     // Messaging
     string GetErrorMessage(string data);
+    // AID
+    void GetAIDList();
+    // CAPK
+    void GetCapKList();
   }
 }

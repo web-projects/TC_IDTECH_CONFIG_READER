@@ -70,6 +70,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sdk\Augusta_parse.dll</HintPath>
     </Reference>
+    <Reference Include="DAL">
+      <HintPath>..\..\IDTechCfg\DAL\obj\Debug\DAL.dll</HintPath>
+    </Reference>
+    <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="IDTechSDK">
       <HintPath>..\sdk\IDTechSDK.dll</HintPath>
     </Reference>
@@ -110,6 +116,9 @@
       <Project>{88da37a0-8e42-45c4-81d5-e89cd6c83816}</Project>
       <Name>CommonInterface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

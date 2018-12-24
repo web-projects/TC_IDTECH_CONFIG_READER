@@ -96,6 +96,38 @@ namespace IPA.CommonInterface
             return data;
         }
 
+        public string[] GetAIDList()
+        {
+            List<string> collection = new List<string>();
+            foreach(var item in aid.Aid)
+            {
+                string payload = "";
+                foreach(var val in item.Value)
+                {
+                    payload += string.Format("{0}:{1} ", val.Key, val.Value).ToUpper();
+                }
+                collection.Add(string.Format("{0}#{1}", item.Key, payload).ToUpper());
+            }
+            string [] data = collection.ToArray();
+            return data;
+        }
+
+        public string[] GetCapKList()
+        {
+            List<string> collection = new List<string>();
+            foreach(var item in capk.Capk)
+            {
+                string payload = "";
+                foreach(var val in item.Value)
+                {
+                    payload += string.Format("{0}:{1} ", val.Key, val.Value).ToUpper();
+                }
+                collection.Add(string.Format("{0}#{1}", item.Key, payload).ToUpper());
+            }
+            string [] data = collection.ToArray();
+            return data;
+        }
+
         public void ReadConfig()
         {
             try

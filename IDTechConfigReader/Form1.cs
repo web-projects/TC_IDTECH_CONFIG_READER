@@ -56,7 +56,7 @@ namespace IDTechConfigReader
                     Thread.CurrentThread.IsBackground = true;
                     Debug.WriteLine("\nmain: new device detected! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
-                    devicePlugin.OnDeviceNotification += new EventHandler<NotificationEventArgs>(this.OnDeviceNotificationUI);
+                    devicePlugin.OnDeviceNotification += new EventHandler<DeviceNotificationEventArgs>(this.OnDeviceNotificationUI);
                     devicePlugin.DeviceInit();
                 }).Start();
             }
@@ -66,7 +66,7 @@ namespace IDTechConfigReader
             }
         }
 
-        protected void OnDeviceNotificationUI(object sender, NotificationEventArgs args)
+        protected void OnDeviceNotificationUI(object sender, DeviceNotificationEventArgs args)
         {
             Debug.WriteLine("device: notification type={0}", args.NotificationType);
 
@@ -81,10 +81,20 @@ namespace IDTechConfigReader
                     ShowTerminalDataUI(sender, args);
                     break;
                 }
+                case NOTIFICATION_TYPE.NT_SHOW_AID_LIST:
+                {
+                    ShowAidListUI(sender, args);
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST:
+                {
+                    ShowCapKListUI(sender, args);
+                    break;
+                }
             }
         }
 
-        private void ShowTerminalDataUI(object sender, NotificationEventArgs e)
+        private void ShowTerminalDataUI(object sender, DeviceNotificationEventArgs e)
         {
             ShowTerminalData(e.Message);
         }
@@ -111,7 +121,7 @@ namespace IDTechConfigReader
                 }
                 catch (Exception exp)
                 {
-                    Debug.WriteLine("main: ShowJsonConfig() - exception={0}", (object) exp.Message);
+                    Debug.WriteLine("main: ShowTerminalData() - exception={0}", (object) exp.Message);
                 }
             };
 
@@ -122,6 +132,127 @@ namespace IDTechConfigReader
             else
             {
                 Invoke(mi);
+            }
+        }
+
+        private void ShowAidListUI(object sender, DeviceNotificationEventArgs e)
+        {
+            ShowAidList(e.Message);
+        }
+
+        private void ShowAidList(object payload)
+        {
+            // Invoker with Parameter(s)
+            MethodInvoker mi = () =>
+            {
+                try
+                {
+                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+
+                    // Remove previous entries
+                    if(listView2.Items.Count > 0)
+                    {
+                        listView2.Items.Clear();
+                    }
+
+                    foreach(string val in data)
+                    {
+                        string [] tlv = val.Split('#');
+                        ListViewItem item1 = new ListViewItem(tlv[0], 0);
+                        item1.SubItems.Add(tlv[1]);
+                        listView2.Items.Add(item1);
+                    }
+
+                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                }
+                catch (Exception exp)
+                {
+                    Debug.WriteLine("main: ShowAIDData() - exception={0}", (object) exp.Message);
+                }
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
+
+        private void ShowCapKListUI(object sender, DeviceNotificationEventArgs e)
+        {
+            ShowCapKList(e.Message);
+        }
+
+        private void ShowCapKList(object payload)
+        {
+            // Invoker with Parameter(s)
+            MethodInvoker mi = () =>
+            {
+                try
+                {
+                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+
+                    // Remove previous entries
+                    if(listView3.Items.Count > 0)
+                    {
+                        listView3.Items.Clear();
+                    }
+
+                    foreach(string val in data)
+                    {
+                        string [] tlv = val.Split('#');
+                        ListViewItem item1 = new ListViewItem(tlv[0], 0);
+                        item1.SubItems.Add(tlv[1]);
+                        listView3.Items.Add(item1);
+                    }
+
+                    listView3.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    listView3.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                }
+                catch (Exception exp)
+                {
+                    Debug.WriteLine("main: ShowCapKList() - exception={0}", (object) exp.Message);
+                }
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
+        private void OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Name.Equals("tabPage1"))
+            {
+                // Configuration Mode
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.tabPage1.Enabled = true;
+                }));
+            }
+            else if (tabControl1.SelectedTab.Name.Equals("tabPage2"))
+            {
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    devicePlugin.GetAIDList();
+                }));
+            }
+            else if (tabControl1.SelectedTab.Name.Equals("tabPage3"))
+            {
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    devicePlugin.GetCapKList();
+                }));
             }
         }
     }
