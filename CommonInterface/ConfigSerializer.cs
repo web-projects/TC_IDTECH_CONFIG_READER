@@ -85,7 +85,13 @@ namespace IPA.CommonInterface
                 }
             }
         }
-        public string[] GetTerminalData()
+        
+        public Dictionary<string, string> GetTerminalData()
+        {
+            return termSettings.TerminalData;
+        }
+
+        public string[] GetTerminalDataString()
         {
             List<string> collection = new List<string>();
             foreach(var item in termSettings.TerminalData)
@@ -96,7 +102,7 @@ namespace IPA.CommonInterface
             return data;
         }
 
-        public string[] GetAIDList()
+        public string[] GetAIDCollection()
         {
             List<string> collection = new List<string>();
             foreach(var item in aid.Aid)
@@ -110,6 +116,11 @@ namespace IPA.CommonInterface
             }
             string [] data = collection.ToArray();
             return data;
+        }
+
+        public AIDList GetAIDList()
+        {
+            return aid;
         }
 
         public string[] GetCapKList()

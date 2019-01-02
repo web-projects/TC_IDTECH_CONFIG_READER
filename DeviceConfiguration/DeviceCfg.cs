@@ -12,11 +12,11 @@ using HidLibrary;
 using IDTechSDK;
 
 using IPA.CommonInterface;
-using IPA.DAL;
-using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using IPA.Core.Shared.Helpers.StatusCode;
 using IPA.Core.Shared.Enums;
+using IPA.DAL;
 using IPA.DAL.RBADAL.Services;
+using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using IPA.DAL.RBADAL.Services.Devices.IDTech.Models;
 
 namespace IPA.DAL.RBADAL
@@ -145,9 +145,11 @@ namespace IPA.DAL.RBADAL
       string [] message = { "COMPLETED" };
       NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_INITIALIZE_DEVICE, Message = message });
 
+      // Initialize Configuration Serializer
       serializer = new ConfigSerializer();
-      serializer.ReadConfig();
-      message = serializer.GetTerminalData();
+
+      // GET AND VALIDATE TERMINAL DATA
+      message = GetTerminalData();
       NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA, Message = message });
     }
 
@@ -497,24 +499,207 @@ namespace IPA.DAL.RBADAL
     #endregion
 
     /********************************************************************************************************/
+    // DEVICE CONFIGURATION
+    /********************************************************************************************************/
+    #region -- device configuration --
+    
+    private void ValidateTerminalData()
+    {
+        if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+        {
+            try
+            {
+                if(serializer != null)
+                {
+                    byte [] tlv = null;
+                    RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveTerminalData(ref tlv);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("VALIDATE TERMINAL DATA ----------------------------------------------------------------------");
+
+                        // Get Configuration File AID List
+                        Dictionary<string, string> td = serializer.GetTerminalData();
+                        Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
+
+                        foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                        {
+                            foreach(var devTag in devCollection)
+                            {
+                                string devTagName = devTag.Key;
+                                bool tagfound = false;
+                                bool tagmatch = false;
+                                foreach(var cfgTag in td)
+                                {
+                                    // Matching TAGNAME: compare keys
+                                    if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        tagfound = true;
+                                        //Debug.Write("key: " + devTag.Key);
+
+                                        // Compare value
+                                        if(cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            tagmatch = true;
+                                            //Debug.WriteLine(" matches value: {0}", (object) devTag.Value);
+                                        }
+                                        else
+                                        {
+                                            Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
+                                        }
+                                        break;
+                                    }
+                                    if(tagfound)
+                                    {
+                                        break;
+                                    }
+                                }
+                                Debug.WriteLine("TAG: {0} {1} AND IT {2}", devTagName.PadRight(6,' '), (tagfound ? "FOUND" : "NOT FOUND"), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("DeviceCfg::ValidateTerminalData(): - exception={0}", (object)exp.Message);
+            }
+        }
+    }
+
+    private void ValidateAidList()
+    {
+        if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+        {
+            try
+            {
+                if(serializer != null)
+                {
+                    byte [][] keys = null;
+                    RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveAIDList(ref keys);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("VALIDATE AID LIST ----------------------------------------------------------------------");
+
+                        // Get Configuration File AID List
+                        AIDList aid = serializer.GetAIDList();
+
+                        List<Aid> AidList = new List<Aid>();
+
+                        foreach(byte[] aidName in keys)
+                        {
+                            bool delete = true;
+                            string name = BitConverter.ToString(aidName).Replace("-", string.Empty);
+
+                            // Is this item in the approved list?
+                            foreach(var cfgItem in aid.Aid)
+                            {
+                                if(cfgItem.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    byte[] value = null;
+
+                                    rt = IDT_Augusta.SharedController.emv_retrieveApplicationData(aidName, ref value);
+
+                                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                    {
+                                        Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(value);
+
+                                        Debug.WriteLine("AID: {0} ===============================================", (object) name);
+
+                                        // Compare values and replace if not the same
+                                        foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                                        {
+                                            foreach(var cfgTag in cfgItem.Value)
+                                            {
+                                                bool tagfound = false;
+                                                bool tagmatch = false;
+                                                string cfgTagName = cfgTag.Key;
+                                                foreach(var devTag in devCollection)
+                                                {
+                                                    // Matching TAGNAME: compare keys
+                                                    if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
+                                                    {
+                                                        tagfound = true;
+                                                        //Debug.Write("key: " + devTag.Key);
+
+                                                        // Compare value
+                                                        if(cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase))
+                                                        {
+                                                            tagmatch = true;
+                                                            //Debug.WriteLine(" matches value: {0}", (object) devTag.Value);
+                                                        }
+                                                        else
+                                                        {
+                                                            Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                                //Aid _aid = new Aid(aidName, value);
+                                                //_aid.ConvertTLVToValuePairs();
+                                                //AidList.Add(_aid);
+                                                Debug.WriteLine("TAG: {0} {1} AND IT {2}", cfgTagName.PadRight(6,' '), (tagfound ? "FOUND" : "NOT FOUND"), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                                            }
+                                        }
+                                    }
+
+                                    delete = false;
+                                }
+                            }
+
+                            // DELETE THIS AID
+                            if(delete)
+                            {
+                                Debug.WriteLine("AID: {0} - DELETE (NOT FOUND)", (object)name.PadRight(14,' '));
+                            }
+                        }
+
+                        // Write to Configuration File
+                        if(AidList.Count > 0)
+                        {
+                            //serializer.terminalCfg.Contact.aid = AidList;
+                        }
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("DeviceCfg::ValidateAidList(): - exception={0}", (object)exp.Message);
+            }
+        }
+    }
+    #endregion
+
+    /********************************************************************************************************/
     // CONFIGURATION ACTIONS
     /********************************************************************************************************/
     #region -- configuration actions --
 
-    public void GetTerminalData()
+    public string [] GetTerminalData()
     {
+        serializer.ReadConfig();
+        ValidateTerminalData();
+        string [] message = serializer.GetTerminalDataString();
+        return message;
     }
 
     public void GetAIDList()
     {
-       string [] message = serializer.GetAIDList();
-       NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_AID_LIST, Message = message });
+        ValidateAidList();
+
+        string [] message = serializer.GetAIDCollection();
+        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_AID_LIST, Message = message });
     }
 
     public void GetCapKList()
     {
-       string [] message = serializer.GetCapKList();
-       NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST, Message = message });
+        string [] message = serializer.GetCapKList();
+        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST, Message = message });
     }
 
     public string[] GetConfig()

@@ -70,8 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sdk\Augusta_parse.dll</HintPath>
     </Reference>
-    <Reference Include="DAL">
-      <HintPath>..\..\IDTechCfg\DAL\obj\Debug\DAL.dll</HintPath>
+    <Reference Include="DAL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DAL\obj\Debug\DAL.dll</HintPath>
     </Reference>
     <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
@@ -106,6 +107,27 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="VP3300_config">
+      <HintPath>..\sdk\VP3300_config.dll</HintPath>
+    </Reference>
+    <Reference Include="VP3300_ctls">
+      <HintPath>..\sdk\VP3300_ctls.dll</HintPath>
+    </Reference>
+    <Reference Include="VP3300_device">
+      <HintPath>..\sdk\VP3300_device.dll</HintPath>
+    </Reference>
+    <Reference Include="VP3300_emv">
+      <HintPath>..\sdk\VP3300_emv.dll</HintPath>
+    </Reference>
+    <Reference Include="VP3300_icc">
+      <HintPath>..\sdk\VP3300_icc.dll</HintPath>
+    </Reference>
+    <Reference Include="VP3300_msr">
+      <HintPath>..\sdk\VP3300_msr.dll</HintPath>
+    </Reference>
+    <Reference Include="VP3300_parse">
+      <HintPath>..\sdk\VP3300_parse.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeviceCfg.cs" />

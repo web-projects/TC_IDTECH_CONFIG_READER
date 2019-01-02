@@ -17,9 +17,11 @@
 /.vs
 
 # Ignore build files
-IDTechConfigReader/bin/
-IDTechConfigReader/obj/
-CommonInterface/bin/
-CommonInterface/obj/
-DeviceConfiguration/bin/
-DeviceConfiguration/obj/
+/CommonInterface/bin/*
+/CommonInterface/obj/*
+/DAL/bin/*
+/DAL/obj/*
+/IDTechConfigReader/bin/*
+/IDTechConfigReader/obj/*
+/DeviceConfiguration/bin/*
+/DeviceConfiguration/obj/*
