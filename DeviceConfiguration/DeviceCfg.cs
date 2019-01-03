@@ -521,17 +521,21 @@ namespace IPA.DAL.RBADAL
                         Debug.WriteLine("VALIDATE TERMINAL DATA ----------------------------------------------------------------------");
 
                         // Get Configuration File AID List
-                        Dictionary<string, string> td = serializer.GetTerminalData();
+                        Dictionary<string, string> cfgTerminalData = serializer.GetTerminalData();
                         Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
 
+                        bool update = false;
+
+                        // TAGS from device
                         foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
                         {
                             foreach(var devTag in devCollection)
                             {
                                 string devTagName = devTag.Key;
+                                string cfgTagValue = "";
                                 bool tagfound = false;
                                 bool tagmatch = false;
-                                foreach(var cfgTag in td)
+                                foreach(var cfgTag in cfgTerminalData)
                                 {
                                     // Matching TAGNAME: compare keys
                                     if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
@@ -547,7 +551,9 @@ namespace IPA.DAL.RBADAL
                                         }
                                         else
                                         {
-                                            Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
+                                            //Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
+                                            cfgTagValue = cfgTag.Value;
+                                            update = true;
                                         }
                                         break;
                                     }
@@ -556,7 +562,43 @@ namespace IPA.DAL.RBADAL
                                         break;
                                     }
                                 }
-                                Debug.WriteLine("TAG: {0} {1} AND IT {2}", devTagName.PadRight(6,' '), (tagfound ? "FOUND" : "NOT FOUND"), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                                if(tagfound)
+                                {
+                                    Debug.WriteLine("TAG: {0} FOUND AND IT {1}", devTagName.PadRight(6,' '), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                                    if(!tagmatch)
+                                    {
+                                        Debug.WriteLine("{0}!={1}", devTag.Value, cfgTagValue);
+                                    }
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("TAG: {0} NOT FOUND", (object) devTagName.PadRight(6,' '));
+                                    update = true;
+                                }
+                            }
+                        }
+
+                        // Update Terminal Data
+                        if(update)
+                        {
+                            rt = IDT_Augusta.SharedController.emv_setTerminalMajorConfiguration(5);
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                List<byte[]> collection = new List<byte[]>();
+                                foreach(var item in cfgTerminalData)
+                                {
+                                    string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
+                                    byte [] bytes = Device_IDTech.HexStringToByteArray(payload);
+                                    collection.Add(bytes);
+                                }
+                                var flattenedList = collection.SelectMany(bytes => bytes);
+                                byte [] terminalData = flattenedList.ToArray();
+                                Dictionary<string, Dictionary<string, string>> worker = Common.processTLV(terminalData);
+                                rt = IDT_Augusta.SharedController.emv_setTerminalData(terminalData);
+                                if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                {
+                                    Debug.WriteLine("emv_setTerminalData() error: {0}", rt);
+                                }
                             }
                         }
                     }
