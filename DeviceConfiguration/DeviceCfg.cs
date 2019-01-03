@@ -636,12 +636,13 @@ namespace IPA.DAL.RBADAL
                         foreach(byte[] aidName in keys)
                         {
                             bool delete = true;
-                            string name = BitConverter.ToString(aidName).Replace("-", string.Empty);
+                            bool found  = false;
+                            string tagDevName = BitConverter.ToString(aidName).Replace("-", string.Empty);
 
                             // Is this item in the approved list?
                             foreach(var cfgItem in aid.Aid)
                             {
-                                if(cfgItem.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                                if(cfgItem.Key.Equals(tagDevName, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     byte[] value = null;
 
@@ -651,7 +652,7 @@ namespace IPA.DAL.RBADAL
                                     {
                                         Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(value);
 
-                                        Debug.WriteLine("AID: {0} ===============================================", (object) name);
+                                        Debug.WriteLine("AID: {0} ===============================================", (object) tagDevName);
 
                                         // Compare values and replace if not the same
                                         foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
@@ -678,14 +679,25 @@ namespace IPA.DAL.RBADAL
                                                         else
                                                         {
                                                             Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
+                                                            byte[] tagCfgName = Device_IDTech.HexStringToByteArray(cfgTagName);
+                                                            byte[] tagCfgValue = Device_IDTech.HexStringToByteArray(cfgTag.Value);
+                                                            rt = IDT_Augusta.SharedController.emv_setApplicationData(tagCfgName, tagCfgValue);
+                                                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                                            {
+                                                                Debug.WriteLine("TAG: {0} UPDATED WITH VALUE: {1}", cfgTagName.PadRight(6,' '), devTag.Value);
+                                                            }
                                                         }
                                                         break;
                                                     }
                                                 }
-                                                //Aid _aid = new Aid(aidName, value);
-                                                //_aid.ConvertTLVToValuePairs();
-                                                //AidList.Add(_aid);
                                                 Debug.WriteLine("TAG: {0} {1} AND IT {2}", cfgTagName.PadRight(6,' '), (tagfound ? "FOUND" : "NOT FOUND"), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                                                if(!tagfound)
+                                                {
+                                                    byte[] tagCfgName = Device_IDTech.HexStringToByteArray(cfgTagName);
+                                                    byte[] tagCfgValue = Device_IDTech.HexStringToByteArray(cfgTag.Value);
+                                                    Aid cfgAid = new Aid(tagCfgName, tagCfgValue);
+                                                    AidList.Add(cfgAid);
+                                                }
                                             }
                                         }
                                     }
@@ -697,14 +709,28 @@ namespace IPA.DAL.RBADAL
                             // DELETE THIS AID
                             if(delete)
                             {
-                                Debug.WriteLine("AID: {0} - DELETE (NOT FOUND)", (object)name.PadRight(14,' '));
+                                Debug.WriteLine("AID: {0} - DELETE (NOT FOUND)", (object)tagDevName.PadRight(14,' '));
+                                byte[] tagName = Device_IDTech.HexStringToByteArray(tagDevName);
+                                rt = IDT_Augusta.SharedController.emv_removeApplicationData(tagName);
+                                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                {
+                                    Debug.WriteLine("AID: {0} DELETED", (object) tagDevName.PadRight(6,' '));
+                                }
                             }
                         }
 
                         // Write to Configuration File
-                        if(AidList.Count > 0)
+                        foreach(var aidElement in AidList)
                         {
-                            //serializer.terminalCfg.Contact.aid = AidList;
+                            byte [] aidName = aidElement.GetAidName();
+                            byte [] aidValue = aidElement.GetAidValue();
+                            rt = IDT_Augusta.SharedController.emv_setApplicationData(aidName, aidValue);
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                string cfgTagName = BitConverter.ToString(aidName).Replace("-", string.Empty);
+                                string cfgTagValue = BitConverter.ToString(aidValue).Replace("-", string.Empty);
+                                Debug.WriteLine("AID: {0} UPDATED WITH VALUE: {1}", cfgTagName.PadRight(6,' '), cfgTagValue);
+                            }
                         }
                     }
                 }

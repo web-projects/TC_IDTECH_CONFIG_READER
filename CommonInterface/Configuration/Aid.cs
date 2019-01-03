@@ -17,18 +17,20 @@ namespace IPA.CommonInterface
         [JsonProperty(PropertyName = "value", Order = 2)]
         string value { get; set; }
         [JsonIgnore]
-        private byte [] data;
+        private byte [] aidName;
+        private byte [] aidValue;
 
         public Aid(byte[] _name, byte[] _value)
         {
             if(_name != null)
             {
+                this.aidName = _name;
                 this.name = BitConverter.ToString(_name).Replace("-", string.Empty);
             }
 
             if(_value != null)
             {
-                this.data  = _value;
+                this.aidValue  = _value;
                 this.value =  BitConverter.ToString(_value).Replace("-", string.Empty);
             }
         }
@@ -38,7 +40,7 @@ namespace IPA.CommonInterface
             string text = "";
             try
             {
-                Dictionary<string, string> dict = Common.processTLVUnencrypted(data);
+                Dictionary<string, string> dict = Common.processTLVUnencrypted(aidValue);
                 Debug.WriteLine("==================== TLV DUMP ====================");
                 Debug.WriteLine("AID  : {0}", (object) this.name);
                 foreach (KeyValuePair<string, string> kvp in dict)
@@ -52,6 +54,15 @@ namespace IPA.CommonInterface
                 Debug.WriteLine("Aid::ConvertTLVToValuePairs(): - exception={0}", (object)exp.Message);
             }
             return text;
+        }
+
+        public  byte [] GetAidName()
+        { 
+            return aidName;
+        }
+        public  byte [] GetAidValue()
+        { 
+            return aidValue;
         }
     }
 }
