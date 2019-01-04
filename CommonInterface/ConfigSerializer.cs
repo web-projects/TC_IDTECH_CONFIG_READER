@@ -123,7 +123,7 @@ namespace IPA.CommonInterface
             return aid;
         }
 
-        public string[] GetCapKList()
+        public string[] GetCapKCollection()
         {
             List<string> collection = new List<string>();
             foreach(var item in capk.Capk)
@@ -137,6 +137,11 @@ namespace IPA.CommonInterface
             }
             string [] data = collection.ToArray();
             return data;
+        }
+
+        public CapKList GetCapKList()
+        {
+            return capk;
         }
 
         public void ReadConfig()
@@ -161,30 +166,30 @@ namespace IPA.CommonInterface
                     Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) device_config.Manufacturer);
                     // ModelFirmware
                     mf.modelFirmware = device_config.ModelFirmware;
-                    DisplayCollection(mf.modelFirmware, "modelFirmware");
+                    //DisplayCollection(mf.modelFirmware, "modelFirmware");
                     // AID List
                     aid.Aid = device_config.AIDList;
-                    DisplayCollection(aid.Aid, "AIDList");
+                    //DisplayCollection(aid.Aid, "AIDList");
                     // CAPK List
                     capk.Capk = device_config.CapKList;
-                    DisplayCollection(capk.Capk, "CapkList");
+                    //DisplayCollection(capk.Capk, "CapkList");
                     // Terminal Settings
                     termSettings = device_config.TerminalSettings;
-                    Debug.WriteLine("device configuration: Terminal Settings --------------");
-                    Debug.WriteLine("MajorConfiguration        : {0}", (object) termSettings.MajorConfiguration);
-                    Debug.WriteLine("MajorConfigurationChecksum: {0}", (object) termSettings.MajorConfigurationChecksum[0]);
+                    //Debug.WriteLine("device configuration: Terminal Settings --------------");
+                    //Debug.WriteLine("MajorConfiguration        : {0}", (object) termSettings.MajorConfiguration);
+                    //Debug.WriteLine("MajorConfigurationChecksum: {0}", (object) termSettings.MajorConfigurationChecksum[0]);
                     // SerialNumberTag
-                    Debug.WriteLine("device configuration: Serial Number TAG -----------: [{0}]", (object) termSettings.SerialNumberTag);
+                    //Debug.WriteLine("device configuration: Serial Number TAG -----------: [{0}]", (object) termSettings.SerialNumberTag);
                     // TerminalData
-                    DisplayCollection(termSettings.TerminalData, "Terminal Data");
+                    //DisplayCollection(termSettings.TerminalData, "Terminal Data");
                     // TransactionTagsRequested
-                    DisplayCollection(termSettings.TransactionTags, "TransactionTagsRequested");
+                    //DisplayCollection(termSettings.TransactionTags, "TransactionTagsRequested");
                     // TransactionValues
                     transactionValues = termSettings.TransactionValues;
-                    DisplayCollection(transactionValues.EMVKernelMapping, "EMVKernelMapping");
-                    DisplayCollection(transactionValues.TransactionStartTags, "TransactionStartTags");
-                    DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");
-                    DisplayCollection(transactionValues.TransactionCompleteTags, "TransactionCompleteTags");
+                    //DisplayCollection(transactionValues.EMVKernelMapping, "EMVKernelMapping");
+                    //DisplayCollection(transactionValues.TransactionStartTags, "TransactionStartTags");
+                    //DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");
+                    //DisplayCollection(transactionValues.TransactionCompleteTags, "TransactionCompleteTags");
                 }
             }
             catch(Exception ex)

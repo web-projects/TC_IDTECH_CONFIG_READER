@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +26,12 @@ namespace IPA.CommonInterface
         [JsonProperty(PropertyName = "modulus", Order = 7)]
         string modulus { get; set; }
 
+        [JsonIgnore]
+        private byte[] capKValue;
+
         public Capk(byte[] key)
         {
+            capKValue = key;
             if(key != null)
             {
                 byte[] worker = key.Skip(0).Take(6).ToArray();
@@ -44,6 +49,37 @@ namespace IPA.CommonInterface
                 worker = key.Skip(34).ToArray();
                 modulus =  BitConverter.ToString(worker).Replace("-", string.Empty);
             }
+        }
+
+        public void ShowCapkValues()
+        {
+            Debug.WriteLine("capk: name: {0}", (object) name);
+            Debug.WriteLine("capk: hash: {0}", (object) hash_algorithm);
+            Debug.WriteLine("capk: algo: {0}", (object) encryption_algorithm);
+            Debug.WriteLine("capk: valu: {0}", (object) hash_value );
+            Debug.WriteLine("capk: expo: {0}", (object) exponent);
+            Debug.WriteLine("capk: modl: {0}", (object) modulus_length);
+            Debug.WriteLine("capk: modu: {0}", (object) modulus);
+        }
+
+        public string GetCapkName()
+        {
+            return name;
+        }
+
+        public byte [] GetCapkValue()
+        {
+            return capKValue;
+        }
+
+        public string GetModulus()
+        {
+            return modulus;
+        }
+
+        public string GetExponent()
+        {
+            return exponent;
         }
     }
 }

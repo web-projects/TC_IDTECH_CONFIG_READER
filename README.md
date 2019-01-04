@@ -39,3 +39,4 @@ This an application to test IDTech Augusta Devices.
 * 20181207 - Added complete JSON processing.
 * 20181218 - Added CRC16 Method.
 * 20190102 - Fixes to tag parser.
+* 20190104 - Added AID and CAPK processing.
