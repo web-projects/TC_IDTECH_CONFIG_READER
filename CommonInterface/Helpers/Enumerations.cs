@@ -13,15 +13,17 @@ namespace IPA.Core.Shared.Enums
     }
     public enum IDTECH_DEVICE_PID
     {
+        SECUREKEY_HID = 2610,
+        SECUREMAG_HID = 2810,
+        SECUREMAG_KYB = 2820,
         VP3000_HID    = 3530,
         VP3000_KYB    = 3531,
         AUGUSTA_KYB   = 3810,
         AUGUSTA_HID   = 3820,
         AUGUSTAS_HID  = 3920,
         AUGUSTAS_KYB  = 3910,
-        SECUREKEY_HID = 2610,
-        SECUREMAG_HID = 2810,
-        SECUREMAG_KYB = 2820,
+        VP5300_HID    = 4450,
+        VP5300_KYB    = 4451,
         // ^^^ ADDITIONAL PID's HERE ^^^
         UNKNOWN       = 9999
     }

@@ -69,6 +69,7 @@ namespace IPA.DAL.RBADAL.Services
                             case (int) IDTECH_DEVICE_PID.AUGUSTAS_KYB:
                             case (int) IDTECH_DEVICE_PID.AUGUSTA_HID:
                             case (int) IDTECH_DEVICE_PID.AUGUSTAS_HID:
+                            case (int) IDTECH_DEVICE_PID.VP5300_HID:
                             {
                               mode = (IDTECH_DEVICE_PID)pidId;
                               break;
@@ -87,6 +88,10 @@ namespace IPA.DAL.RBADAL.Services
                             mode == IDTECH_DEVICE_PID.AUGUSTAS_HID || mode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
                         {
                             deviceInterface = new Device_Augusta(deviceMode);
+                        }
+                        else if (mode == IDTECH_DEVICE_PID.VP5300_HID)
+                        {
+                            deviceInterface = new Device_VP5300(deviceMode);
                         }
                         /*else if (mode == IDTECH_DEVICE_PID.VP3000_HID || mode == IDTECH_DEVICE_PID.VP3000_KYB)
                         {
@@ -126,7 +131,6 @@ namespace IPA.DAL.RBADAL.Services
                 throw new Exception(DeviceStatus.NoDevice.ToString());
             }
             deviceInterface?.Init(Device.AcceptedPorts, available, Device.BaudRate, Device.DataBits);            
-            
         }
         
         public void Configure(object[] settings)

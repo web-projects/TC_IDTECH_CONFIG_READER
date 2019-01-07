@@ -12,6 +12,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HidLibrary;
+
+using IPA.DAL.RBADAL;
+using IPA.DAL.RBADAL.Services;
 
 namespace IDTechConfigReader
 {
@@ -31,6 +35,8 @@ namespace IDTechConfigReader
 
         IDevicePlugIn devicePlugin;
 
+        bool formClosing = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -42,6 +48,22 @@ namespace IDTechConfigReader
             InitalizeDevice();
         }
 
+        /********************************************************************************************************/
+        // DELEGATES SECTION
+        /********************************************************************************************************/
+        #region -- delegates section --
+
+        private void InitalizeDeviceUI(object sender, DeviceNotificationEventArgs e)
+        {
+            InitalizeDevice();
+        }
+        #endregion
+
+        /********************************************************************************************************/
+        // FORM ELEMENTS
+        /********************************************************************************************************/
+        #region -- form elements --
+
         private void OnFormLoad(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -51,24 +73,124 @@ namespace IDTechConfigReader
             SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
         }
 
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            formClosing = true;
+
+            if (devicePlugin != null)
+            {
+                try
+                {
+                    devicePlugin.SetFormClosing(formClosing);
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("main: Form1_FormClosing() - exception={0}", (object) ex.Message);
+                }
+            }
+        }
+        #endregion
+
         private void InitalizeDevice()
         {
+            if(this.IsHandleCreated)
+            {
+                MethodInvoker mi = () =>
+                {
+                    this.picBoxConfigWait1.Enabled = false;
+                    this.picBoxConfigWait1.Visible  = false;
+                };
+
+                if (InvokeRequired)
+                {
+                    BeginInvoke(mi);
+                }
+                else
+                {
+                    Invoke(mi);
+                }
+            }
+
             try
             {
                 devicePlugin = new IPA.DAL.RBADAL.DeviceCfg() as IDevicePlugIn;
                 new Thread(() =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    Debug.WriteLine("\nmain: new device detected! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                    try
+                    {
+                        // Initialize Device
+                        devicePlugin.OnDeviceNotification += new EventHandler<DeviceNotificationEventArgs>(this.OnDeviceNotificationUI);
+                        devicePlugin.DeviceInit();
+                        Debug.WriteLine("main: loaded plugin={0} ++++++++++++++++++++++++++++++++++++++++++++", (object)devicePlugin.PluginName);
+                    }
+                    catch(Exception ex)
+                    {
+                        Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                        if(ex.Message.Equals("NoDevice"))
+                        {
+                            WaitForDeviceToConnect();
+                        }
+                    }
 
-                    devicePlugin.OnDeviceNotification += new EventHandler<DeviceNotificationEventArgs>(this.OnDeviceNotificationUI);
-                    devicePlugin.DeviceInit();
                 }).Start();
+
+
             }
             catch (Exception exp)
             {
                 Debug.WriteLine("main: Initalize() - exception={0}", (object) exp.Message);
             }
+        }
+
+        private void WaitForDeviceToConnect()
+        {
+            if(this.IsHandleCreated)
+            {
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.picBoxConfigWait1.Enabled = true;
+                    this.picBoxConfigWait1.Visible  = true;
+                }));
+            }
+
+            // Wait for a new device to connect
+            new Thread(() =>
+            {
+                bool foundit = false;
+                Thread.CurrentThread.IsBackground = true;
+
+                Debug.Write("Waiting for new device to connect");
+
+                // Wait for a device to attach
+                while (!formClosing && !foundit)
+                {
+                    HidDevice device = HidDevices.Enumerate(Device_IDTech.IDTechVendorID).FirstOrDefault();
+
+                    if (device != null)
+                    {
+                        foundit = true;
+                        device.CloseDevice();
+                    }
+                    else
+                    {
+                        Debug.Write(".");
+                        Thread.Sleep(1000);
+                    }
+                }
+
+                // Initialize Device
+                if (!formClosing && foundit)
+                {
+                    Debug.WriteLine("found one!");
+
+                    Thread.Sleep(3000);
+
+                    // Initialize Device
+                    InitalizeDeviceUI(this, new DeviceNotificationEventArgs());
+                }
+
+            }).Start();
         }
 
         protected void OnDeviceNotificationUI(object sender, DeviceNotificationEventArgs args)

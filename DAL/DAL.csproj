@@ -80,6 +80,27 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sdk\IDTechSDK.dll</HintPath>
     </Reference>
+    <Reference Include="SpectrumPro_config">
+      <HintPath>..\sdk\SpectrumPro_config.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_device">
+      <HintPath>..\sdk\SpectrumPro_device.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_emv">
+      <HintPath>..\sdk\SpectrumPro_emv.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_icc">
+      <HintPath>..\sdk\SpectrumPro_icc.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_msr">
+      <HintPath>..\sdk\SpectrumPro_msr.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_parse">
+      <HintPath>..\sdk\SpectrumPro_parse.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_pin">
+      <HintPath>..\sdk\SpectrumPro_pin.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
@@ -143,6 +164,7 @@
     <Compile Include="Interfaces\StatusCodeEnum.cs" />
     <Compile Include="Models\NotificationEventArgs.cs" />
     <Compile Include="Services\IDTech\DeviceData.cs" />
+    <Compile Include="Services\IDTech\Device_VP5300.cs" />
     <Compile Include="Services\IDTech\Device_Augusta.cs" />
     <Compile Include="Interfaces\IDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -51,9 +51,9 @@
             this.picBoxConfigWait4 = new System.Windows.Forms.PictureBox();
             this.listView3 = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
@@ -112,9 +112,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(182, 125);
+            this.button3.Location = new System.Drawing.Point(183, 124);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(75, 29);
             this.button3.TabIndex = 4;
             this.button3.Text = "Factory";
             this.button3.UseVisualStyleBackColor = true;
@@ -131,9 +131,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(295, 52);
+            this.button2.Location = new System.Drawing.Point(295, 50);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(75, 29);
             this.button2.TabIndex = 2;
             this.button2.Text = "Device";
             this.button2.UseVisualStyleBackColor = true;
@@ -141,9 +141,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(183, 52);
+            this.button1.Location = new System.Drawing.Point(183, 50);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 29);
             this.button1.TabIndex = 1;
             this.button1.Text = "File";
             this.button1.UseVisualStyleBackColor = true;
@@ -301,6 +301,10 @@
             // 
             this.columnHeader5.Text = "CAPK";
             // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "MODULUS";
+            // 
             // panel1
             // 
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -317,10 +321,6 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // columnHeader9
-            // 
-            this.columnHeader9.Text = "MODULUS";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -332,6 +332,7 @@
             this.Name = "Form1";
             this.Text = "IDTech Configuration Reader";
             this.Load += new System.EventHandler(this.OnFormLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

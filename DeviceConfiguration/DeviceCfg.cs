@@ -124,8 +124,11 @@ namespace IPA.DAL.RBADAL
 
             if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-               deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+               deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+               deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
             {
+                Debug.WriteLine("DeviceCfg::DeviceInit(): - device TYPE={0}", IDT_Device.getDeviceType());
+
                 // Initialize Universal SDK
                 IDT_Device.setCallback(MessageCallBack);
                 IDT_Device.startUSBMonitoring();
@@ -137,7 +140,11 @@ namespace IPA.DAL.RBADAL
             }
             // Set as Attached
             attached = true;
-        }
+          }
+          else
+          {
+              throw new Exception("NoDevice");
+          }
       }
       catch (Exception xcp)
       {
@@ -509,7 +516,8 @@ namespace IPA.DAL.RBADAL
 
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -533,7 +541,7 @@ namespace IPA.DAL.RBADAL
                 }
                 else
                 {
-                    Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR=0x{0:X}", (ushort) rt);
+                    Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR={0}", rt);
                 }
             }
             catch(Exception exp)
@@ -549,7 +557,8 @@ namespace IPA.DAL.RBADAL
     {
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -646,7 +655,7 @@ namespace IPA.DAL.RBADAL
                     }
                     else
                     {
-                        Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR=0x{0:X}", (ushort) rt);
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR={0}", rt);
                     }
                 }
             }
@@ -663,7 +672,8 @@ namespace IPA.DAL.RBADAL
 
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -705,7 +715,7 @@ namespace IPA.DAL.RBADAL
                 }
                 else
                 {
-                    Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR=0x{0:X}", (ushort) rt);
+                    Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR={0}", rt);
                 }
             }
             catch(Exception exp)
@@ -721,7 +731,8 @@ namespace IPA.DAL.RBADAL
     {
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -869,7 +880,7 @@ namespace IPA.DAL.RBADAL
                     }
                     else
                     {
-                        Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR=0x{0:X}", (ushort) rt);
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR={0}", rt);
                     }
                 }
             }
@@ -886,7 +897,8 @@ namespace IPA.DAL.RBADAL
 
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -933,7 +945,7 @@ namespace IPA.DAL.RBADAL
                 }
                 else
                 {
-                    Debug.WriteLine("AID: emv_retrieveCAPKList() - ERROR=0x{0:X}", (ushort) rt);
+                    Debug.WriteLine("AID: emv_retrieveCAPKList() - ERROR={0}", rt);
                 }
             }
             catch(Exception exp)
@@ -949,7 +961,8 @@ namespace IPA.DAL.RBADAL
     {
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -1079,7 +1092,7 @@ namespace IPA.DAL.RBADAL
                     }
                     else
                     {
-                        Debug.WriteLine("CAPK: emv_retrieveCAPKList() - ERROR=0x{0:X}", (ushort) rt);
+                        Debug.WriteLine("CAPK: emv_retrieveCAPKList() - ERROR={0}", rt);
                     }
                 }
             }
@@ -1094,7 +1107,8 @@ namespace IPA.DAL.RBADAL
     {
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
            deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
         {
             try
             {
@@ -1298,6 +1312,22 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = false;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_KYB;
+                message[0] = USK_DEVICE_MODE.USB_HID;
+                break;
+            }
+
+            case IDTECH_DEVICE_PID.VP5300_HID:
+            {
+                useUniversalSDK = true;
+                deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_HID;
+                message[0] = USK_DEVICE_MODE.USB_KYB;
+                break;
+            }
+
+            case IDTECH_DEVICE_PID.VP5300_KYB:
+            {
+                useUniversalSDK = false;
+                deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_KYB;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }

@@ -65,8 +65,39 @@
     <Reference Include="Augusta_parse">
       <HintPath>..\sdk\Augusta_parse.dll</HintPath>
     </Reference>
+    <Reference Include="DAL">
+      <HintPath>..\DAL\bin\Debug\DAL.dll</HintPath>
+    </Reference>
     <Reference Include="DeviceConfiguration">
       <HintPath>..\DeviceConfiguration\bin\Debug\DeviceConfiguration.dll</HintPath>
+    </Reference>
+    <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="IDTechSDK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=dbf9f7fd0c4c4b4a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\IDTechSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_config">
+      <HintPath>..\sdk\SpectrumPro_config.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_device">
+      <HintPath>..\sdk\SpectrumPro_device.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_emv">
+      <HintPath>..\sdk\SpectrumPro_emv.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_icc">
+      <HintPath>..\sdk\SpectrumPro_icc.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_msr">
+      <HintPath>..\sdk\SpectrumPro_msr.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_parse">
+      <HintPath>..\sdk\SpectrumPro_parse.dll</HintPath>
+    </Reference>
+    <Reference Include="SpectrumPro_pin">
+      <HintPath>..\sdk\SpectrumPro_pin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -125,6 +156,7 @@
     <EmbeddedResource Include="configuration.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
