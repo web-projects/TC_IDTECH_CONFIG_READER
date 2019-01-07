@@ -34,6 +34,11 @@ namespace IDTechConfigReader
         public Form1()
         {
             InitializeComponent();
+
+            tabControl1.TabPages.Remove(tabPage2);
+            tabControl1.TabPages.Remove(tabPage3);
+            tabControl1.TabPages.Remove(tabPage4);
+
             InitalizeDevice();
         }
 
@@ -91,6 +96,12 @@ namespace IDTechConfigReader
                     ShowCapKListUI(sender, args);
                     break;
                 }
+
+                case NOTIFICATION_TYPE.NT_UI_ENABLE_BUTTONS:
+                {
+                    EnableButtonsUI(sender, args);
+                    break;
+                }
             }
         }
 
@@ -108,6 +119,12 @@ namespace IDTechConfigReader
                 {
                     string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
 
+                    // Remove previous entries
+                    if(listView1.Items.Count > 0)
+                    {
+                        listView1.Items.Clear();
+                    }
+
                     foreach(string val in data)
                     {
                         string [] tlv = val.Split(':');
@@ -118,6 +135,28 @@ namespace IDTechConfigReader
 
                     listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    // TAB 2
+                    if(!tabControl1.Contains(tabPage2))
+                    {
+                        tabControl1.TabPages.Add(tabPage2);
+                    }
+                    this.tabPage2.Enabled = true;
+                    this.picBoxConfigWait2.Enabled = false;
+                    this.picBoxConfigWait2.Visible  = false;
+                    tabControl1.SelectedTab = this.tabPage2;
+                    // TAB 3
+                    if(!tabControl1.Contains(tabPage3))
+                    {
+                        tabControl1.TabPages.Add(tabPage3);
+                    }
+                    this.tabPage3.Enabled = true;
+                    // TAB 4
+                    if(!tabControl1.Contains(tabPage4))
+                    {
+                        tabControl1.TabPages.Add(tabPage4);
+                    }
+                    this.tabPage4.Enabled = true;
                 }
                 catch (Exception exp)
                 {
@@ -155,20 +194,35 @@ namespace IDTechConfigReader
                         listView2.Items.Clear();
                     }
 
-                    foreach(string val in data)
+                    foreach(string item in data)
                     {
-                        string [] tlv = val.Split('#');
-                        ListViewItem item1 = new ListViewItem(tlv[0], 0);
-                        item1.SubItems.Add(tlv[1]);
-                        listView2.Items.Add(item1);
+                        string [] components = item.Split('#');
+                        if(components.Length == 2)
+                        {
+                            ListViewItem item1 = new ListViewItem(components[0], 0);
+                            item1.SubItems.Add(components[1]);
+                            listView2.Items.Add(item1);
+                        }
                     }
 
                     listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    if(!tabControl1.Contains(tabPage3))
+                    {
+                        tabControl1.TabPages.Add(tabPage3);
+                    }
+                    this.tabPage3.Enabled = true;
+                    tabControl1.SelectedTab = this.tabPage3;
                 }
                 catch (Exception exp)
                 {
                     Debug.WriteLine("main: ShowAIDData() - exception={0}", (object) exp.Message);
+                }
+                finally
+                {
+                    this.picBoxConfigWait3.Enabled = false;
+                    this.picBoxConfigWait3.Visible  = false;
                 }
             };
 
@@ -181,7 +235,6 @@ namespace IDTechConfigReader
                 Invoke(mi);
             }
         }
-
 
         private void ShowCapKListUI(object sender, DeviceNotificationEventArgs e)
         {
@@ -203,21 +256,96 @@ namespace IDTechConfigReader
                         listView3.Items.Clear();
                     }
 
-                    foreach(string val in data)
+                    foreach(string item in data)
                     {
-                        string [] tlv = val.Split('#');
-                        ListViewItem item1 = new ListViewItem(tlv[0], 0);
-                        item1.SubItems.Add(tlv[1]);
-                        listView3.Items.Add(item1);
+                        string [] components = item.Split('#');
+                        if(components.Length == 2)
+                        {
+                            ListViewItem item1 = new ListViewItem(components[0], 0);
+                            string [] keyvalue = components[1].Split(' ');
+                            if(keyvalue.Length > 2)
+                            {
+                                // RID
+                                //string [] ridvalue = keyvalue[0].Split(':');
+                                //if(ridvalue.Length == 2)
+                                //{
+                                //    item1.SubItems.Add(ridvalue[1]);
+                                //}
+                                // INDEX
+                                //string [] indexvalue = keyvalue[1].Split(':');
+                                //if(indexvalue.Length == 2)
+                                //{
+                                //    item1.SubItems.Add(indexvalue[1]);
+                                //}
+                                // MODULUS
+                                string [] modvalues = keyvalue[2].Split(':');
+                                if(modvalues.Length == 2)
+                                {
+                                    item1.SubItems.Add(modvalues[1]);
+                                }
+                                // EXPONENT: FILE ONLY
+                                //string [] expvalues = keyvalue[3].Split(':');
+                                //if(expvalues.Length == 2)
+                                //{
+                                //    item1.SubItems.Add(expvalues[1]);
+                                //}
+                                // CHECKSUM: FILE ONLY
+                                //string [] checksumvalues = keyvalue[4].Split(':');
+                                //if(checksumvalues.Length == 2)
+                                //{
+                                //    item1.SubItems.Add(checksumvalues[1]);
+                                //}
+                                listView3.Items.Add(item1);
+                            }
+                        }
                     }
 
                     listView3.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     listView3.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    if(!tabControl1.Contains(tabPage4))
+                    {
+                        tabControl1.TabPages.Add(tabPage4);
+                    }
+                    this.tabPage4.Enabled = true;
+                    tabControl1.SelectedTab = this.tabPage4;
                 }
                 catch (Exception exp)
                 {
                     Debug.WriteLine("main: ShowCapKList() - exception={0}", (object) exp.Message);
                 }
+                finally
+                {
+                    this.picBoxConfigWait4.Enabled = false;
+                    this.picBoxConfigWait4.Visible  = false;
+                }
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
+        private void EnableButtonsUI(object sender, DeviceNotificationEventArgs e)
+        {
+            EnableButtons();
+        }
+
+        private void EnableButtons()
+        {
+            MethodInvoker mi = () =>
+            {
+                this.button1.Enabled = true;
+                this.button2.Enabled = true;
+                this.button3.Enabled = true;
+
+                this.picBoxConfigWait1.Enabled = false;
+                this.picBoxConfigWait1.Visible  = false;
             };
 
             if (InvokeRequired)
@@ -237,23 +365,104 @@ namespace IDTechConfigReader
                 // Configuration Mode
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    this.tabPage1.Enabled = true;
+                    if(tabControl1.Contains(tabPage2))
+                    {
+                        tabControl1.TabPages.Remove(tabPage2);
+                    }
+                    if(tabControl1.Contains(tabPage3))
+                    {
+                        tabControl1.TabPages.Remove(tabPage3);
+                    }
+                    if(tabControl1.Contains(tabPage4))
+                    {
+                        tabControl1.TabPages.Remove(tabPage4);
+                    }
                 }));
             }
             else if (tabControl1.SelectedTab.Name.Equals("tabPage2"))
             {
+                // Configuration Mode
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    devicePlugin.GetAIDList();
+                    this.picBoxConfigWait2.Visible = true;
+                    this.picBoxConfigWait2.Enabled = true;
+                    System.Windows.Forms.Application.DoEvents();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetTerminalData(); } ).Start();
                 }));
             }
             else if (tabControl1.SelectedTab.Name.Equals("tabPage3"))
             {
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    devicePlugin.GetCapKList();
+                    this.picBoxConfigWait3.Visible = true;
+                    this.picBoxConfigWait3.Enabled = true;
+                    System.Windows.Forms.Application.DoEvents();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetAIDList(); } ).Start();
                 }));
             }
+            else if (tabControl1.SelectedTab.Name.Equals("tabPage4"))
+            {
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.picBoxConfigWait4.Visible = true;
+                    this.picBoxConfigWait4.Enabled = true;
+                    System.Windows.Forms.Application.DoEvents();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetCapKList(); } ).Start();
+                }));
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Load Configuration from FILE
+            new Thread(() => devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_CONFIG)).Start();
+
+            this.Invoke(new MethodInvoker(() =>
+            {
+                if(!tabControl1.Contains(tabPage2))
+                {
+                    tabControl1.TabPages.Add(tabPage2);
+                }
+                this.tabPage2.Enabled = true;
+                tabControl1.SelectedTab = this.tabPage2;
+                // FILE load modifies DEVICE configuration
+                this.button2.Enabled = false;
+                this.picBoxConfigWait2.Visible = true;
+                this.picBoxConfigWait2.Enabled = true;
+                System.Windows.Forms.Application.DoEvents();
+            }));
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Load Configuration from DEVICE
+            new Thread(() => devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_DEVICE)).Start();
+
+            this.Invoke(new MethodInvoker(() =>
+            {
+                if(!tabControl1.Contains(tabPage2))
+                {
+                    tabControl1.TabPages.Add(tabPage2);
+                }
+                this.tabPage2.Enabled = true;
+                tabControl1.SelectedTab = this.tabPage2;
+            }));
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            // Reset Configuration to Factory defaults
+            new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.FactoryReset(); } ).Start();
+
+            this.Invoke(new MethodInvoker(() =>
+            {
+                this.button1.Enabled = false;
+                this.button2.Enabled = false;
+                this.button3.Enabled = false;
+                this.picBoxConfigWait1.Enabled = true;
+                this.picBoxConfigWait1.Visible  = true;
+                System.Windows.Forms.Application.DoEvents();
+            }));
         }
     }
 }

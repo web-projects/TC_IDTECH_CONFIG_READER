@@ -50,8 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\TerminalDataFactory.cs" />
+    <Compile Include="Configuration\CapKFactory.cs" />
+    <Compile Include="Configuration\AidFactory.cs" />
     <Compile Include="Configuration\TerminalConfiguration.cs" />
     <Compile Include="Helpers\DeviceNotificationEventArgs.cs" />
+    <Compile Include="Helpers\ConfigurationModes.cs" />
     <Compile Include="Helpers\Enumerations.cs" />
     <Compile Include="Helpers\StatusCodeEnum.cs" />
     <Compile Include="Helpers\Utils.cs" />

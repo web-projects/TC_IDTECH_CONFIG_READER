@@ -29,9 +29,15 @@ namespace IPA.CommonInterface
     string DeviceCommand(string command, bool notify);
     // Messaging
     string GetErrorMessage(string data);
+    // Configuration Source
+    void SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes mode);
+    // TERMINAL DATA
+    void GetTerminalData();
     // AID
     void GetAIDList();
     // CAPK
     void GetCapKList();
+    // Factory Reset
+    void FactoryReset();
   }
 }

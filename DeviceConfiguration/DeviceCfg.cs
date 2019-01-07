@@ -61,6 +61,9 @@ namespace IPA.DAL.RBADAL
     byte[] additionalTags;
     string amount;
 
+    // configuration modes
+    IPA.Core.Shared.Enums.ConfigurationModes configurationMode = ConfigurationModes.FROM_CONFIG;
+
     #endregion
 
     /********************************************************************************************************/
@@ -148,10 +151,6 @@ namespace IPA.DAL.RBADAL
       // Initialize Configuration Serializer
       serializer = new ConfigSerializer();
       serializer.ReadConfig();
-
-      // GET AND VALIDATE TERMINAL DATA
-      message = GetTerminalData();
-      NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA, Message = message });
     }
 
     public ConfigSerializer GetConfigSerializer()
@@ -504,6 +503,48 @@ namespace IPA.DAL.RBADAL
     /********************************************************************************************************/
     #region -- device configuration --
     
+    private string [] DeviceGetTerminalData()
+    {
+        string [] data = null;
+
+        if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+        {
+            try
+            {
+                byte [] tlv = null;
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveTerminalData(ref tlv);
+                
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    List<string> collection = new List<string>();
+
+                    Debug.WriteLine("DEVICE TERMINAL DATA ----------------------------------------------------------------------");
+                    Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
+                    foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                    {
+                        foreach(var devTag in devCollection)
+                        {
+                            collection.Add(string.Format("{0}:{1}", devTag.Key, devTag.Value).ToUpper());
+                        }
+                    }
+                    data = collection.ToArray();
+                }
+                else
+                {
+                    Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR=0x{0:X}", (ushort) rt);
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("DeviceCfg::GetTerminalData(): - exception={0}", (object)exp.Message);
+            }
+        }
+
+        return data;
+    }
+
     private void ValidateTerminalData()
     {
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
@@ -603,6 +644,10 @@ namespace IPA.DAL.RBADAL
                             }
                         }
                     }
+                    else
+                    {
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR=0x{0:X}", (ushort) rt);
+                    }
                 }
             }
             catch(Exception exp)
@@ -610,6 +655,66 @@ namespace IPA.DAL.RBADAL
                 Debug.WriteLine("DeviceCfg::ValidateTerminalData(): - exception={0}", (object)exp.Message);
             }
         }
+    }
+
+    private string [] DeviceGetAidList()
+    {
+        string [] data = null;
+
+        if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+        {
+            try
+            {
+                byte [][] keys = null;
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveAIDList(ref keys);
+                
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    List<string> collection = new List<string>();
+
+                    Debug.WriteLine("DEVICE AID LIST ----------------------------------------------------------------------");
+
+                    foreach(byte[] aidName in keys)
+                    {
+                        byte[] value = null;
+
+                        rt = IDT_Augusta.SharedController.emv_retrieveApplicationData(aidName, ref value);
+
+                        if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                        {
+                            string devAidName = BitConverter.ToString(aidName).Replace("-", string.Empty).ToUpper();
+                            Debug.WriteLine("AID: {0} ===============================================", (object) devAidName);
+
+                            Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(value);
+                            List<string> valCollection = new List<string>();
+
+                            // Compare values and replace if not the same
+                            foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                            {
+                                foreach(var devTag in devCollection)
+                                {
+                                    valCollection.Add(string.Format("{0}:{1}", devTag.Key, devTag.Value).ToUpper());
+                                }
+                            }
+                            collection.Add(string.Format("{0}#{1}", devAidName, String.Join(" ", valCollection.ToArray())));
+                        }
+                    }
+                    data = collection.ToArray();
+                }
+                else
+                {
+                    Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR=0x{0:X}", (ushort) rt);
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("DeviceCfg::GetTerminalData(): - exception={0}", (object)exp.Message);
+            }
+        }
+
+        return data;
     }
 
     private void ValidateAidList()
@@ -762,6 +867,10 @@ namespace IPA.DAL.RBADAL
                             }
                         }
                     }
+                    else
+                    {
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR=0x{0:X}", (ushort) rt);
+                    }
                 }
             }
             catch(Exception exp)
@@ -771,6 +880,71 @@ namespace IPA.DAL.RBADAL
         }
     }
     
+    private string [] DeviceGetCapKList()
+    {
+        string [] data = null;
+
+        if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+        {
+            try
+            {
+                byte [] keys = null;
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveCAPKList(ref keys);
+                
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    List<string> collection = new List<string>();
+
+                    Debug.WriteLine("DEVICE CAPK LIST ----------------------------------------------------------------------");
+
+                    List<byte[]> capkNames = new List<byte[]>();
+
+                    // Convert array to array of arrays
+                    for(int i = 0; i < keys.Length; i += 6)
+                    {
+                        byte[] result = new byte[6];
+                        Array.Copy(keys, i, result, 0, 6);
+                        capkNames.Add(result); 
+                    }
+
+                    foreach(byte[] capkName in capkNames)
+                    {
+                        string devCapKName = BitConverter.ToString(capkName).Replace("-", string.Empty);
+                        Debug.WriteLine("CAPK: {0} ===============================================", (object) devCapKName);
+
+                        byte[] key = null;
+                        rt = IDT_Augusta.SharedController.emv_retrieveCAPK(capkName, ref key);
+                        if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                        {
+                            Capk capk = new Capk(key);
+                            string RID = devCapKName.Substring(0, 10);
+                            string Idx = devCapKName.Substring(10, 2);
+                            string payload = string.Format("{0}:{1} ", "RID", RID).ToUpper();
+                            payload += string.Format("{0}:{1} ", "INDEX", Idx).ToUpper();
+                            payload += string.Format("{0}:{1} ", "MODULUS", capk.GetModulus()).ToUpper();
+                            collection.Add(string.Format("{0}#{1}", (RID + "-" + Idx), payload).ToUpper());
+                            Debug.WriteLine("MODULUS: {0}", (object) capk.GetModulus().ToUpper());
+                        }
+                    }
+
+                    data = collection.ToArray();
+                }
+                else
+                {
+                    Debug.WriteLine("AID: emv_retrieveCAPKList() - ERROR=0x{0:X}", (ushort) rt);
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("DeviceCfg::GetTerminalData(): - exception={0}", (object)exp.Message);
+            }
+        }
+
+        return data;
+    }
+
     private void ValidateCapKList()
     {
         if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
@@ -903,11 +1077,87 @@ namespace IPA.DAL.RBADAL
                             }
                         }
                     }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: emv_retrieveCAPKList() - ERROR=0x{0:X}", (ushort) rt);
+                    }
                 }
             }
             catch(Exception exp)
             {
                 Debug.WriteLine("DeviceCfg::ValidateAidList(): - exception={0}", (object)exp.Message);
+            }
+        }
+    }
+
+    public void FactoryReset()
+    {
+        if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+           deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+        {
+            try
+            {
+                // TERMINAL DATA
+                TerminalDataFactory tf = new TerminalDataFactory();
+                byte[] term = tf.GetFactoryTerminalData5C();
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_setTerminalData(term);
+                if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    Debug.WriteLine("TERMINAL DATA [DEFAULT] ----------------------------------------------------------------------");
+                }
+                else
+                {
+                    Debug.WriteLine("TERMINAL DATA [DEFAULT] failed with error code: 0x{0:X}", (ushort) rt);
+                }
+
+                // AID
+                AidFactory factoryAids = new AidFactory();
+                Dictionary<byte [], byte []> aid = factoryAids.GetFactoryAids();
+                Debug.WriteLine("AID LIST [DEFAULT] ----------------------------------------------------------------------");
+                foreach(var item in aid)
+                {
+                    byte [] name  = item.Key;
+                    byte [] value = item.Value;
+                    rt = IDT_Augusta.SharedController.emv_setApplicationData(name, value);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("AID: {0}", (object) BitConverter.ToString(name).Replace("-", string.Empty));
+                    }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: {0} failed Error Code: 0x{1:X}", (ushort) rt);
+                    }
+                }
+
+                // CAPK
+                CapKFactory factoryCapk = new CapKFactory();
+                Dictionary<byte [], byte []> capk = factoryCapk.GetFactoryCapK();
+                Debug.WriteLine("CAPK LIST [DEFAULT] ----------------------------------------------------------------------");
+                foreach(var item in capk)
+                {
+                    byte [] name  = item.Key;
+                    byte [] value = item.Value;
+                    rt = IDT_Augusta.SharedController.emv_setCAPK(value);
+
+                    if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("CAPK: {0}", (object) BitConverter.ToString(name).Replace("-", string.Empty).ToUpper());
+                    }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: {0} failed Error Code: 0x{1:X}", (ushort) rt);
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("DeviceCfg::FactoryReset(): - exception={0}", (object)exp.Message);
+            }
+            finally
+            {
+                NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_UI_ENABLE_BUTTONS });
             }
         }
     }
@@ -918,33 +1168,63 @@ namespace IPA.DAL.RBADAL
     /********************************************************************************************************/
     #region -- configuration actions --
 
-    public string [] GetTerminalData()
+    public void SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes mode)
     {
-        if(serializer == null)
+        configurationMode = mode;
+    }
+
+    public void GetTerminalData()
+    {
+        string [] message = null;
+        if(configurationMode == ConfigurationModes.FROM_DEVICE)
         {
-            serializer = new ConfigSerializer();
-            serializer.ReadConfig();        
+            message = DeviceGetTerminalData();
+        }
+        else
+        {
+            if(serializer == null)
+            {
+                serializer = new ConfigSerializer();
+                serializer.ReadConfig();        
+            }
+
+            ValidateTerminalData();
+
+            message = serializer.GetTerminalDataString();
         }
 
-        ValidateTerminalData();
-
-        string [] message = serializer.GetTerminalDataString();
-        return message;
+        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA, Message = message });
     }
 
     public void GetAIDList()
     {
-        ValidateAidList();
+        string [] message = null;
+        if(configurationMode == ConfigurationModes.FROM_DEVICE)
+        {
+            message = DeviceGetAidList();
+        }
+        else
+        {
+            ValidateAidList();
+            message = serializer.GetAIDCollection();
+        }
 
-        string [] message = serializer.GetAIDCollection();
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_AID_LIST, Message = message });
     }
 
     public void GetCapKList()
     {
-        ValidateCapKList();
+        string [] message = null;
+        if(configurationMode == ConfigurationModes.FROM_DEVICE)
+        {
+            message = DeviceGetCapKList();
+        }
+        else
+        {
+            ValidateCapKList();
+            message = serializer.GetCapKCollection();
+        }
 
-        string [] message = serializer.GetCapKCollection();
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST, Message = message });
     }
 

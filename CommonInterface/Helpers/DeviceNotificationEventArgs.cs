@@ -20,7 +20,8 @@ namespace IPA.CommonInterface
         NT_SHOW_TERMINAL_DATA         = 10,
         NT_SHOW_JSON_CONFIG           = 11,
         NT_SHOW_AID_LIST              = 12,
-        NT_SHOW_CAPK_LIST             = 13
+        NT_SHOW_CAPK_LIST             = 13,
+        NT_UI_ENABLE_BUTTONS          = 14,
     }
 
     [Serializable]
