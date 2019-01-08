@@ -57,6 +57,80 @@ namespace IDTechConfigReader
         {
             InitalizeDevice();
         }
+        
+        protected void OnDeviceNotificationUI(object sender, DeviceNotificationEventArgs args)
+        {
+            Debug.WriteLine("device: notification type={0}", args.NotificationType);
+
+            switch (args.NotificationType)
+            {
+                case NOTIFICATION_TYPE.NT_INITIALIZE_DEVICE:
+                {
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_UNLOAD_DEVICE_CONFIGDOMAIN:
+                {
+                    UnloadDeviceConfigurationDomainUI(sender, args);
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_SET_DEVICE_MODE:
+                {
+                    SetDeviceModeUI(sender, args);
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA:
+                {
+                    ShowTerminalDataUI(sender, args);
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_SHOW_AID_LIST:
+                {
+                    ShowAidListUI(sender, args);
+                    break;
+                }
+                case NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST:
+                {
+                    ShowCapKListUI(sender, args);
+                    break;
+                }
+
+                case NOTIFICATION_TYPE.NT_UI_ENABLE_BUTTONS:
+                {
+                    EnableButtonsUI(sender, args);
+                    break;
+                }
+            }
+        }
+        private void UnloadDeviceConfigurationDomainUI(object sender, DeviceNotificationEventArgs e)
+        {
+            UnloadDeviceConfigurationDomain(e.Message);
+        }
+
+        private void SetDeviceModeUI(object sender, DeviceNotificationEventArgs e)
+        {
+            SetDeviceMode(e.Message);
+        }
+        
+        private void ShowTerminalDataUI(object sender, DeviceNotificationEventArgs e)
+        {
+            ShowTerminalData(e.Message);
+        }
+        
+        private void ShowAidListUI(object sender, DeviceNotificationEventArgs e)
+        {
+            ShowAidList(e.Message);
+        }
+
+        private void ShowCapKListUI(object sender, DeviceNotificationEventArgs e)
+        {
+            ShowCapKList(e.Message);
+        }
+
+        private void EnableButtonsUI(object sender, DeviceNotificationEventArgs e)
+        {
+            EnableButtons();
+        }
+
         #endregion
 
         /********************************************************************************************************/
@@ -193,43 +267,51 @@ namespace IDTechConfigReader
             }).Start();
         }
 
-        protected void OnDeviceNotificationUI(object sender, DeviceNotificationEventArgs args)
+        private void UnloadDeviceConfigurationDomain(object payload)
         {
-            Debug.WriteLine("device: notification type={0}", args.NotificationType);
-
-            switch (args.NotificationType)
+            new Thread(() =>
             {
-                case NOTIFICATION_TYPE.NT_INITIALIZE_DEVICE:
-                {
-                    break;
-                }
-                case NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA:
-                {
-                    ShowTerminalDataUI(sender, args);
-                    break;
-                }
-                case NOTIFICATION_TYPE.NT_SHOW_AID_LIST:
-                {
-                    ShowAidListUI(sender, args);
-                    break;
-                }
-                case NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST:
-                {
-                    ShowCapKListUI(sender, args);
-                    break;
-                }
+                Thread.CurrentThread.IsBackground = true;
 
-                case NOTIFICATION_TYPE.NT_UI_ENABLE_BUTTONS:
-                {
-                    EnableButtonsUI(sender, args);
-                    break;
-                }
-            }
+                // Terminate Transaction Timer if running
+                //TransactionTimer?.Stop();
+
+                //ClearUI();
+
+                // Unload The Plugin
+                //appDomainCfg.UnloadPlugin(appDomainDevice);
+
+                // wait for a new device to connect
+                WaitForDeviceToConnect();
+
+            }).Start();
         }
 
-        private void ShowTerminalDataUI(object sender, DeviceNotificationEventArgs e)
+        private void SetDeviceMode(object payload)
         {
-            ShowTerminalData(e.Message);
+            // Invoker with Parameter(s)
+            MethodInvoker mi = () =>
+            {
+                try
+                {
+                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                    this.button4.Text = data[0];
+                    this.button4.Enabled = true;
+                }
+                catch (Exception exp)
+                {
+                    Debug.WriteLine("main: SetDeviceMode() - exception={0}", (object) exp.Message);
+                }
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
         }
 
         private void ShowTerminalData(object payload)
@@ -296,11 +378,6 @@ namespace IDTechConfigReader
             }
         }
 
-        private void ShowAidListUI(object sender, DeviceNotificationEventArgs e)
-        {
-            ShowAidList(e.Message);
-        }
-
         private void ShowAidList(object payload)
         {
             // Invoker with Parameter(s)
@@ -356,11 +433,6 @@ namespace IDTechConfigReader
             {
                 Invoke(mi);
             }
-        }
-
-        private void ShowCapKListUI(object sender, DeviceNotificationEventArgs e)
-        {
-            ShowCapKList(e.Message);
         }
 
         private void ShowCapKList(object payload)
@@ -451,11 +523,6 @@ namespace IDTechConfigReader
             {
                 Invoke(mi);
             }
-        }
-
-        private void EnableButtonsUI(object sender, DeviceNotificationEventArgs e)
-        {
-            EnableButtons();
         }
 
         private void EnableButtons()
@@ -585,6 +652,27 @@ namespace IDTechConfigReader
                 this.picBoxConfigWait1.Visible  = true;
                 System.Windows.Forms.Application.DoEvents();
             }));
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string mode = this.button4.Text;
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                try
+                {
+                    devicePlugin.SetDeviceMode(mode);
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                }
+
+            }).Start();
+
+            // Disable MODE Button
+            this.button4.Enabled = false;
         }
     }
 }

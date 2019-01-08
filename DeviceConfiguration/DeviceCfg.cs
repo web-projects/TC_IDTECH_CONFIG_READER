@@ -123,7 +123,9 @@ namespace IPA.DAL.RBADAL
             SetDeviceMode(deviceInformation.deviceMode);
 
             if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+               deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB  ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
+               deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
             {
@@ -1345,11 +1347,87 @@ namespace IPA.DAL.RBADAL
 
     public void SetDeviceMode(string mode)
     {
+        try
+        {
+            if(mode.Equals(USK_DEVICE_MODE.USB_HID))
+            {
+               if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB ||
+                  deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
+               {
+                    // Set Device to HID MODE
+                    RETURN_CODE rt = IDT_Augusta.SharedController.msr_switchUSBInterfaceMode(false);
+                    Debug.WriteLine("DeviceCfg::SetDeviceMode(): - status={0}", rt);
+                    DeviceRemovedHandler();
+               }
+                else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_KYB)
+                {
+                    Device.SetVP3000DeviceHidMode();
+                }
+            }
+            else if(mode.Equals(USK_DEVICE_MODE.USB_KYB))
+            {
+               if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+                  deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID)
+               {
+                    // TURN ON QUICK CHIP MODE
+                    string command = USDK_CONFIGURATION_COMMANDS.ENABLE_QUICK_CHIP_MODE;
+                    DeviceCommand(command, true);
+                    // Set Device to HID MODE
+                    RETURN_CODE rt = IDT_Augusta.SharedController.msr_switchUSBInterfaceMode(true);
+                    Debug.WriteLine("DeviceCfg::SetDeviceMode(): - status={0}", rt);
+                    DeviceRemovedHandler();
+               }
+               else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+               {
+                  RETURN_CODE rt = IDT_VP3300.SharedController.device_setPollMode(3);
+                  if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                  {
+                    Debug.WriteLine("DeviceCfg::SetDeviceMode(): VP3000 - error={0}", rt);
+                  }
+               }
+            }
+        }
+        catch(Exception exp)
+        {
+           Debug.WriteLine("DeviceCfg::SetDeviceMode(): - exception={0}", (object)exp.Message);
+        }
     }    
     
     public string DeviceCommand(string command, bool notify)
     {
-        throw new NotImplementedException();
+        string [] message = { "" };
+
+        if(useUniversalSDK)
+        {
+            byte[] response = null;
+            RETURN_CODE rt = IDT_Augusta.SharedController.device_sendDataCommand(command, true, ref response);
+            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+            {
+                message[0] = BitConverter.ToString(response).Replace("-", string.Empty);
+            }
+            else
+            {
+                if(response != null)
+                {
+                    message[0] = "COMMAND EXECUTE FAILED - CODE=" + BitConverter.ToString(response).Replace("-", string.Empty);
+                }
+                else
+                {
+                    message[0] = "COMMAND EXECUTE FAILED - CODE=0x" + string.Format("{0:X}", rt);
+                }
+            }
+
+            if(notify)
+            {
+                NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SET_EXECUTE_RESULT, Message = message });
+            }
+         }
+        else
+        {
+
+        }
+
+        return message[0];
     }
     public string GetErrorMessage(string data)
     {
