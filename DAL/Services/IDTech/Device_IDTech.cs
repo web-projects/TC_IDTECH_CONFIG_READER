@@ -261,6 +261,37 @@ namespace IPA.DAL.RBADAL.Services
                 return false;
         }
 
+        private EntryModeStatus DeviceSoftReset()
+        {
+          byte[] result;
+
+          // Create the command to get config values
+          var readConfig = new byte[CommandTokens.DeviceReset.Length + 1];
+          Array.Copy(CommandTokens.DeviceReset, readConfig, CommandTokens.DeviceReset.Length);
+          readConfig[CommandTokens.DeviceReset.Length] = 0x00;
+          readConfig[readConfig.Length - 1] = GetCheckSumValue(readConfig);
+
+          //execute the command, get the result
+          var status = SetupCommand(readConfig, out result);
+
+          return status;
+        }
+
+        public bool SetUSBHIDMode()
+        {
+           byte[] result;
+
+           // Create the command to get config values
+           var readConfig = new byte[CommandTokens.SetUSBHIDMode.Length + 1];
+           Array.Copy(CommandTokens.SetUSBHIDMode, readConfig, CommandTokens.SetUSBHIDMode.Length);
+           readConfig[CommandTokens.SetUSBHIDMode.Length] = 0x00;
+           readConfig[readConfig.Length - 1] = GetCheckSumValue(readConfig);
+
+           // execute the command, get the result
+           var status = SetupCommand(readConfig, out result);
+           return (status == EntryModeStatus.Success) ? true : false;
+        }
+
         private IDTSetStatus SetUSBKBMode()
         {
             string SetKBCommand = string.Empty;
@@ -1726,7 +1757,6 @@ if(empty)
         }
 
         #endregion
-
 
         public virtual void Configure(object[] settings)
         {

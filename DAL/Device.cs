@@ -203,6 +203,11 @@ namespace IPA.DAL.RBADAL.Services
             return deviceInterface.Reset();
         }
 
+        public bool SetUSBHIDMode()
+        {
+            return deviceInterface.SetUSBHIDMode();
+        }
+
         public bool UpdateDevice(DeviceUpdateType updateType)
         {
             return deviceInterface.UpdateDevice(updateType);

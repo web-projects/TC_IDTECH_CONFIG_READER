@@ -60,7 +60,7 @@ namespace IDTechConfigReader
         
         protected void OnDeviceNotificationUI(object sender, DeviceNotificationEventArgs args)
         {
-            Debug.WriteLine("device: notification type={0}", args.NotificationType);
+            Debug.WriteLine("main: notification type={0}", args.NotificationType);
 
             switch (args.NotificationType)
             {
@@ -99,6 +99,12 @@ namespace IDTechConfigReader
                     EnableButtonsUI(sender, args);
                     break;
                 }
+
+                case NOTIFICATION_TYPE.NT_SET_EMV_MODE_BUTTON:
+                {
+                    SetEmvButtonUI(sender, args);
+                    break;
+                }
             }
         }
         private void UnloadDeviceConfigurationDomainUI(object sender, DeviceNotificationEventArgs e)
@@ -129,6 +135,11 @@ namespace IDTechConfigReader
         private void EnableButtonsUI(object sender, DeviceNotificationEventArgs e)
         {
             EnableButtons();
+        }
+
+        private void SetEmvButtonUI(object sender, DeviceNotificationEventArgs e)
+        {
+            SetEmvButton(e.Message);
         }
 
         #endregion
@@ -297,6 +308,7 @@ namespace IDTechConfigReader
                     string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
                     this.button4.Text = data[0];
                     this.button4.Enabled = true;
+                    this.button5.Enabled = (this.button4.Text.Equals(USK_DEVICE_MODE.USB_HID)) ? false : true;
                 }
                 catch (Exception exp)
                 {
@@ -547,6 +559,28 @@ namespace IDTechConfigReader
             }
         }
 
+        private void SetEmvButton(object payload)
+        {
+            MethodInvoker mi = () =>
+            {
+                string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+
+                this.button5.Text = data[0];
+                this.button5.Enabled = true;
+                this.picBoxConfigWait1.Enabled = false;
+                this.picBoxConfigWait1.Visible  = false;
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
         private void OnSelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab.Name.Equals("tabPage1"))
@@ -671,8 +705,29 @@ namespace IDTechConfigReader
 
             }).Start();
 
-            // Disable MODE Button
+            // Disable Buttons
             this.button4.Enabled = false;
+            this.button5.Enabled = false;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                try
+                {
+                    devicePlugin.DisableQCEmvMode();
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                }
+
+            }).Start();
+
+            // Disable Button
+            this.button5.Enabled = false;
         }
     }
 }

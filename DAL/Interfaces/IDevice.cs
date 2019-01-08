@@ -40,6 +40,7 @@ namespace IPA.DAL.RBADAL.Interfaces
         string GetSerialNumber();
         DeviceInfo GetDeviceInfo();
         bool Reset();
+        bool SetUSBHIDMode();
         ///Task CardRead(string paymentAmount, string promptText, string availableReaders, List<TCCustAttributeItem> attributes, EntryModeType entryModeType);
         Task CardRead(string paymentAmount, string promptText);
 

@@ -22,6 +22,7 @@ namespace IPA.CommonInterface
         NT_SHOW_AID_LIST              = 12,
         NT_SHOW_CAPK_LIST             = 13,
         NT_UI_ENABLE_BUTTONS          = 14,
+        NT_SET_EMV_MODE_BUTTON        = 15,
     }
 
     [Serializable]

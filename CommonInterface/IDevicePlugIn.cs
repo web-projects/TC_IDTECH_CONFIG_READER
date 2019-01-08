@@ -25,7 +25,10 @@ namespace IPA.CommonInterface
     void GetDeviceConfiguration();
     // Configuration
     void SetDeviceConfiguration(object data);
+    // USB/KYB Mode
     void SetDeviceMode(string mode);
+    // QC EMV Mode
+    void DisableQCEmvMode();
     string DeviceCommand(string command, bool notify);
     // Messaging
     string GetErrorMessage(string data);

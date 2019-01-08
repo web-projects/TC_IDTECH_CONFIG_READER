@@ -32,6 +32,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.picBoxConfigWait1 = new System.Windows.Forms.PictureBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
@@ -54,8 +56,7 @@
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
@@ -84,6 +85,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.picBoxConfigWait1);
+            this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.button3);
@@ -114,6 +116,25 @@
             this.picBoxConfigWait1.Visible = false;
             this.picBoxConfigWait1.WaitOnLoad = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(183, 207);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 29);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "UNKNOWN";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(40, 215);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Device Mode:";
+            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(183, 124);
@@ -135,7 +156,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(295, 50);
+            this.button2.Location = new System.Drawing.Point(296, 47);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 29);
             this.button2.TabIndex = 2;
@@ -145,7 +166,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(183, 50);
+            this.button1.Location = new System.Drawing.Point(183, 47);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 29);
             this.button1.TabIndex = 1;
@@ -325,24 +346,15 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // label3
+            // button5
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(40, 215);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Device Mode:";
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(183, 208);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 29);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "UNKNOWN";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button5.Location = new System.Drawing.Point(296, 207);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(117, 29);
+            this.button5.TabIndex = 8;
+            this.button5.Text = "EMV Mode Disable";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
@@ -400,6 +412,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button5;
     }
 }
 

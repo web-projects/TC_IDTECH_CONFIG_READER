@@ -123,9 +123,7 @@ namespace IPA.DAL.RBADAL
             SetDeviceMode(deviceInformation.deviceMode);
 
             if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
-               deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB  ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-               deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
                deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
             {
@@ -219,7 +217,7 @@ namespace IPA.DAL.RBADAL
 
     protected void OnNotification(object sender, Models.NotificationEventArgs args)
     {
-        Debug.WriteLine("device: notification type={0}", args.NotificationType);
+        Debug.WriteLine("device: notification type={0}, event={1}", args.NotificationType, args.DeviceEvent);
 
         switch (args.NotificationType)
         {
@@ -1349,20 +1347,27 @@ namespace IPA.DAL.RBADAL
     {
         try
         {
+            Debug.WriteLine("device: SET MODE={0} ++++++++++++++++++++++++++++++++++++++++", (object) mode);
+
             if(mode.Equals(USK_DEVICE_MODE.USB_HID))
             {
                if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB ||
                   deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
                {
-                    // Set Device to HID MODE
-                    RETURN_CODE rt = IDT_Augusta.SharedController.msr_switchUSBInterfaceMode(false);
-                    Debug.WriteLine("DeviceCfg::SetDeviceMode(): - status={0}", rt);
-                    DeviceRemovedHandler();
+                    if(!Device.SetUSBHIDMode())
+                    {
+                        DeviceRemovedHandler();
+                    }
+                    //if(status == EntryModeStatus.Success)
+                    //{
+                        //status = DeviceSoftReset();
+                        //Debug.WriteLine("DeviceCfg::SetDeviceMode(): - RESET status={0}", status);
+                    //}
                }
-                else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_KYB)
-                {
+               else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_KYB)
+               {
                     Device.SetVP3000DeviceHidMode();
-                }
+               }
             }
             else if(mode.Equals(USK_DEVICE_MODE.USB_KYB))
             {
@@ -1375,6 +1380,8 @@ namespace IPA.DAL.RBADAL
                     // Set Device to HID MODE
                     RETURN_CODE rt = IDT_Augusta.SharedController.msr_switchUSBInterfaceMode(true);
                     Debug.WriteLine("DeviceCfg::SetDeviceMode(): - status={0}", rt);
+
+                    // Restart device discovery
                     DeviceRemovedHandler();
                }
                else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
@@ -1390,6 +1397,37 @@ namespace IPA.DAL.RBADAL
         catch(Exception exp)
         {
            Debug.WriteLine("DeviceCfg::SetDeviceMode(): - exception={0}", (object)exp.Message);
+        }
+    }    
+
+    public void DisableQCEmvMode()
+    {
+        try
+        {
+            // Disable QC Mode
+            string command = USDK_CONFIGURATION_COMMANDS.DISABLE_QUICK_CHIP_MODE;
+            DeviceCommand(command, true);
+            // Disable ICC
+            RETURN_CODE rt = IDT_Augusta.SharedController.icc_disable();
+            // Remove EMV settings
+            rt = IDT_Augusta.SharedController.emv_removeTerminalData();
+            // Remove All AID
+            rt = IDT_Augusta.SharedController.emv_removeAllApplicationData();
+            // Remove All CAPK
+            rt = IDT_Augusta.SharedController.emv_removeAllCAPK();
+            // Set Device to HID MODE
+            rt = IDT_Augusta.SharedController.msr_switchUSBInterfaceMode(true);
+            Debug.WriteLine("DeviceCfg::SetDeviceMode() - status={0}", rt);
+
+            //string [] message = { "Enable" };
+            //NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SET_EMV_MODE_BUTTON, Message = message });
+
+            // Restart device discovery
+            DeviceRemovedHandler();
+        }
+        catch(Exception exp)
+        {
+           Debug.WriteLine("DeviceCfg::SetEmvMode(): - exception={0}", (object)exp.Message);
         }
     }    
     
@@ -1454,6 +1492,12 @@ namespace IPA.DAL.RBADAL
     public const string OLDIDTECHKYB = "OLDIDTECHKB";
   }
 
+  public static class USK_EMV_MODE
+  {
+    public const string EMV_ENABLE  = "Enable";
+    public const string EMV_DISABLE = "Disable";
+  }
+
   internal static class TerminalMajorConfiguration
   {
     internal const string CONFIG_2C = "2C";
@@ -1469,6 +1513,7 @@ namespace IPA.DAL.RBADAL
      internal const string SET_TERMINAL_MAJOR_5C   = "72 53 01 28 01 35";
      internal const string GET_EMV_TERMINAL_DATA   = "72 46 02 01";
      internal const string ENABLE_QUICK_CHIP_MODE  = "72 53 01 29 01 31";
+     internal const string DISABLE_QUICK_CHIP_MODE = "72 53 01 29 01 30";
   }
 
   #endregion
