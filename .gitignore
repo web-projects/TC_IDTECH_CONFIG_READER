@@ -25,3 +25,5 @@
 /IDTechConfigReader/obj/*
 /DeviceConfiguration/bin/*
 /DeviceConfiguration/obj/*
+/LoggerManager/bin/*
+/LoggerManager/obj/*
