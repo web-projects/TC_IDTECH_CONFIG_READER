@@ -1354,6 +1354,7 @@ namespace IPA.DAL.RBADAL
                if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB ||
                   deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
                {
+                    // Set Device to HID MODE
                     if(!Device.SetUSBHIDMode())
                     {
                         DeviceRemovedHandler();
@@ -1417,7 +1418,7 @@ namespace IPA.DAL.RBADAL
             rt = IDT_Augusta.SharedController.emv_removeAllCAPK();
             // Set Device to HID MODE
             rt = IDT_Augusta.SharedController.msr_switchUSBInterfaceMode(true);
-            Debug.WriteLine("DeviceCfg::SetDeviceMode() - status={0}", rt);
+            Debug.WriteLine("DeviceCfg::DisableQCEmvMode() - status={0}", rt);
 
             //string [] message = { "Enable" };
             //NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SET_EMV_MODE_BUTTON, Message = message });
@@ -1427,7 +1428,7 @@ namespace IPA.DAL.RBADAL
         }
         catch(Exception exp)
         {
-           Debug.WriteLine("DeviceCfg::SetEmvMode(): - exception={0}", (object)exp.Message);
+           Debug.WriteLine("DeviceCfg::DisableQCEmvMode(): - exception={0}", (object)exp.Message);
         }
     }    
     
@@ -1512,8 +1513,8 @@ namespace IPA.DAL.RBADAL
      internal const string SET_TERMINAL_MAJOR_2C   = "72 53 01 28 01 32";
      internal const string SET_TERMINAL_MAJOR_5C   = "72 53 01 28 01 35";
      internal const string GET_EMV_TERMINAL_DATA   = "72 46 02 01";
-     internal const string ENABLE_QUICK_CHIP_MODE  = "72 53 01 29 01 31";
      internal const string DISABLE_QUICK_CHIP_MODE = "72 53 01 29 01 30";
+     internal const string ENABLE_QUICK_CHIP_MODE  = "72 53 01 29 01 31";
   }
 
   #endregion

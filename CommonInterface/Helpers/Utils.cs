@@ -33,6 +33,12 @@ namespace IPA.CommonInterface
                 yield return (i++, t);
             }
         }
+
+        public static String GetTimeStamp()
+        {
+            DateTime value = DateTime.Now;
+            return value.ToString("yyyyMMdd-HH:mm:ss.fff");
+        }
     }
 
     public class Crc16Ccitt 

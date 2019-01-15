@@ -16,6 +16,9 @@ using HidLibrary;
 
 using IPA.DAL.RBADAL;
 using IPA.DAL.RBADAL.Services;
+using IPA.LoggerManager;
+using System.Reflection;
+using System.Configuration;
 
 namespace IDTechConfigReader
 {
@@ -44,6 +47,8 @@ namespace IDTechConfigReader
             tabControl1.TabPages.Remove(tabPage2);
             tabControl1.TabPages.Remove(tabPage3);
             tabControl1.TabPages.Remove(tabPage4);
+
+            SetupLogging();
 
             InitalizeDevice();
         }
@@ -175,6 +180,28 @@ namespace IDTechConfigReader
             }
         }
         #endregion
+
+        void SetupLogging()
+        {
+            bool loggingEnabled = false;
+            var configLogging = ConfigurationManager.AppSettings["IPA.DAL.Application.Client.Logging"] ?? "false";
+            bool.TryParse(configLogging, out loggingEnabled);
+            if(loggingEnabled)
+            {
+                string fullName = Assembly.GetEntryAssembly().Location;
+                string logname = System.IO.Path.GetFileNameWithoutExtension(fullName) + ".log";
+                string path = System.IO.Directory.GetCurrentDirectory(); 
+                string filepath = path + "\\" + logname;
+                Logger.SetFileLoggerName(filepath);
+                Logger.info( "LOGGING INITIALIZED.");
+                //Logger.info( "LOG ARG1:", "1111");
+                //Logger.info( "LOG ARG1:{0}, ARG2:{1}", "1111", "2222");
+                //Logger.debug("THIS IS A DEBUG STRING");
+                //Logger.warning("THIS IS A WARNING");
+                //Logger.error("THIS IS AN ERROR");
+                //Logger.fatal("THIS IS FATAL");
+            }
+        }
 
         private void InitalizeDevice()
         {

@@ -41,3 +41,5 @@ This an application to test IDTech Augusta Devices.
 * 20190102 - Fixes to tag parser.
 * 20190104 - Added AID and CAPK processing.
 * 20190107 - Added Factory Reset Option.
+* 20190115 - Added Logging Capabilities.
+
