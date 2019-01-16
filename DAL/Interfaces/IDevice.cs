@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using IPA.DAL.RBADAL.Services;
+using IPA.CommonInterface;
 
 namespace IPA.DAL.RBADAL.Interfaces
 {
@@ -50,6 +51,20 @@ namespace IPA.DAL.RBADAL.Interfaces
         // keyboard mode overrides
         void SetVP3000DeviceHidMode();
         void VP3000PingReport();
+        #endregion
+
+                /********************************************************************************************************/
+        // DEVICE CONFIGURATION
+        /********************************************************************************************************/
+        #region -- device configuration --
+
+        string [] DeviceGetTerminalData();
+        void ValidateTerminalData(ConfigSerializer serializer);
+        string [] DeviceGetAidList();
+        void ValidateAidList(ConfigSerializer serializer);
+        string [] DeviceGetCapKList();
+        void ValidateCapKList(ConfigSerializer serializer);
+        void FactoryReset();
         #endregion
     }
 }

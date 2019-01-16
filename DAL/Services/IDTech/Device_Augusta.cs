@@ -1,4 +1,5 @@
 ﻿using IDTechSDK;
+using IPA.CommonInterface;
 using IPA.Core.Shared.Enums;
 using IPA.DAL.RBADAL.Interfaces;
 using IPA.DAL.RBADAL.Services.Devices.IDTech;
@@ -51,7 +52,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             else
             {
-                Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get serialNumber reason={0}", rt);
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get serialNumber reason={0}", rt);
             }
 
             string firmwareVersion = "";
@@ -67,7 +68,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             else
             {
-                Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get Firmware version reason={0}", rt);
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Firmware version reason={0}", rt);
             }
 
             deviceInfo.ModelName = IDTechSDK.Profile.IDT_DEVICE_String(deviceType, deviceConnect);
@@ -81,7 +82,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             else
             {
-                Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get Model number reason={0}", rt);
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Model number reason={0}", rt);
             }
 
             return true;
@@ -138,5 +139,630 @@ namespace IPA.DAL.RBADAL.Services
 
             return base.GetDeviceInfo();
         }
+
+        /********************************************************************************************************/
+        // DEVICE CONFIGURATION
+        /********************************************************************************************************/
+        #region -- device configuration --
+
+         public override string [] DeviceGetTerminalData()
+         {
+            string [] data = null;
+
+            try
+            {
+                byte [] tlv = null;
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveTerminalData(ref tlv);
+                
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    List<string> collection = new List<string>();
+
+                    Debug.WriteLine("DEVICE TERMINAL DATA ----------------------------------------------------------------------");
+                    Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
+                    foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                    {
+                        foreach(var devTag in devCollection)
+                        {
+                            collection.Add(string.Format("{0}:{1}", devTag.Key, devTag.Value).ToUpper());
+                        }
+                    }
+                    data = collection.ToArray();
+                }
+                else
+                {
+                    Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR={0}", rt);
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: GetTerminalData() - exception={0}", (object)exp.Message);
+            }
+
+            return data;
+        }
+
+         public override void ValidateTerminalData(ConfigSerializer serializer)
+         {
+            try
+            {
+                if(serializer != null)
+                {
+                    byte [] tlv = null;
+                    RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveTerminalData(ref tlv);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("VALIDATE TERMINAL DATA ----------------------------------------------------------------------");
+
+                        // Get Configuration File AID List
+                        Dictionary<string, string> cfgTerminalData = serializer.GetTerminalData();
+                        Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
+
+                        bool update = false;
+
+                        // TAGS from device
+                        foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                        {
+                            foreach(var devTag in devCollection)
+                            {
+                                string devTagName = devTag.Key;
+                                string cfgTagValue = "";
+                                bool tagfound = false;
+                                bool tagmatch = false;
+                                foreach(var cfgTag in cfgTerminalData)
+                                {
+                                    // Matching TAGNAME: compare keys
+                                    if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        tagfound = true;
+                                        //Debug.Write("key: " + devTag.Key);
+
+                                        // Compare value
+                                        if(cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            tagmatch = true;
+                                            //Debug.WriteLine(" matches value: {0}", (object) devTag.Value);
+                                        }
+                                        else
+                                        {
+                                            //Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
+                                            cfgTagValue = cfgTag.Value;
+                                            update = true;
+                                        }
+                                        break;
+                                    }
+                                    if(tagfound)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(tagfound)
+                                {
+                                    Debug.WriteLine("TAG: {0} FOUND AND IT {1}", devTagName.PadRight(6,' '), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                                    if(!tagmatch)
+                                    {
+                                        Debug.WriteLine("{0}!={1}", devTag.Value, cfgTagValue);
+                                    }
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("TAG: {0} NOT FOUND", (object) devTagName.PadRight(6,' '));
+                                    update = true;
+                                }
+                            }
+                        }
+
+                        // Update Terminal Data
+                        if(update)
+                        {
+                            rt = IDT_Augusta.SharedController.emv_setTerminalMajorConfiguration(5);
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                List<byte[]> collection = new List<byte[]>();
+                                foreach(var item in cfgTerminalData)
+                                {
+                                    string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
+                                    byte [] bytes = Device_IDTech.HexStringToByteArray(payload);
+                                    collection.Add(bytes);
+                                }
+                                var flattenedList = collection.SelectMany(bytes => bytes);
+                                byte [] terminalData = flattenedList.ToArray();
+                                Dictionary<string, Dictionary<string, string>> worker = Common.processTLV(terminalData);
+                                rt = IDT_Augusta.SharedController.emv_setTerminalData(terminalData);
+                                if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                {
+                                    Debug.WriteLine("emv_setTerminalData() error: {0}", rt);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveTerminalData() - ERROR={0}", rt);
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: ValidateTerminalData() - exception={0}", (object)exp.Message);
+            }
+        }
+         public override string [] DeviceGetAidList()
+         {
+            string [] data = null;
+
+                try
+                {
+                    byte [][] keys = null;
+                    RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveAIDList(ref keys);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        List<string> collection = new List<string>();
+
+                        Debug.WriteLine("DEVICE AID LIST ----------------------------------------------------------------------");
+
+                        foreach(byte[] aidName in keys)
+                        {
+                            byte[] value = null;
+
+                            rt = IDT_Augusta.SharedController.emv_retrieveApplicationData(aidName, ref value);
+
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                string devAidName = BitConverter.ToString(aidName).Replace("-", string.Empty).ToUpper();
+                                Debug.WriteLine("AID: {0} ===============================================", (object) devAidName);
+
+                                Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(value);
+                                List<string> valCollection = new List<string>();
+
+                                // Compare values and replace if not the same
+                                foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                                {
+                                    foreach(var devTag in devCollection)
+                                    {
+                                        valCollection.Add(string.Format("{0}:{1}", devTag.Key, devTag.Value).ToUpper());
+                                    }
+                                }
+                                collection.Add(string.Format("{0}#{1}", devAidName, String.Join(" ", valCollection.ToArray())));
+                            }
+                        }
+                        data = collection.ToArray();
+                    }
+                    else
+                    {
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR={0}", rt);
+                    }
+                }
+                catch(Exception exp)
+                {
+                    Debug.WriteLine("device: GetTerminalData() - exception={0}", (object)exp.Message);
+                }
+
+            return data;
+         }
+
+         public override void ValidateAidList(ConfigSerializer serializer)
+         {
+            try
+            {
+                if(serializer != null)
+                {
+                    byte [][] keys = null;
+                    RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveAIDList(ref keys);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("VALIDATE AID LIST ----------------------------------------------------------------------");
+
+                        // Get Configuration File AID List
+                        AIDList aid = serializer.GetAIDList();
+
+                        List<Aid> AidList = new List<Aid>();
+
+                        foreach(byte[] aidName in keys)
+                        {
+                            bool delete = true;
+                            bool found  = false;
+                            bool update = false;
+                            KeyValuePair<string, Dictionary<string, string>> cfgCurrentItem = new KeyValuePair<string, Dictionary<string, string>>();
+                            string devAidName = BitConverter.ToString(aidName).Replace("-", string.Empty);
+
+                            Debug.WriteLine("AID: {0} ===============================================", (object) devAidName);
+
+                            // Is this item in the approved list?
+                            foreach(var cfgItem in aid.Aid)
+                            {
+                                cfgCurrentItem = cfgItem;
+                                if(cfgItem.Key.Equals(devAidName, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    found  = true;
+                                    byte[] value = null;
+
+                                    rt = IDT_Augusta.SharedController.emv_retrieveApplicationData(aidName, ref value);
+
+                                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                    {
+                                        Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(value);
+
+                                        // Compare values and replace if not the same
+                                        foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                                        {
+                                            foreach(var cfgTag in cfgItem.Value)
+                                            {
+                                                bool tagfound = false;
+                                                string cfgTagName = cfgTag.Key;
+                                                string cfgTagValue = cfgTag.Value;
+                                                foreach(var devTag in devCollection)
+                                                {
+                                                    // Matching TAGNAME: compare keys
+                                                    if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
+                                                    {
+                                                        tagfound = true;
+                                                        //Debug.Write("key: " + devTag.Key);
+                                                        update = !cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase);
+
+                                                        // Compare value and fix it if mismatched
+                                                        if(cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase))
+                                                        {
+                                                            //Debug.WriteLine("TAG: {0} FOUND AND IT MATCHES", (object) cfgTagName.PadRight(6,' '));
+                                                            //Debug.WriteLine(" matches value: {0}", (object) devTag.Value);
+                                                        }
+                                                        else
+                                                        {
+                                                            Debug.WriteLine("TAG: {0} FOUND AND IT DOES NOT match value: {1}!={2}", cfgTagName.PadRight(6,' '), cfgTag.Value, devTag.Value);
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                                // No need to continue validating the remaing tags
+                                                if(!tagfound || update)
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    delete = false;
+
+                                    if(update)
+                                    {
+                                        byte[] tagCfgName = Device_IDTech.HexStringToByteArray(cfgCurrentItem.Key);
+
+                                        List<byte[]> collection = new List<byte[]>();
+                                        foreach(var item in cfgCurrentItem.Value)
+                                        {
+                                            string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
+                                            byte [] bytes = Device_IDTech.HexStringToByteArray(payload);
+                                            collection.Add(bytes);
+                                        }
+                                        var flattenedList = collection.SelectMany(bytes => bytes);
+                                        byte [] tagCfgValue = flattenedList.ToArray();
+                                        Aid cfgAid = new Aid(tagCfgName, tagCfgValue);
+                                        AidList.Add(cfgAid);
+                                    }
+                                }
+                            }
+
+                            // DELETE THIS AID
+                            if(delete)
+                            {
+                                Debug.WriteLine("AID: {0} - DELETE (NOT FOUND)", (object)devAidName.PadRight(14,' '));
+                                byte[] tagName = Device_IDTech.HexStringToByteArray(devAidName);
+                                rt = IDT_Augusta.SharedController.emv_removeApplicationData(tagName);
+                                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                {
+                                    Debug.WriteLine("AID: {0} DELETED", (object) devAidName.PadRight(6,' '));
+                                }
+                            }
+                            else if(!found)
+                            {
+                                byte[] tagCfgName = Device_IDTech.HexStringToByteArray(cfgCurrentItem.Key);
+
+                                List<byte[]> collection = new List<byte[]>();
+                                foreach(var item in cfgCurrentItem.Value)
+                                {
+                                    string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
+                                    byte [] bytes = Device_IDTech.HexStringToByteArray(payload);
+                                    collection.Add(bytes);
+                                }
+                                var flattenedList = collection.SelectMany(bytes => bytes);
+                                byte [] tagCfgValue = flattenedList.ToArray();
+                                Aid cfgAid = new Aid(tagCfgName, tagCfgValue);
+                                AidList.Add(cfgAid);
+                            }
+                        }
+
+                        // Add missing AID(s)
+                        foreach(var aidElement in AidList)
+                        {
+                            byte [] aidName = aidElement.GetAidName();
+                            byte [] aidValue = aidElement.GetAidValue();
+                            rt = IDT_Augusta.SharedController.emv_setApplicationData(aidName, aidValue);
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                string cfgTagName = BitConverter.ToString(aidName).Replace("-", string.Empty);
+                                string cfgTagValue = BitConverter.ToString(aidValue).Replace("-", string.Empty);
+                                Debug.WriteLine("AID: {0} UPDATED WITH VALUE: {1}", cfgTagName.PadRight(6,' '), cfgTagValue);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("TERMINAL DATA: emv_retrieveAIDList() - ERROR={0}", rt);
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: ValidateAidList() - exception={0}", (object)exp.Message);
+            }
+         }
+    
+         public override string [] DeviceGetCapKList()
+         {
+            string [] data = null;
+
+            try
+            {
+                byte [] keys = null;
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveCAPKList(ref keys);
+
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    List<string> collection = new List<string>();
+
+                    Debug.WriteLine("DEVICE CAPK LIST ----------------------------------------------------------------------");
+
+                    List<byte[]> capkNames = new List<byte[]>();
+
+                    // Convert array to array of arrays
+                    for(int i = 0; i < keys.Length; i += 6)
+                    {
+                        byte[] result = new byte[6];
+                        Array.Copy(keys, i, result, 0, 6);
+                        capkNames.Add(result); 
+                    }
+
+                    foreach(byte[] capkName in capkNames)
+                    {
+                        string devCapKName = BitConverter.ToString(capkName).Replace("-", string.Empty);
+                        Debug.WriteLine("CAPK: {0} ===============================================", (object) devCapKName);
+
+                        byte[] key = null;
+                        rt = IDT_Augusta.SharedController.emv_retrieveCAPK(capkName, ref key);
+                        if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                        {
+                            Capk capk = new Capk(key);
+                            string RID = devCapKName.Substring(0, 10);
+                            string Idx = devCapKName.Substring(10, 2);
+                            string payload = string.Format("{0}:{1} ", "RID", RID).ToUpper();
+                            payload += string.Format("{0}:{1} ", "INDEX", Idx).ToUpper();
+                            payload += string.Format("{0}:{1} ", "MODULUS", capk.GetModulus()).ToUpper();
+                            collection.Add(string.Format("{0}#{1}", (RID + "-" + Idx), payload).ToUpper());
+                            Debug.WriteLine("MODULUS: {0}", (object) capk.GetModulus().ToUpper());
+                        }
+                    }
+
+                    data = collection.ToArray();
+                }
+                else
+                {
+                    Debug.WriteLine("device: emv_retrieveCAPKList() - ERROR={0}", rt);
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: GetTerminalData() - exception={0}", (object)exp.Message);
+            }
+
+            return data;
+         }
+
+         public override void ValidateCapKList(ConfigSerializer serializer)
+         {
+            try
+            {
+                if(serializer != null)
+                {
+                    byte [] keys = null;
+                    RETURN_CODE rt = IDT_Augusta.SharedController.emv_retrieveCAPKList(ref keys);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("VALIDATE CAPK LIST ----------------------------------------------------------------------");
+
+                        // Get Configuration File AID List
+                        CapKList capK = serializer.GetCapKList();
+
+                        List<Capk> CapKList = new List<Capk>();
+                        List<byte[]> capkNames = new List<byte[]>();
+
+                        // Convert array to array of arrays
+                        for(int i = 0; i < keys.Length; i += 6)
+                        {
+                            byte[] result = new byte[6];
+                            Array.Copy(keys, i, result, 0, 6);
+                            capkNames.Add(result); 
+                        }
+
+                        foreach(byte[] capkName in capkNames)
+                        {
+                            bool delete = true;
+                            bool found  = false;
+                            bool update = false;
+                            KeyValuePair<string, Dictionary<string, string>> cfgCurrentItem = new KeyValuePair<string, Dictionary<string, string>>();
+                            string devCapKName = BitConverter.ToString(capkName).Replace("-", string.Empty);
+
+                            Debug.WriteLine("CAPK: {0} ===============================================", (object) devCapKName);
+
+                            // Is this item in the approved list?
+                            foreach(var cfgItem in capK.Capk)
+                            {
+                                cfgCurrentItem = cfgItem;
+                                string devRID = cfgItem.Value.Where(x => x.Key.Equals("RID")).Select(x => x.Value).First();
+                                string devIdx = cfgItem.Value.Where(x => x.Key.Equals("Index")).Select(x => x.Value).First();
+                                string devItem = devRID + devIdx;
+                                if(devItem.Equals(devCapKName, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    found  = true;
+                                    byte[] value = null;
+                                    Capk capk = null;
+
+                                    rt = IDT_Augusta.SharedController.emv_retrieveCAPK(capkName, ref value);
+
+                                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                    {
+                                        capk = new Capk(value);
+
+                                        // compare modulus
+                                        string modulus = cfgItem.Value.Where(x => x.Key.Equals("modulus", StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Value).First();
+                                        update = !modulus.Equals(capk.GetModulus(), StringComparison.CurrentCultureIgnoreCase);
+                                        if(!update)
+                                        {
+                                            // compare exponent
+                                            string exponent = cfgItem.Value.Where(x => x.Key.Equals("exponent", StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Value).First();
+                                            update = !exponent.Equals(capk.GetExponent(), StringComparison.CurrentCultureIgnoreCase);
+                                        }
+                                    }
+
+                                    delete = false;
+
+                                    if(update && capk != null)
+                                    {
+                                        CapKList.Add(capk);
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine("    : UP-TO-DATE");
+                                    }
+                                }
+                            }
+
+                            // DELETE CAPK(s)
+                            if(delete)
+                            {
+                                byte[] tagName = Device_IDTech.HexStringToByteArray(devCapKName);
+                                rt = IDT_Augusta.SharedController.emv_removeCAPK(tagName);
+                                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                {
+                                    Debug.WriteLine("CAPK: {0} DELETED (NOT FOUND)", (object) devCapKName);
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("CAPK: {0} DELETE FAILED, ERROR={1}", devCapKName, rt);
+                                }
+                            }
+                            else if(!found)
+                            {
+                                byte[] tagCfgName = Device_IDTech.HexStringToByteArray(cfgCurrentItem.Key);
+
+                                List<byte[]> collection = new List<byte[]>();
+                                foreach(var item in cfgCurrentItem.Value)
+                                {
+                                    string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
+                                    byte [] bytes = Device_IDTech.HexStringToByteArray(payload);
+                                    collection.Add(bytes);
+                                }
+                                var flattenedList = collection.SelectMany(bytes => bytes);
+                                byte [] tagCfgValue = flattenedList.ToArray();
+                                Capk cfgCapK = new Capk(tagCfgValue);
+                                CapKList.Add(cfgCapK);
+                            }
+                        }
+
+                        // Add/Update CAPK(s)
+                        foreach(var capkElement in CapKList)
+                        {
+                            //capkElement.ShowCapkValues();
+                            byte [] capkValue = capkElement.GetCapkValue();
+                            rt = IDT_Augusta.SharedController.emv_setCAPK(capkValue);
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                Debug.WriteLine("CAPK: {0} UPDATED", (object) capkElement.GetCapkName());
+                            }
+                            else
+                            {
+                                Debug.WriteLine("CAPK: {0} FAILED TO UPDATE - ERROR={1}", capkElement.GetCapkName(), rt);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: emv_retrieveCAPKList() - ERROR={0}", rt);
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: ValidateAidList() - exception={0}", (object)exp.Message);
+            }
+        }
+
+        public override void FactoryReset()
+        {
+            try
+            {
+                // TERMINAL DATA
+                TerminalDataFactory tf = new TerminalDataFactory();
+                byte[] term = tf.GetFactoryTerminalData5C();
+                RETURN_CODE rt = IDT_Augusta.SharedController.emv_setTerminalData(term);
+                if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    Debug.WriteLine("TERMINAL DATA [DEFAULT] ----------------------------------------------------------------------");
+                }
+                else
+                {
+                    Debug.WriteLine("TERMINAL DATA [DEFAULT] failed with error code: 0x{0:X}", (ushort) rt);
+                }
+
+                // AID
+                AidFactory factoryAids = new AidFactory();
+                Dictionary<byte [], byte []> aid = factoryAids.GetFactoryAids();
+                Debug.WriteLine("AID LIST [DEFAULT] ----------------------------------------------------------------------");
+                foreach(var item in aid)
+                {
+                    byte [] name  = item.Key;
+                    byte [] value = item.Value;
+                    rt = IDT_Augusta.SharedController.emv_setApplicationData(name, value);
+                
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("AID: {0}", (object) BitConverter.ToString(name).Replace("-", string.Empty));
+                    }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: {0} failed Error Code: 0x{1:X}", (ushort) rt);
+                    }
+                }
+
+                // CAPK
+                CapKFactory factoryCapk = new CapKFactory();
+                Dictionary<byte [], byte []> capk = factoryCapk.GetFactoryCapK();
+                Debug.WriteLine("CAPK LIST [DEFAULT] ----------------------------------------------------------------------");
+                foreach(var item in capk)
+                {
+                    byte [] name  = item.Key;
+                    byte [] value = item.Value;
+                    rt = IDT_Augusta.SharedController.emv_setCAPK(value);
+
+                    if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("CAPK: {0}", (object) BitConverter.ToString(name).Replace("-", string.Empty).ToUpper());
+                    }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: {0} failed Error Code: 0x{1:X}", (ushort) rt);
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: FactoryReset() - exception={0}", (object)exp.Message);
+            }
+        }
+        #endregion
     }
 }

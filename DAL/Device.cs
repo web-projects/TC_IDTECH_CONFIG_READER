@@ -7,6 +7,7 @@ using System.Management;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
+using IPA.CommonInterface;
 ///using Configuration = IPA.Core.Client.DataAccess.Helper.Config;
 
 namespace IPA.DAL.RBADAL.Services
@@ -264,6 +265,41 @@ if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}")
         public void VP3000PingReport()
         {
             deviceInterface.VP3000PingReport();
+        }
+        #endregion
+
+        /********************************************************************************************************/
+        // DEVICE CONFIGURATION
+        /********************************************************************************************************/
+        #region -- device configuration --
+
+        public string [] DeviceGetTerminalData()
+        {
+            return deviceInterface.DeviceGetTerminalData();
+        }
+        public void ValidateTerminalData(ConfigSerializer serializer)
+        {
+            deviceInterface.ValidateTerminalData(serializer);
+        }
+        public string [] DeviceGetAidList()
+        {
+            return deviceInterface.DeviceGetAidList();
+        }
+        public void ValidateAidList(ConfigSerializer serializer)
+        {
+            deviceInterface.ValidateAidList(serializer);
+        }
+        public string [] DeviceGetCapKList()
+        {
+            return deviceInterface.DeviceGetCapKList();
+        }
+        public void ValidateCapKList(ConfigSerializer serializer)
+        {
+            deviceInterface.ValidateCapKList(serializer);
+        }
+        public void FactoryReset()
+        {
+            deviceInterface.FactoryReset();
         }
         #endregion
 

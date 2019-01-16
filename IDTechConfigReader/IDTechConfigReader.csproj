@@ -81,27 +81,6 @@
     <Reference Include="LoggerManager">
       <HintPath>..\LoggerManager\bin\Debug\LoggerManager.dll</HintPath>
     </Reference>
-    <Reference Include="SpectrumPro_config">
-      <HintPath>..\sdk\SpectrumPro_config.dll</HintPath>
-    </Reference>
-    <Reference Include="SpectrumPro_device">
-      <HintPath>..\sdk\SpectrumPro_device.dll</HintPath>
-    </Reference>
-    <Reference Include="SpectrumPro_emv">
-      <HintPath>..\sdk\SpectrumPro_emv.dll</HintPath>
-    </Reference>
-    <Reference Include="SpectrumPro_icc">
-      <HintPath>..\sdk\SpectrumPro_icc.dll</HintPath>
-    </Reference>
-    <Reference Include="SpectrumPro_msr">
-      <HintPath>..\sdk\SpectrumPro_msr.dll</HintPath>
-    </Reference>
-    <Reference Include="SpectrumPro_parse">
-      <HintPath>..\sdk\SpectrumPro_parse.dll</HintPath>
-    </Reference>
-    <Reference Include="SpectrumPro_pin">
-      <HintPath>..\sdk\SpectrumPro_pin.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -114,27 +93,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VP3300_config">
-      <HintPath>..\sdk\VP3300_config.dll</HintPath>
-    </Reference>
-    <Reference Include="VP3300_ctls">
-      <HintPath>..\sdk\VP3300_ctls.dll</HintPath>
-    </Reference>
-    <Reference Include="VP3300_device">
-      <HintPath>..\sdk\VP3300_device.dll</HintPath>
-    </Reference>
-    <Reference Include="VP3300_emv">
-      <HintPath>..\sdk\VP3300_emv.dll</HintPath>
-    </Reference>
-    <Reference Include="VP3300_icc">
-      <HintPath>..\sdk\VP3300_icc.dll</HintPath>
-    </Reference>
-    <Reference Include="VP3300_msr">
-      <HintPath>..\sdk\VP3300_msr.dll</HintPath>
-    </Reference>
-    <Reference Include="VP3300_parse">
-      <HintPath>..\sdk\VP3300_parse.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">

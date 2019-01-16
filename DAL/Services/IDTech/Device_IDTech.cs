@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 //using IPA.Core.Shared.Helpers;
 using IPA.Core.Shared.Helpers.StatusCode;
+using IPA.CommonInterface;
 
 namespace IPA.DAL.RBADAL.Services
 {
@@ -1771,6 +1772,38 @@ if(empty)
         {
         }
         #endregion
+
+        /********************************************************************************************************/
+        // DEVICE CONFIGURATION
+        /********************************************************************************************************/
+        #region -- device configuration --
+
+        public virtual string [] DeviceGetTerminalData()
+        {
+            return null;
+        }
+        public virtual void ValidateTerminalData(ConfigSerializer serializer)
+        {
+        }
+        public virtual string [] DeviceGetAidList()
+        {
+            return null;
+        }
+        public virtual void ValidateAidList(ConfigSerializer serializer)
+        {
+        }
+        public virtual string [] DeviceGetCapKList()
+        {
+            return null;
+        }
+        public virtual void ValidateCapKList(ConfigSerializer serializer)
+        {
+        }
+        public virtual void FactoryReset()
+        {
+        }
+        #endregion
+
     }
 
     ///internal class DeviceInfo
