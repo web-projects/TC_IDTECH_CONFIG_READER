@@ -122,10 +122,7 @@ namespace IPA.DAL.RBADAL
             // Notify Main Form
             SetDeviceMode(deviceInformation.deviceMode);
 
-            if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
-               deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID ||
-               deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID   ||
-               deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
+            if(deviceInformation.emvConfigSupported)
             {
                 Debug.WriteLine("DeviceCfg::DeviceInit(): - device TYPE={0}", IDT_Device.getDeviceType());
 
@@ -601,6 +598,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = true;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTA_KYB;
+                deviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -609,6 +607,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = true;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTA_HID;
+                deviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -617,6 +616,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = true;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTAS_KYB;
+                deviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -625,6 +625,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = true;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTAS_HID;
+                deviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -633,6 +634,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = true;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_HID;
+                deviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -641,6 +643,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = false;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_KYB;
+                deviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -649,6 +652,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = true;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_HID;
+                deviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -657,6 +661,7 @@ namespace IPA.DAL.RBADAL
             {
                 useUniversalSDK = false;
                 deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_KYB;
+                deviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -792,7 +797,7 @@ namespace IPA.DAL.RBADAL
          }
         else
         {
-
+            //TODO:
         }
 
         return message[0];
@@ -827,6 +832,7 @@ namespace IPA.DAL.RBADAL
     internal string ModelNumber;
     internal string Port;
     internal IDTECH_DEVICE_PID deviceMode;
+    internal bool emvConfigSupported;
   }
   public static class USK_DEVICE_MODE
   {

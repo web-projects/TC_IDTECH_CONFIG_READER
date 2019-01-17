@@ -22,12 +22,13 @@ namespace IPA.CommonInterface
         private string fileName;
         
         // Accessors
-        private DeviceConfig device_config;
+        private Config device_config;
         private ModelFirmware mf = new ModelFirmware();
+        private string[] md = new string[0];
         private AIDList aid = new AIDList();
-        private CapKList capk = new CapKList();
+        private CAPKList capk = new CAPKList();
         private TerminalSettings termSettings = new TerminalSettings();
-        private TransactionValues transactionValues = new TransactionValues();
+        private EMVTrans transactionValues = new EMVTrans();
 
         private void DisplayCollection(List<string> collection, string name)
         {
@@ -126,22 +127,30 @@ namespace IPA.CommonInterface
         public string[] GetCapKCollection()
         {
             List<string> collection = new List<string>();
-            foreach(var item in capk.Capk)
+            foreach(var item in capk.CAPK)
             {
+                CAPK value = item.Value;
                 string payload = "";
-                foreach(var val in item.Value)
-                {
-                    payload += string.Format("{0}:{1} ", val.Key, val.Value).ToUpper();
-                }
+                payload += string.Format("{0}:{1} ", "RID", value.RID);
+                payload += string.Format("{0}:{1} ", "Index", value.Index);
+                payload += string.Format("{0}:{1} ", "Modulus", value.Modulus);
+                payload += string.Format("{0}:{1} ", "Exponent", value.Exponent);
+                payload += string.Format("{0}:{1}", "Checksum", value.Checksum);
+                
                 collection.Add(string.Format("{0}#{1}", item.Key, payload).ToUpper());
             }
             string [] data = collection.ToArray();
             return data;
         }
 
-        public CapKList GetCapKList()
+        public CAPKList GetCapKList()
         {
             return capk;
+        }
+
+        public TerminalSettings GetTerminalSettings()
+        {
+            return termSettings;
         }
 
         public void ReadConfig()
@@ -161,20 +170,20 @@ namespace IPA.CommonInterface
                 if(terminalCfg != null)
                 {
                     // devConfig
-                    device_config = terminalCfg.DeviceConfiguration.First();
+                    device_config = terminalCfg.Configuration.First();
                     // Manufacturer
-                    Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) device_config.Manufacturer);
-                    // ModelFirmware
-                    mf.modelFirmware = device_config.ModelFirmware;
+                    Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) device_config.ConfigurationID.Manufacturer);
+                    // Models
+                    md = device_config.ConfigurationID.Models;
                     //DisplayCollection(mf.modelFirmware, "modelFirmware");
                     // AID List
-                    aid.Aid = device_config.AIDList;
+                    aid.Aid = device_config.EMVConfiguration.AIDList;
                     //DisplayCollection(aid.Aid, "AIDList");
                     // CAPK List
-                    capk.Capk = device_config.CapKList;
+                    capk.CAPK = device_config.EMVConfiguration.CAPKList;
                     //DisplayCollection(capk.Capk, "CapkList");
                     // Terminal Settings
-                    termSettings = device_config.TerminalSettings;
+                    termSettings = device_config.EMVConfiguration.TerminalSettings;
                     //Debug.WriteLine("device configuration: Terminal Settings --------------");
                     //Debug.WriteLine("MajorConfiguration        : {0}", (object) termSettings.MajorConfiguration);
                     //Debug.WriteLine("MajorConfigurationChecksum: {0}", (object) termSettings.MajorConfigurationChecksum[0]);
@@ -185,7 +194,7 @@ namespace IPA.CommonInterface
                     // TransactionTagsRequested
                     //DisplayCollection(termSettings.TransactionTags, "TransactionTagsRequested");
                     // TransactionValues
-                    transactionValues = termSettings.TransactionValues;
+                    transactionValues = device_config.EMVTransactionData;
                     //DisplayCollection(transactionValues.EMVKernelMapping, "EMVKernelMapping");
                     //DisplayCollection(transactionValues.TransactionStartTags, "TransactionStartTags");
                     //DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");

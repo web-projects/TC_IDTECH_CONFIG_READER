@@ -31,6 +31,7 @@ namespace IDTechConfigReader
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
         // Always on TOP
+        bool tc_always_on_top;
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         private const UInt32 SWP_NOSIZE = 0x0001;
         private const UInt32 SWP_NOMOVE = 0x0002;
@@ -47,6 +48,10 @@ namespace IDTechConfigReader
             tabControl1.TabPages.Remove(tabPage2);
             tabControl1.TabPages.Remove(tabPage3);
             tabControl1.TabPages.Remove(tabPage4);
+
+            // Application Always on Top
+            string always_on_top = System.Configuration.ConfigurationManager.AppSettings["tc_always_on_top"] ?? "true";
+            bool.TryParse(always_on_top, out tc_always_on_top);
 
             SetupLogging();
 
@@ -160,7 +165,10 @@ namespace IDTechConfigReader
             this.MinimizeBox = false;
             this.MaximizeBox = false;
 
-            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            if(tc_always_on_top)
+            {
+                SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            }
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)

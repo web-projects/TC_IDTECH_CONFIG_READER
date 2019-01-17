@@ -70,6 +70,54 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sdk\IDTechSDK.dll</HintPath>
     </Reference>
+    <Reference Include="L100_config">
+      <HintPath>..\sdk\L100_config.dll</HintPath>
+    </Reference>
+    <Reference Include="L100_device">
+      <HintPath>..\sdk\L100_device.dll</HintPath>
+    </Reference>
+    <Reference Include="L100_lcd">
+      <HintPath>..\sdk\L100_lcd.dll</HintPath>
+    </Reference>
+    <Reference Include="L100_pin">
+      <HintPath>..\sdk\L100_pin.dll</HintPath>
+    </Reference>
+    <Reference Include="LoggerManager">
+      <HintPath>..\LoggerManager\bin\Debug\LoggerManager.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_config">
+      <HintPath>..\sdk\NEO2_config.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_ctls">
+      <HintPath>..\sdk\NEO2_ctls.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_device">
+      <HintPath>..\sdk\NEO2_device.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_emv">
+      <HintPath>..\sdk\NEO2_emv.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_icc">
+      <HintPath>..\sdk\NEO2_icc.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_lcd">
+      <HintPath>..\sdk\NEO2_lcd.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_msr">
+      <HintPath>..\sdk\NEO2_msr.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_pin">
+      <HintPath>..\sdk\NEO2_pin.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_ws">
+      <HintPath>..\sdk\NEO2_ws.dll</HintPath>
+    </Reference>
+    <Reference Include="RKIUtility">
+      <HintPath>..\sdk\RKIUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="RKIWeb">
+      <HintPath>..\sdk\RKIWeb.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
