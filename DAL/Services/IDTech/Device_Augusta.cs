@@ -24,6 +24,8 @@ namespace IPA.DAL.RBADAL.Services
         private DEVICE_PROTOCOL_Types      deviceProtocol;
         private IDTECH_DEVICE_PID          deviceMode;
 
+        private string serialNumber = "";
+        private string EMVKernelVer = "";
         private static DeviceInfo deviceInfo;
 
         public Device_Augusta(IDTECH_DEVICE_PID mode) : base(mode)
@@ -46,9 +48,8 @@ namespace IPA.DAL.RBADAL.Services
 
         private bool PopulateDeviceInfo()
         {
-            string serialNumber = "";
+            serialNumber = "";
             RETURN_CODE rt = IDT_Augusta.SharedController.config_getSerialNumber(ref serialNumber);
-
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
                 deviceInfo.SerialNumber = serialNumber;
@@ -61,7 +62,6 @@ namespace IPA.DAL.RBADAL.Services
 
             string firmwareVersion = "";
             rt = IDT_Augusta.SharedController.device_getFirmwareVersion(ref firmwareVersion);
-
             if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
@@ -79,10 +79,21 @@ namespace IPA.DAL.RBADAL.Services
             Debug.WriteLine("device INFO[Model Name]        : {0}", (object) deviceInfo.ModelName);
 
             rt = IDT_Augusta.SharedController.config_getModelNumber(ref deviceInfo.ModelNumber);
-
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
                 Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
+            }
+            else
+            {
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Model number reason={0}", rt);
+            }
+
+            EMVKernelVer = "";
+            rt = IDT_Augusta.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
+            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            {
+                deviceInfo.EMVKernelVersion = EMVKernelVer;
+                Debug.WriteLine("device INFO[EMV KERNEL V.]     : {0}", (object) deviceInfo.EMVKernelVersion);
             }
             else
             {
@@ -200,7 +211,7 @@ namespace IPA.DAL.RBADAL.Services
                         Debug.WriteLine("VALIDATE TERMINAL DATA ----------------------------------------------------------------------");
 
                         // Get Configuration File AID List
-                        Dictionary<string, string> cfgTerminalData = serializer.GetTerminalData();
+                        SortedDictionary<string, string> cfgTerminalData = serializer.GetTerminalData(serialNumber, EMVKernelVer);
                         Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
 
                         bool update = false;

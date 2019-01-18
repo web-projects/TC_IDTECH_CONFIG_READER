@@ -112,7 +112,7 @@ namespace IPA.CommonInterface
         [JsonProperty(PropertyName = "KernelVersionTag", Order = 3)]
         public string KernelVersionTag { get; set; }
         [JsonProperty(PropertyName = "TerminalData", Order = 4)]
-        public Dictionary<string, string> TerminalData { get; set; }
+        public SortedDictionary<string, string> TerminalData { get; set; }
         [JsonProperty(PropertyName = "TransactionTagsRequested", Order = 5)]
         public string [] TransactionTagsRequested { get; set; }
     }

@@ -86,19 +86,32 @@ namespace IPA.CommonInterface
                 }
             }
         }
-        
-        public Dictionary<string, string> GetTerminalData()
+
+        private SortedDictionary<string, string> GetAllTerminalData(string serialNumber, string EMVKernelVer)
         {
-            return termSettings.TerminalData;
+            SortedDictionary<string, string> allTerminalTags = termSettings.TerminalData;
+            allTerminalTags["9F1E"] = serialNumber.Substring(Math.Max(0, serialNumber.Length - 8));
+            allTerminalTags["9F1C"] = EMVKernelVer;
+            string [] tagsRequested = termSettings.TransactionTagsRequested;
+            allTerminalTags["DFEF5A"] = string.Join("", tagsRequested);
+
+            return allTerminalTags;
+        }
+        
+        public SortedDictionary<string, string> GetTerminalData(string serialNumber, string EMVKernelVer)
+        {
+            return GetAllTerminalData(serialNumber, EMVKernelVer);
         }
 
-        public string[] GetTerminalDataString()
+        public string[] GetTerminalDataString(string serialNumber, string EMVKernelVer)
         {
+            SortedDictionary<string, string> allTerminalTags = GetAllTerminalData(serialNumber, EMVKernelVer);
             List<string> collection = new List<string>();
-            foreach(var item in termSettings.TerminalData)
+            foreach(var item in allTerminalTags)
             {
                 collection.Add(string.Format("{0}:{1}", item.Key, item.Value).ToUpper());
             }
+            collection.Sort();
             string [] data = collection.ToArray();
             return data;
         }

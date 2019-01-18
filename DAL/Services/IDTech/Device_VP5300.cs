@@ -23,6 +23,8 @@ namespace IPA.DAL.RBADAL.Services
         private DEVICE_PROTOCOL_Types      deviceProtocol;
         private IDTECH_DEVICE_PID          deviceMode;
 
+        private string serialNumber = "";
+        private string EMVKernelVer = "";
         private static DeviceInfo deviceInfo;
 
         public Device_VP5300(IDTECH_DEVICE_PID mode) : base(mode)
@@ -45,9 +47,8 @@ namespace IPA.DAL.RBADAL.Services
 
         private bool PopulateDeviceInfo()
         {
-            string serialNumber = "";
+            serialNumber = "";
             RETURN_CODE rt = IDT_NEO2.SharedController.config_getSerialNumber(ref serialNumber);
-
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
                 deviceInfo.SerialNumber = serialNumber;
@@ -60,7 +61,6 @@ namespace IPA.DAL.RBADAL.Services
 
             string firmwareVersion = "";
             rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref firmwareVersion);
-
             if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
@@ -79,7 +79,6 @@ namespace IPA.DAL.RBADAL.Services
 
             rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref deviceInfo.ModelNumber);
             deviceInfo.ModelNumber = deviceInfo.ModelNumber.Split(' ')[0];
-
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
                 Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
@@ -87,6 +86,17 @@ namespace IPA.DAL.RBADAL.Services
             else
             {
                 Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get Model number reason={0}", rt);
+            }
+
+            EMVKernelVer = "";
+            rt = IDT_Augusta.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
+            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            {
+                Debug.WriteLine("device INFO[EMV KERNEL V.]     : {0}", (object) EMVKernelVer);
+            }
+            else
+            {
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Model number reason={0}", rt);
             }
 
             return true;
@@ -200,7 +210,7 @@ namespace IPA.DAL.RBADAL.Services
                         Debug.WriteLine("VALIDATE TERMINAL DATA ----------------------------------------------------------------------");
 
                         // Get Configuration File AID List
-                        Dictionary<string, string> cfgTerminalData = serializer.GetTerminalData();
+                        SortedDictionary<string, string> cfgTerminalData = serializer.GetTerminalData(serialNumber, EMVKernelVer);
                         Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
 
                         bool update = false;
@@ -267,7 +277,7 @@ namespace IPA.DAL.RBADAL.Services
                             if(Int32.TryParse(majorcfgstr, out majorcfgint))
                             {
                                 //TODO: IDTech.dll reference issue
-                                //rt = IDT_NEO2.SharedController.emv_setTerminalMajorConfiguration(majorcfgint);
+                                rt = IDT_NEO2.SharedController.emv_setTerminalMajorConfiguration(majorcfgint);
                                 if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                                 {
                                     List<byte[]> collection = new List<byte[]>();

@@ -252,6 +252,39 @@ namespace IPA.DAL.RBADAL
     // UNIVERSAL SDK INTERFACE
     /********************************************************************************************************/
     #region -- universal sdk interface --
+
+    private void SetDeviceConfig()
+    {
+      if(IDT_DEVICE_Types.IDT_DEVICE_NONE != deviceType)
+      {
+           object [] settings = { deviceType, deviceConnect };
+
+           Device.Configure(settings);
+
+           // Create Device info object
+           if(deviceInformation == null)
+           {
+              deviceInformation = new DeviceInformation();
+           }
+
+           DeviceInfo devInfo = Device.GetDeviceInfo();
+
+           if(devInfo != null)
+           {
+              deviceInformation.SerialNumber     = devInfo.SerialNumber;
+              deviceInformation.FirmwareVersion  = devInfo.FirmwareVersion;
+              deviceInformation.EMVKernelVersion = devInfo.EMVKernelVersion;
+              deviceInformation.ModelName        = devInfo.ModelName;
+              deviceInformation.ModelNumber      = devInfo.ModelNumber;
+              deviceInformation.Port             = devInfo.Port;
+           }
+
+           // Update Device Configuration
+           object [] message = { "COMPLETED" };
+           NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_DEVICE_UPDATE_CONFIG, Message = message });
+      }
+    }
+
     private void MessageCallBack(IDTechSDK.IDT_DEVICE_Types type, DeviceState state, byte[] data, IDTTransactionData cardData, EMV_Callback emvCallback, RETURN_CODE transactionResultCode)
     {
       // Setup Connection
@@ -303,7 +336,7 @@ namespace IPA.DAL.RBADAL
              Thread.CurrentThread.IsBackground = false;
 
              // Get Device Configuration
-             ///SetDeviceConfig();
+             SetDeviceConfig();
 
              Thread.Sleep(100);
              connected = true;
@@ -517,7 +550,6 @@ namespace IPA.DAL.RBADAL
         string [] message = null;
         if(configurationMode == ConfigurationModes.FROM_DEVICE)
         {
-            //message = DeviceGetTerminalData();
             message = Device.DeviceGetTerminalData();
         }
         else
@@ -530,7 +562,7 @@ namespace IPA.DAL.RBADAL
 
             Device.ValidateTerminalData(serializer);
 
-            message = serializer.GetTerminalDataString();
+            message = serializer.GetTerminalDataString(deviceInformation.SerialNumber, deviceInformation.EMVKernelVersion);
         }
 
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA, Message = message });
@@ -828,6 +860,7 @@ namespace IPA.DAL.RBADAL
   {
     internal string SerialNumber;
     internal string FirmwareVersion;
+    internal string EMVKernelVersion;
     internal string ModelName;
     internal string ModelNumber;
     internal string Port;

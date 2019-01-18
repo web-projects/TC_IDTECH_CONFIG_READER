@@ -1811,6 +1811,7 @@ if(empty)
     {
         public string SerialNumber;
         public string FirmwareVersion;
+        public string EMVKernelVersion;
         public string ModelName;
         public string ModelNumber;
         public string Port;
