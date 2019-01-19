@@ -273,25 +273,25 @@ if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}")
         /********************************************************************************************************/
         #region -- device configuration --
 
-        public string [] DeviceGetTerminalData()
+        public string [] GetTerminalData()
         {
-            return deviceInterface.DeviceGetTerminalData();
+            return deviceInterface.GetTerminalData();
         }
         public void ValidateTerminalData(ConfigSerializer serializer)
         {
             deviceInterface.ValidateTerminalData(serializer);
         }
-        public string [] DeviceGetAidList()
+        public string [] GetAidList()
         {
-            return deviceInterface.DeviceGetAidList();
+            return deviceInterface.GetAidList();
         }
         public void ValidateAidList(ConfigSerializer serializer)
         {
             deviceInterface.ValidateAidList(serializer);
         }
-        public string [] DeviceGetCapKList()
+        public string [] GetCapKList()
         {
-            return deviceInterface.DeviceGetCapKList();
+            return deviceInterface.GetCapKList();
         }
         public void ValidateCapKList(ConfigSerializer serializer)
         {

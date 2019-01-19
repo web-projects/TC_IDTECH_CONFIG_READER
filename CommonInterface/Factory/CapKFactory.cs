@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IPA.CommonInterface
+namespace IPA.CommonInterface.Factory
 {
     [Serializable]
     public class CapKFactory

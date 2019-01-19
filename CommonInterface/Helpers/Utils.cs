@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IPA.CommonInterface
+namespace IPA.CommonInterface.Helpers
 {
     public enum InitialCrcValue { ZEROS = 0x0000, NONZERO1 = 0xffff, NONZERO2 = 0x1D0F }
 

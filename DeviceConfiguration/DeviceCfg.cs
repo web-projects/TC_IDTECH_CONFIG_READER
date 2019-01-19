@@ -12,6 +12,7 @@ using HidLibrary;
 using IDTechSDK;
 
 using IPA.CommonInterface;
+using IPA.CommonInterface.Helpers;
 using IPA.Core.Shared.Helpers.StatusCode;
 using IPA.Core.Shared.Enums;
 using IPA.DAL;
@@ -550,7 +551,7 @@ namespace IPA.DAL.RBADAL
         string [] message = null;
         if(configurationMode == ConfigurationModes.FROM_DEVICE)
         {
-            message = Device.DeviceGetTerminalData();
+            message = Device.GetTerminalData();
         }
         else
         {
@@ -573,7 +574,7 @@ namespace IPA.DAL.RBADAL
         string [] message = null;
         if(configurationMode == ConfigurationModes.FROM_DEVICE)
         {
-            message = Device.DeviceGetAidList();
+            message = Device.GetAidList();
         }
         else
         {
@@ -589,7 +590,7 @@ namespace IPA.DAL.RBADAL
         string [] message = null;
         if(configurationMode == ConfigurationModes.FROM_DEVICE)
         {
-            message = Device.DeviceGetCapKList();
+            message = Device.GetCapKList();
         }
         else
         {

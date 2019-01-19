@@ -1,7 +1,9 @@
 ﻿using IDTechSDK;
 using IPA.CommonInterface;
+using IPA.CommonInterface.Factory;
 using IPA.Core.Shared.Enums;
 using IPA.DAL.RBADAL.Interfaces;
+using IPA.LoggerManager;
 using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using System;
 using System.Collections.Generic;
@@ -78,9 +80,9 @@ namespace IPA.DAL.RBADAL.Services
             Debug.WriteLine("device INFO[Model Name]        : {0}", (object) deviceInfo.ModelName);
 
             rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref deviceInfo.ModelNumber);
-            deviceInfo.ModelNumber = deviceInfo.ModelNumber.Split(' ')[0];
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
+                deviceInfo.ModelNumber = deviceInfo?.ModelNumber?.Split(' ')[0] ?? "";
                 Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
             }
             else
@@ -92,7 +94,8 @@ namespace IPA.DAL.RBADAL.Services
             rt = IDT_Augusta.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
-                Debug.WriteLine("device INFO[EMV KERNEL V.]     : {0}", (object) EMVKernelVer);
+                deviceInfo.EMVKernelVersion = EMVKernelVer;
+                Debug.WriteLine("device INFO[EMV KERNEL V.]     : {0}", (object) deviceInfo.EMVKernelVersion);
             }
             else
             {
@@ -159,7 +162,7 @@ namespace IPA.DAL.RBADAL.Services
         /********************************************************************************************************/
         #region -- device configuration --
 
-         public override string [] DeviceGetTerminalData()
+         public override string [] GetTerminalData()
          {
             string [] data = null;
 
@@ -280,20 +283,44 @@ namespace IPA.DAL.RBADAL.Services
                                 rt = IDT_NEO2.SharedController.emv_setTerminalMajorConfiguration(majorcfgint);
                                 if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                                 {
-                                    List<byte[]> collection = new List<byte[]>();
-                                    foreach(var item in cfgTerminalData)
+                                    try
                                     {
-                                        string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
-                                        byte [] bytes = Device_IDTech.HexStringToByteArray(payload);
-                                        collection.Add(bytes);
+                                        List<byte[]> collection = new List<byte[]>();
+                                        foreach(var item in cfgTerminalData)
+                                        {
+                                            byte [] bytes = null;
+                                            string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
+                                            if (System.Text.RegularExpressions.Regex.IsMatch(item.Value, @"[g-zG-Z\x20\x2E]+"))
+                                            {
+                                                List<byte> byteArray = new List<byte>();
+                                                byteArray.AddRange(Device_IDTech.HexStringToByteArray(item.Key));
+                                                byte [] item1 = Encoding.ASCII.GetBytes(item.Value);
+                                                byte itemLen = Convert.ToByte(item1.Length);
+                                                byte [] item2 = new byte[]{ itemLen };
+                                                byteArray.AddRange(item2);
+                                                byteArray.AddRange(item1);
+                                                bytes = new byte[byteArray.Count];
+                                                byteArray.CopyTo(bytes);
+                                                Logger.debug( "device: ValidateTerminalData() DATA={0}", BitConverter.ToString(bytes).Replace("-", string.Empty));
+                                            }
+                                            else
+                                            {
+                                                bytes = Device_IDTech.HexStringToByteArray(payload);
+                                            }
+                                            collection.Add(bytes);
+                                        }
+                                        var flattenedList = collection.SelectMany(bytes => bytes);
+                                        byte [] terminalData = flattenedList.ToArray();
+                                        rt = IDT_Augusta.SharedController.emv_setTerminalData(terminalData);
+                                        if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                        {
+                                            Debug.WriteLine("emv_setTerminalData() error: {0}", rt);
+                                            Logger.error( "device: ValidateTerminalData() error={0} DATA={1}", rt, BitConverter.ToString(terminalData).Replace("-", string.Empty));
+                                        }
                                     }
-                                    var flattenedList = collection.SelectMany(bytes => bytes);
-                                    byte [] terminalData = flattenedList.ToArray();
-                                    Dictionary<string, Dictionary<string, string>> worker = Common.processTLV(terminalData);
-                                    rt = IDT_NEO2.SharedController.emv_setTerminalData(terminalData);
-                                    if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                    catch(Exception exp)
                                     {
-                                        Debug.WriteLine("emv_setTerminalData() error: {0}", rt);
+                                        Debug.WriteLine("device: ValidateTerminalData() - exception={0}", (object)exp.Message);
                                     }
                                 }
                             }
@@ -310,7 +337,7 @@ namespace IPA.DAL.RBADAL.Services
                 Debug.WriteLine("device: ValidateTerminalData() - exception={0}", (object)exp.Message);
             }
         }
-         public override string [] DeviceGetAidList()
+         public override string [] GetAidList()
          {
             string [] data = null;
 
@@ -523,7 +550,7 @@ namespace IPA.DAL.RBADAL.Services
             }
          }
     
-         public override string [] DeviceGetCapKList()
+         public override string [] GetCapKList()
          {
             string [] data = null;
 

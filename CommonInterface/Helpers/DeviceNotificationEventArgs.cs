@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IPA.CommonInterface
+namespace IPA.CommonInterface.Helpers
 {
     public enum NOTIFICATION_TYPE
     {

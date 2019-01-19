@@ -58,11 +58,11 @@ namespace IPA.DAL.RBADAL.Interfaces
         /********************************************************************************************************/
         #region -- device configuration --
 
-        string [] DeviceGetTerminalData();
+        string [] GetTerminalData();
         void ValidateTerminalData(ConfigSerializer serializer);
-        string [] DeviceGetAidList();
+        string [] GetAidList();
         void ValidateAidList(ConfigSerializer serializer);
-        string [] DeviceGetCapKList();
+        string [] GetCapKList();
         void ValidateCapKList(ConfigSerializer serializer);
         void FactoryReset();
         #endregion

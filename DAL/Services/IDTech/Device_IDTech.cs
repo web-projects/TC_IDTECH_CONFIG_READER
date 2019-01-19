@@ -1778,21 +1778,21 @@ if(empty)
         /********************************************************************************************************/
         #region -- device configuration --
 
-        public virtual string [] DeviceGetTerminalData()
+        public virtual string [] GetTerminalData()
         {
             return null;
         }
         public virtual void ValidateTerminalData(ConfigSerializer serializer)
         {
         }
-        public virtual string [] DeviceGetAidList()
+        public virtual string [] GetAidList()
         {
             return null;
         }
         public virtual void ValidateAidList(ConfigSerializer serializer)
         {
         }
-        public virtual string [] DeviceGetCapKList()
+        public virtual string [] GetCapKList()
         {
             return null;
         }

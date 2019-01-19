@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
+using IPA.CommonInterface.Helpers;
 
 namespace IPA.CommonInterface
 {
@@ -90,8 +91,8 @@ namespace IPA.CommonInterface
         private SortedDictionary<string, string> GetAllTerminalData(string serialNumber, string EMVKernelVer)
         {
             SortedDictionary<string, string> allTerminalTags = termSettings.TerminalData;
-            allTerminalTags["9F1E"] = serialNumber.Substring(Math.Max(0, serialNumber.Length - 8));
-            allTerminalTags["9F1C"] = EMVKernelVer;
+            allTerminalTags["9F1E"] = serialNumber?.Substring(Math.Max(0, serialNumber.Length - 8)) ?? "";
+            allTerminalTags["9F1C"] = EMVKernelVer?.Substring(Math.Max(0, EMVKernelVer.Length - 8)) ?? "";
             string [] tagsRequested = termSettings.TransactionTagsRequested;
             allTerminalTags["DFEF5A"] = string.Join("", tagsRequested);
 

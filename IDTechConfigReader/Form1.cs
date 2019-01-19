@@ -1,5 +1,4 @@
-﻿using IPA.CommonInterface;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +16,8 @@ using HidLibrary;
 using IPA.DAL.RBADAL;
 using IPA.DAL.RBADAL.Services;
 using IPA.LoggerManager;
+using IPA.CommonInterface;
+using IPA.CommonInterface.Helpers;
 using System.Reflection;
 using System.Configuration;
 
