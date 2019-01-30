@@ -15,18 +15,20 @@ namespace IPA.CommonInterface
     [Serializable]
     public class TerminalConfiguration
     {
-        public List<Config> Configuration { get; set; }
+        public List<Configuration> Configuration { get; set; }
     }
 
     [Serializable]
-    public class Config
+    public class Configuration
     {
         [JsonProperty(PropertyName = "ConfigurationID", Order = 1)]
         public ConfigurationID ConfigurationID { get; set; }
         [JsonProperty(PropertyName = "EMVConfiguration", Order = 2)]
-        public EMVConfig EMVConfiguration { get; set; }
+        public EMVConfiguration EMVConfiguration { get; set; }
         [JsonProperty(PropertyName = "EMVTransactionData", Order = 3)]
-        public EMVTrans EMVTransactionData { get; set; }
+        public EMVTransactionData EMVTransactionData { get; set; }
+        [JsonProperty(PropertyName = "EMVDeviceSettings", Order = 4)]
+        public List<EMVDeviceSettings> EMVDeviceSettings { get; set; }
     }
 
     [Serializable]
@@ -45,13 +47,7 @@ namespace IPA.CommonInterface
     }
 
     [Serializable]
-    public class ModelFirmware
-    {
-        public Dictionary<string, string[]> modelFirmware;
-    }
-
-    [Serializable]
-    public class EMVConfig
+    public class EMVConfiguration
     {
         [JsonProperty(PropertyName = "AIDList", Order = 1)]
         public Dictionary<string, Dictionary<string, string>> AIDList { get; set; }
@@ -118,7 +114,7 @@ namespace IPA.CommonInterface
     }
 
     [Serializable]
-    public class EMVTrans
+    public class EMVTransactionData
     {
         [JsonProperty(PropertyName = "EMVKernelMapping", Order = 1)]
         public Dictionary<string, string> EMVKernelMapping { get; set; }
@@ -128,5 +124,16 @@ namespace IPA.CommonInterface
         public List<string> TransactionAuthenticateTags { get; set; }
         [JsonProperty(PropertyName = "TransactionCompleteTags", Order = 4)]
         public List<string> TransactionCompleteTags { get; set; }
+    }
+
+    [Serializable]
+    public class EMVDeviceSettings
+    {
+        [JsonProperty(PropertyName = "ModelFirmware", Order = 1)]
+        public Dictionary<string, List<string>> ModelFirmware { get; set; }
+        [JsonProperty(PropertyName = "GroupTags", Order = 2)]
+        public Dictionary<string, List<string>> GroupTags { get; set; }
+        [JsonProperty(PropertyName = "DoNotSendTags", Order = 3)]
+        public string[] DoNotSendTags { get; set; }
     }
 }

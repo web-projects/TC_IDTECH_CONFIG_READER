@@ -252,6 +252,14 @@ namespace IDTechConfigReader
                         {
                             WaitForDeviceToConnect();
                         }
+                        else if(ex.Message.Equals("MultipleDevice"))
+                        {
+                            this.Invoke(new MethodInvoker(() =>
+                            {
+                                MessageBoxEx.Show(this, "Multiple Devices Detected\r\nDisconnect One of them !!!", "ERROR: MULTIPLE DEVICES DETECTED", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                WaitForDeviceToConnect();
+                            }));
+                        }
                     }
 
                 }).Start();

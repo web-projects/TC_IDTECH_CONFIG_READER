@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using IPA.CommonInterface;
+using IPA.LoggerManager;
 ///using Configuration = IPA.Core.Client.DataAccess.Helper.Config;
 
 namespace IPA.DAL.RBADAL.Services
@@ -232,8 +233,8 @@ namespace IPA.DAL.RBADAL.Services
             foreach (var device in collection)
             {
                 var deviceID = (string)device.GetPropertyValue("DeviceID");
-///                if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}") && !Configuration.General.IDTechDisable )|| deviceID.Contains($"VID_{INGNAR}")))
-if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}"))|| deviceID.Contains($"VID_{INGNAR}"))) 
+                ///if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}") && !Configuration.General.IDTechDisable )|| deviceID.Contains($"VID_{INGNAR}")))
+                if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}"))|| deviceID.Contains($"VID_{INGNAR}"))) 
                 {
                     DeviceManufacturer vendor = deviceID.Contains($"VID_{IDTECH}") ? DeviceManufacturer.IDTech : DeviceManufacturer.Ingenico;
                     devices.Add(new USBDeviceInfo(
@@ -275,15 +276,22 @@ if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}")
 
         public string [] GetTerminalData()
         {
-            return deviceInterface.GetTerminalData();
+            return deviceInterface?.GetTerminalData();
         }
         public void ValidateTerminalData(ConfigSerializer serializer)
         {
-            deviceInterface.ValidateTerminalData(serializer);
+            try
+            {
+                deviceInterface?.ValidateTerminalData(serializer);
+            }
+            catch(Exception e)
+            {
+                Logger.error("device: ValidateTerminalData() exception={0}", e.Message);
+            }
         }
         public string [] GetAidList()
         {
-            return deviceInterface.GetAidList();
+            return deviceInterface?.GetAidList();
         }
         public void ValidateAidList(ConfigSerializer serializer)
         {
@@ -291,15 +299,15 @@ if (deviceID.ToLower().Contains("usb\\") && ((deviceID.Contains($"VID_{IDTECH}")
         }
         public string [] GetCapKList()
         {
-            return deviceInterface.GetCapKList();
+            return deviceInterface?.GetCapKList();
         }
         public void ValidateCapKList(ConfigSerializer serializer)
         {
-            deviceInterface.ValidateCapKList(serializer);
+            deviceInterface?.ValidateCapKList(serializer);
         }
         public void FactoryReset()
         {
-            deviceInterface.FactoryReset();
+            deviceInterface?.FactoryReset();
         }
         #endregion
 

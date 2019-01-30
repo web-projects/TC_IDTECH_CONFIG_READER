@@ -262,10 +262,10 @@
         "TerminalData": {
           // Tags for QuickChip KB-mode
           "9F02": "000000001000",		      // Default amount (10.00)
-          "DFEE1E": "D09C20D0C41E1600",		// Contact Terminal Configuration (Ingenico equiv F0DC3CF0C2D28400)	// Non-KB 5C value "D09C20D0C41E1400"
+          "DFEE1E": "108420D0C41E0600",		// Contact Terminal Configuration (Ingenico equiv F0DC3CF0C2D28400)	// Non-KB 5C value "D09C20D0C41E1400"
           //   Byte 1:
-          //     Key Pad Support (b8) - True
-          //     LCD Support (b7) - True
+          //     Key Pad Support (b8) - False
+          //     LCD Support (b7) - False
           //     PIN Pad Support (b6) - False
           //     Print Support (b5) - True
           //     RFU (b4) - False
@@ -276,8 +276,8 @@
           //     PSE Support (b8) [Major] - True (equivalent to Ingenico 9F8142 = 01?)
           //     Cardholder Confirmation (b7) [Major] - False  (equivalent to Ingenico 9F844B = 00?)
           //     Preferred Display Order (b6) - False  (equivalent to Ingenico 9F8440 = 00?)
-          //     Multi language (b5) - True  (equivalent to Ingenico 9F8441 = 01?)
-          //     EMV language selection method (b4) - True
+          //     Multi language (b5) - False  (equivalent to Ingenico 9F8441 = 01?)
+          //     EMV language selection method (b4) - False
           //     Default DDOL (b3) [Major] - True  (equivalent to Ingenico 9F8452 = 01?)
           //     RFU (b2) - False
           //     RFU (b1) - False
@@ -302,7 +302,7 @@
           //   Byte 5:
           //     Terminal action code support (b8) [Major] - True
           //     Terminal action code can be change (b7) [Major] - True
-          //     Terminal action code can be deleted or disable 	Major (b6) [Major] - False
+          //     Terminal action code can be deleted or disable (b6) [Major] - False
           //     Default Action code processing before 1st GAC (b5) [Major] - False
           //     Default Action code processing after 1st GAC (b4) [Major] - False
           //     TAC/IAC default process when unable to go online (Skipped) (b3) [Major] - True
@@ -321,7 +321,7 @@
           //     Amount and pin entered on the same keypad (b8) - False
           //     ICC/Magstripe reader combined (b7) - False
           //     Magstripe read first (b6) - False
-          //     Support account type selection (b5) - True  (equivalent to Ingenico 9F8459 = 01?)
+          //     Support account type selection (b5) - False  (equivalent to Ingenico 9F8459 = 01?)
           //     On fly script processing (b4) - False
           //     Internal date management (b3) - True
           //     Reversal Mode (b2) - True
@@ -428,7 +428,8 @@
           //"9F16": "303030303030303030303030303030",			    // Merchant Identifier (len 15)
           //"9F1C": "3837363534333231",								        // Terminal Identification (len 8) - replace with last Serial#?
           //"9F4E": "31303732312057616c6b65722053742e20437970726573732c204341202c5553412e",	// Merchant Name and Location (len 30)
-          "9F7C": "54323031395F312E302E305F5370686572655443", // Data length = 20; T2019_1.0.0_SphereTC_A
+          "9F4E": "54323031395F312E302E305F53706865726554435F41",				// Merchant Name and Location (len 30); T2019_1.0.0_SphereTC_A
+          //"9F7C": "54323031395F312E302E305F53706865726554435F41",			// Data length = 20; T2019_1.0.0_SphereTC_A
 
           "DF26": "01",			            // Enable/Disable Certificate Revocation List  (equivalent to Ingenico 9F8442 = 01?)
           "DF10": "656e667265737a68",		// Language (var up to 128; default 656e667265737a68)	-- Ingenico tag 9F8431, value 65 6e  <!-- enes (en=65 6e; es=65 73; fr=66 72-->   Supported Languages.
@@ -523,110 +524,109 @@
           "DFEE23",	// MSR all track data
           //"DFEE26",	// Encryption Status Information		// This is not an Augusta tag; it is for NEO class devices
           "FFEE01"	// ViVOpay TLV Group Tag	// End disable for VP3300
-        ],
+        ]
+      }
+    },
+    
+    "EMVTransactionData": {
+      "EMVKernelMapping": {	            // FirmwareVersion (from Tag DFEF57) to EMVKernelVersion mappings; for HID, a live value can be used (emv_getEMVKernelVersion())
+              "ID TECH Augusta USB-KB V1.02.011": "V1.10.037",
+              "ID TECH Augusta S USB-KB V1.02.012.S": "V1.10.037",
+              "ID TECH Augusta S USB-KB V1.02.013.S": "V1.10.037",
+              "VP5300 FW v1.00.028.0192.S": "V1.10.037",
+              "VP3300 USB NEO v1.01": "V1.10.037"
+      },
+      "TransactionStartTags": [	        // Tag values to return from emv_startTransaction(), assembled as single value for IDTech tag DFEE1A
+      ],
+      "TransactionAuthenticateTags": [	// Tag values to return from emv_authenticateTransaction(), assembled as single value for IDTech tag DFEE1A
+              "57",		//		Track 2 Data Equivalent
+              "5A",		//		Application Primary Account Number
+              "82",		//		Application Interchange Profile
+              "4F",		//		Application Identifier ICC
+              "50",		//		Application Label
+              "84",		//		Dedicated Filename
+              "5F20",		//		Cardholder Name
+              "5F24",		//		Application Expiration Date
+              "5F28",		//		Issuer Country Code
+              "5F2A",		//		Transaction Currency Code
+              "5F34",		//		Card Sequence Terminal Number
+              "9F02",		//		Amount Authorized
+              "9F03",		//		Amount Other
+              "9F06",		//		Application Identifier (AID)
+              "9F07",		//		Application Usage Control
+              "9F09",		//		Application Version Number (Reader)
+              "9F10",		//		Issuer Application Data
+              "9F11",		//		Issuer Code Table Index
+              "9F12",		//		Application Preferred Name
+              //"9F16",		//		Merchant Identifier
+              //"9F1C",		//		Terminal Identification
+              "9F4E",		//		Merchant Name and Location
+              //"DFEE54",	//		Kernel ID Transaction Type Group List
+              "9F1A",		//		Terminal Country Code
+              "9F1E",		//		Interface Device Serial Number
+              "9F21",		//		Transaction Time
+              "9F26",		//		Application Cryptogram
+              "9F27",		//		Cryptogram Information Data
+              "9F33",		//		Terminal Capabilities
+              "9F34",		//		Cardholder Verification Method Results
+              "9F35",		//		Terminal Type
+              "9F36",		//		Application Transaction Counter
+              "9F37",		//		Unpredictable Number
+              "9F39",		//		POS Entry Mode (*)
+              "9F40",		//		Additional Terminal Capabilities
+              "9F41",		//		Transaction Sequence Counter
+              "95",		  //		Terminal Verification Results
+              "9A",		  //		Transaction Date
+              "9B",		  //		Processing Code
+              "9C",		  //		Transaction Type
+              //"DFEE25",	//		EMV Result Codes
+              //"DFEE26",	//		TLV Encrypt Information
+              "FFEE01"		//		ViVOpay Group Tag
+      ],
+      "TransactionCompleteTags": [	    // Tag values to return from emv_completeTransaction(), assembled as single value for IDTech tag DFEE1A
+        "4F",		    //		Application Identifier ICC
+        "50",		    //		Application Label
+        "9B",		    //		Transaction Status Information
+        "9F03",		  //		Amount Other
+        "9F26",		  //		Application cryptogram
+        "9F37",		  //		Unpredicatable number
+        "9F41",		  //		Transaction Sequence Number
+        "95",		    //		Terminal Verification Results
+        "9F02",		  //		Amount Authorized
+        //"DF8121",	//		TAC Denial
+        //"FFFD",		//		TAC Denial
+        //"DF8122",	//		TAC Online
+        //"FFFE",		//		TAC Online
+        //"DF8120",	//		TAC Default
+        //"FFFF",		//		TAC Default
+        "9F07",		  //		Application Usage Control
+        "9F08",		  //		Application Version Number ICC
+        "9F0D",		  //		Issuer Action Code Default
+        "9F0E",		  //		Issuer Action Code Denial
+        "9F0F"		  //		Issuer Action Code Online
+      ]
+    },
 
-        "DeviceSettings": [
-        {
-          "ModelFirmware": {
-            "VP5300": [ "VP5300 FW v1.00.028.0192.S", "VP5300 FW v1.00.028.0192.S Test" ]
-          },
-          "GroupTags": {
-            "0": [
-              "9F53"
-            ]
-          },
-          "DoNotSendTags": [
-            "DFED0A",			// Output Fallback Reason (1 = enabled)
-            "DFEF65",			// Control Output Errors (1 = enabled)
-            "DFEF62",			// Allow MSR Swipe data from ICC card - disabled (01)
-            "DFEF7D",			// Re-power on times
-            "DFEF7E"			// Fallback response code list (list of response codes that trigger fallback)
-          ]
-        }
+    "EMVDeviceSettings": [
+    {
+      "ModelFirmware": {
+        "VP5300": [ "VP5300 FW v1.00.028.0192.S", "VP5300 FW v1.00.028.0192.S Test" ]
+      },
+      "GroupTags": {
+        "0": [
+          "9F53"
         ]
       },
-    
-      "EMVTransactionData": {
-        "TransactionValues": {
-          "EMVKernelMapping": {	            // FirmwareVersion (from Tag DFEF57) to EMVKernelVersion mappings; for HID, a live value can be used (emv_getEMVKernelVersion())
-                  "ID TECH Augusta USB-KB V1.02.011": "V1.10.037",
-                  "ID TECH Augusta S USB-KB V1.02.012.S": "V1.10.037",
-                  "ID TECH Augusta S USB-KB V1.02.013.S": "V1.10.037",
-                  "VP5300 FW v1.00.028.0192.S": "V1.10.037",
-                  "VP3300 USB NEO v1.01": "V1.10.037"
-          },
-          "TransactionStartTags": [	        // Tag values to return from emv_startTransaction(), assembled as single value for IDTech tag DFEE1A
-          ],
-          "TransactionAuthenticateTags": [	// Tag values to return from emv_authenticateTransaction(), assembled as single value for IDTech tag DFEE1A
-                  "57",		//		Track 2 Data Equivalent
-                  "5A",		//		Application Primary Account Number
-                  "82",		//		Application Interchange Profile
-                  "4F",		//		Application Identifier ICC
-                  "50",		//		Application Label
-                  "84",		//		Dedicated Filename
-                  "5F20",		//		Cardholder Name
-                  "5F24",		//		Application Expiration Date
-                  "5F28",		//		Issuer Country Code
-                  "5F2A",		//		Transaction Currency Code
-                  "5F34",		//		Card Sequence Terminal Number
-                  "9F02",		//		Amount Authorized
-                  "9F03",		//		Amount Other
-                  "9F06",		//		Application Identifier (AID)
-                  "9F07",		//		Application Usage Control
-                  "9F09",		//		Application Version Number (Reader)
-                  "9F10",		//		Issuer Application Data
-                  "9F11",		//		Issuer Code Table Index
-                  "9F12",		//		Application Preferred Name
-                  //"9F16",		//		Merchant Identifier
-                  //"9F1C",		//		Terminal Identification
-                  //"9F4E",		//		Merchant Name and Location
-                  //"DFEE54",	//		Kernel ID Transaction Type Group List
-                  "9F1A",		//		Terminal Country Code
-                  "9F1E",		//		Interface Device Serial Number
-                  "9F21",		//		Transaction Time
-                  "9F26",		//		Application Cryptogram
-                  "9F27",		//		Cryptogram Information Data
-                  "9F33",		//		Terminal Capabilities
-                  "9F34",		//		Cardholder Verification Method Results
-                  "9F35",		//		Terminal Type
-                  "9F36",		//		Application Transaction Counter
-                  "9F37",		//		Unpredictable Number
-                  "9F39",		//		POS Entry Mode (*)
-                  "9F40",		//		Additional Terminal Capabilities
-                  "9F41",		//		Transaction Sequence Counter
-                  "95",		  //		Terminal Verification Results
-                  "9A",		  //		Transaction Date
-                  "9B",		  //		Processing Code
-                  "9C",		  //		Transaction Type
-                  //"DFEE25",	//		EMV Result Codes
-                  //"DFEE26",	//		TLV Encrypt Information
-                  "FFEE01"		//		ViVOpay Group Tag
-          ],
-          "TransactionCompleteTags": [	    // Tag values to return from emv_completeTransaction(), assembled as single value for IDTech tag DFEE1A
-            "4F",		    //		Application Identifier ICC
-            "50",		    //		Application Label
-            "9B",		    //		Transaction Status Information
-            "9F03",		  //		Amount Other
-            "9F26",		  //		Application cryptogram
-            "9F37",		  //		Unpredicatable number
-            "9F41",		  //		Transaction Sequence Number
-            "95",		    //		Terminal Verification Results
-            "9F02",		  //		Amount Authorized
-            //"DF8121",	//		TAC Denial
-            //"FFFD",		//		TAC Denial
-            //"DF8122",	//		TAC Online
-            //"FFFE",		//		TAC Online
-            //"DF8120",	//		TAC Default
-            //"FFFF",		//		TAC Default
-            "9F07",		  //		Application Usage Control
-            "9F08",		  //		Application Version Number ICC
-            "9F0D",		  //		Issuer Action Code Default
-            "9F0E",		  //		Issuer Action Code Denial
-            "9F0F"		  //		Issuer Action Code Online
-          ]
-        }
-      }
+      "DoNotSendTags": [
+        "DFED0A",			// Output Fallback Reason (1 = enabled)
+        "DFEF65",			// Control Output Errors (1 = enabled)
+        "DFEF62",			// Allow MSR Swipe data from ICC card - disabled (01)
+        "DFEF7D",			// Re-power on times
+        "DFEF7E",			// Fallback response code list (list of response codes that trigger fallback)
+        "FFEE01"
+      ]
     }
+    ]    
   }
   ]
 }

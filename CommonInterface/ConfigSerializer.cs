@@ -23,13 +23,15 @@ namespace IPA.CommonInterface
         private string fileName;
         
         // Accessors
-        private Config device_config;
-        private ModelFirmware mf = new ModelFirmware();
+        private Configuration deviceConfig;
         private string[] md = new string[0];
         private AIDList aid = new AIDList();
         private CAPKList capk = new CAPKList();
+        private EMVConfiguration emvConfiguration = new EMVConfiguration();
         private TerminalSettings termSettings = new TerminalSettings();
-        private EMVTrans transactionValues = new EMVTrans();
+        private EMVTransactionData emvTransactionData = new EMVTransactionData();
+        private List<EMVDeviceSettings> emvDeviceSettings = new List<EMVDeviceSettings>();
+//        private ModelFirmware modelFirmware = new ModelFirmware();
 
         private void DisplayCollection(List<string> collection, string name)
         {
@@ -176,28 +178,28 @@ namespace IPA.CommonInterface
                 fileName = path + "\\" + JSON_CONFIG;
                 string FILE_CFG = File.ReadAllText(fileName);
 
-                //string s = @"{ ""ModelFirmware"": { ""VP5300"": ""VP5300 FW v1.00.028.0192.S"", ""IDEM-85XX"": ""ID TECH Augusta S USB-HID V1.02.S"" } }";
-                //var Json = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(s);
+                //string s = @"{ ""ModelFirmware"": { ""VP5300"": [ ""VP5300 FW v1.00.028.0192.S"", ""VP5300 FW v1.00.028.0192.S Test"" ] } }";
+                //var Json = JsonConvert.DeserializeObject<EMVDeviceSettings>(s);
 
                 terminalCfg = JsonConvert.DeserializeObject<TerminalConfiguration>(FILE_CFG);
 
                 if(terminalCfg != null)
                 {
                     // devConfig
-                    device_config = terminalCfg.Configuration.First();
+                    deviceConfig = terminalCfg.Configuration.First();
                     // Manufacturer
-                    Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) device_config.ConfigurationID.Manufacturer);
+                    Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) deviceConfig.ConfigurationID.Manufacturer);
                     // Models
-                    md = device_config.ConfigurationID.Models;
+                    md = deviceConfig.ConfigurationID.Models;
                     //DisplayCollection(mf.modelFirmware, "modelFirmware");
                     // AID List
-                    aid.Aid = device_config.EMVConfiguration.AIDList;
+                    aid.Aid = deviceConfig.EMVConfiguration.AIDList;
                     //DisplayCollection(aid.Aid, "AIDList");
                     // CAPK List
-                    capk.CAPK = device_config.EMVConfiguration.CAPKList;
+                    capk.CAPK = deviceConfig.EMVConfiguration.CAPKList;
                     //DisplayCollection(capk.Capk, "CapkList");
                     // Terminal Settings
-                    termSettings = device_config.EMVConfiguration.TerminalSettings;
+                    termSettings = deviceConfig.EMVConfiguration.TerminalSettings;
                     //Debug.WriteLine("device configuration: Terminal Settings --------------");
                     //Debug.WriteLine("MajorConfiguration        : {0}", (object) termSettings.MajorConfiguration);
                     //Debug.WriteLine("MajorConfigurationChecksum: {0}", (object) termSettings.MajorConfigurationChecksum[0]);
@@ -208,11 +210,12 @@ namespace IPA.CommonInterface
                     // TransactionTagsRequested
                     //DisplayCollection(termSettings.TransactionTags, "TransactionTagsRequested");
                     // TransactionValues
-                    transactionValues = device_config.EMVTransactionData;
+                    emvTransactionData = deviceConfig.EMVTransactionData;
                     //DisplayCollection(transactionValues.EMVKernelMapping, "EMVKernelMapping");
                     //DisplayCollection(transactionValues.TransactionStartTags, "TransactionStartTags");
                     //DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");
                     //DisplayCollection(transactionValues.TransactionCompleteTags, "TransactionCompleteTags");
+                    emvDeviceSettings = deviceConfig.EMVDeviceSettings;
                 }
             }
             catch(Exception ex)

@@ -46,3 +46,4 @@ This an application to test IDTech Augusta Devices.
            - Merged with VP5300 device interface.
 * 20190117 - Enhanced TerminalData processing.
 * 20190118 - Fixes to TerminalData processing.
+* 20190130 - Updated config file.

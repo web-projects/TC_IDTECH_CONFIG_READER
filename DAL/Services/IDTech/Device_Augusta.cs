@@ -1,9 +1,9 @@
 ﻿using IDTechSDK;
 using IPA.CommonInterface;
 using IPA.CommonInterface.Factory;
-using IPA.LoggerManager;
 using IPA.Core.Shared.Enums;
 using IPA.DAL.RBADAL.Interfaces;
+using IPA.LoggerManager;
 using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace IPA.DAL.RBADAL.Services
 
         public Device_Augusta(IDTECH_DEVICE_PID mode) : base(mode)
         {
-            deviceType = IDT_DEVICE_Types.IDT_DEVICE_NONE;
+            deviceType = IDT_DEVICE_Types.IDT_DEVICE_AUGUSTA;
             deviceMode = mode;
             Debug.WriteLine("device: Augusta instantiated with PID={0}", deviceMode);
             Logger.debug( "device: August instantiated with PID={0}", deviceMode);
@@ -337,7 +337,7 @@ namespace IPA.DAL.RBADAL.Services
                                                 byteArray.AddRange(item1);
                                                 bytes = new byte[byteArray.Count];
                                                 byteArray.CopyTo(bytes);
-                                                Logger.debug( "device: ValidateTerminalData() DATA={0}", BitConverter.ToString(bytes).Replace("-", string.Empty));
+                                                //Logger.debug( "device: ValidateTerminalData() DATA={0}", BitConverter.ToString(bytes).Replace("-", string.Empty));
                                             }
                                             else
                                             {

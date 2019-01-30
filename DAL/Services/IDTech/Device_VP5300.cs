@@ -31,7 +31,7 @@ namespace IPA.DAL.RBADAL.Services
 
         public Device_VP5300(IDTECH_DEVICE_PID mode) : base(mode)
         {
-            deviceType = IDT_DEVICE_Types.IDT_DEVICE_NONE;
+            deviceType = IDT_DEVICE_Types.IDT_DEVICE_SPECTRUM_PRO;
             deviceMode = mode;
             Debug.WriteLine("device: VP5300 instantiated with PID={0}", deviceMode);
         }
@@ -91,7 +91,7 @@ namespace IPA.DAL.RBADAL.Services
             }
 
             EMVKernelVer = "";
-            rt = IDT_Augusta.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
+            rt = IDT_NEO2.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
             if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
             {
                 deviceInfo.EMVKernelVersion = EMVKernelVer;
@@ -161,6 +161,42 @@ namespace IPA.DAL.RBADAL.Services
         // DEVICE CONFIGURATION
         /********************************************************************************************************/
         #region -- device configuration --
+
+        public void GetTerminalInfo(ConfigSerializer serializer)
+        {
+            try
+            {
+                string response = null;
+                RETURN_CODE rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref response);
+
+                if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt && !string.IsNullOrWhiteSpace(response))
+                {
+                    //serializer.terminalCfg.general_configuration.Terminal_info.firmware_ver = response;
+                }
+                response = "";
+                rt = IDT_NEO2.SharedController.emv_getEMVKernelVersion(ref response);
+                if(RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt && !string.IsNullOrWhiteSpace(response))
+                {
+                    //serializer.terminalCfg.general_configuration.Terminal_info.contact_emv_kernel_ver = response;
+                }
+                response = "";
+                rt = IDT_NEO2.SharedController.emv_getEMVKernelCheckValue(ref response);
+                if(RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt && !string.IsNullOrWhiteSpace(response))
+                {
+                    //serializer.terminalCfg.general_configuration.Terminal_info.contact_emv_kernel_checksum = response;
+                }
+                response = "";
+                rt = IDT_NEO2.SharedController.emv_getEMVConfigurationCheckValue(ref response);
+                if(RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt && !string.IsNullOrWhiteSpace(response))
+                {
+                    //serializer.terminalCfg.general_configuration.Terminal_info.contact_emv_kernel_configuration_checksum = response;
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: GetTerminalInfo() - exception={0}", (object)exp.Message);
+            }
+         }
 
          public override string [] GetTerminalData()
          {
@@ -301,7 +337,7 @@ namespace IPA.DAL.RBADAL.Services
                                                 byteArray.AddRange(item1);
                                                 bytes = new byte[byteArray.Count];
                                                 byteArray.CopyTo(bytes);
-                                                Logger.debug( "device: ValidateTerminalData() DATA={0}", BitConverter.ToString(bytes).Replace("-", string.Empty));
+                                                //Logger.debug( "device: ValidateTerminalData() DATA={0}", BitConverter.ToString(bytes).Replace("-", string.Empty));
                                             }
                                             else
                                             {
@@ -311,7 +347,7 @@ namespace IPA.DAL.RBADAL.Services
                                         }
                                         var flattenedList = collection.SelectMany(bytes => bytes);
                                         byte [] terminalData = flattenedList.ToArray();
-                                        rt = IDT_Augusta.SharedController.emv_setTerminalData(terminalData);
+                                        rt = IDT_NEO2.SharedController.emv_setTerminalData(terminalData);
                                         if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                                         {
                                             Debug.WriteLine("emv_setTerminalData() error: {0}", rt);
