@@ -128,7 +128,8 @@ namespace IPA.DAL.RBADAL
                 Debug.WriteLine("DeviceCfg::DeviceInit(): - device TYPE={0}", IDT_Device.getDeviceType());
 
                 // Initialize Universal SDK
-                IDT_Device.setCallback(MessageCallBack);
+//                IDT_Device.setCallback(MessageCallBack);
+                IDT_Device.setCallbackIP(MessageCallBackIP);
                 IDT_Device.startUSBMonitoring();
             }
             else
@@ -533,6 +534,11 @@ namespace IPA.DAL.RBADAL
           break;
         }
       }
+    }
+    
+    private void MessageCallBackIP(IDTechSDK.IDT_DEVICE_Types type, DeviceState state, byte[] data, IDTTransactionData cardData, EMV_Callback emvCallback, RETURN_CODE transactionResultCode, string IP2)
+    {
+        MessageCallBack(type, state, data, cardData, emvCallback, transactionResultCode);
     }
     #endregion
 

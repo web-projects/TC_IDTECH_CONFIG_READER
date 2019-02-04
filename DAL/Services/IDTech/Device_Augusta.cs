@@ -27,7 +27,7 @@ namespace IPA.DAL.RBADAL.Services
 
         private string serialNumber = "";
         private string EMVKernelVer = "";
-        private static DeviceInfo deviceInfo;
+        private static DeviceInfo deviceInfo = null;
 
         public Device_Augusta(IDTECH_DEVICE_PID mode) : base(mode)
         {

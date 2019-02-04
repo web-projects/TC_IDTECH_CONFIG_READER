@@ -238,10 +238,10 @@ namespace IPA.DAL.RBADAL.Services
                 {
                     DeviceManufacturer vendor = deviceID.Contains($"VID_{IDTECH}") ? DeviceManufacturer.IDTech : DeviceManufacturer.Ingenico;
                     devices.Add(new USBDeviceInfo(
-                    (string)device.GetPropertyValue("DeviceID"),
-                    (string)device.GetPropertyValue("PNPDeviceID"),
-                    (string)device.GetPropertyValue("Description"),
-                    vendor
+                        (string)device.GetPropertyValue("DeviceID"),
+                        (string)device.GetPropertyValue("PNPDeviceID"),
+                        (string)device.GetPropertyValue("Description"),
+                        vendor
                     ));
                 }
             }
