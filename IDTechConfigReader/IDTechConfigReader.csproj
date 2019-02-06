@@ -36,34 +36,43 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Augusta_config">
-      <HintPath>..\sdk\Augusta_config.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_config.dll</HintPath>
+    </Reference>
+    <Reference Include="Augusta_ctls">
+      <HintPath>..\sdk\Augusta\Augusta_ctls.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_device">
-      <HintPath>..\sdk\Augusta_device.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_device.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_emv">
-      <HintPath>..\sdk\Augusta_emv.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_emv.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_icc">
-      <HintPath>..\sdk\Augusta_icc.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_icc.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_KB_config">
-      <HintPath>..\sdk\Augusta_KB_config.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_KB_config.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_KB_device">
-      <HintPath>..\sdk\Augusta_KB_device.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_KB_device.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_KB_msr">
-      <HintPath>..\sdk\Augusta_KB_msr.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_KB_msr.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_KB_parse_">
-      <HintPath>..\sdk\Augusta_KB_parse_.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_KB_parse_.dll</HintPath>
+    </Reference>
+    <Reference Include="Augusta_lcd">
+      <HintPath>..\sdk\Augusta\Augusta_lcd.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_msr">
-      <HintPath>..\sdk\Augusta_msr.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_msr.dll</HintPath>
     </Reference>
     <Reference Include="Augusta_parse">
-      <HintPath>..\sdk\Augusta_parse.dll</HintPath>
+      <HintPath>..\sdk\Augusta\Augusta_parse.dll</HintPath>
+    </Reference>
+    <Reference Include="Augusta_pin">
+      <HintPath>..\sdk\Augusta\Augusta_pin.dll</HintPath>
     </Reference>
     <Reference Include="DAL">
       <HintPath>..\DAL\bin\Debug\DAL.dll</HintPath>
@@ -78,14 +87,70 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sdk\IDTechSDK.dll</HintPath>
     </Reference>
+    <Reference Include="L100_config, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\L100_config.dll</HintPath>
+    </Reference>
+    <Reference Include="L100_device, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\L100_device.dll</HintPath>
+    </Reference>
+    <Reference Include="L100_lcd, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\L100_lcd.dll</HintPath>
+    </Reference>
+    <Reference Include="L100_pin, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\L100_pin.dll</HintPath>
+    </Reference>
     <Reference Include="LoggerManager">
       <HintPath>..\LoggerManager\bin\Debug\LoggerManager.dll</HintPath>
     </Reference>
-    <Reference Include="RKIUtility">
-      <HintPath>..\..\..\..\..\..\..\DEVICES\IDTech\sdk\C_Sharp\VP5300\80152801-001-A\80152801-001-A\SDK\RKIUtility.dll</HintPath>
+    <Reference Include="NEO2_config, Version=1.2.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_config.dll</HintPath>
     </Reference>
-    <Reference Include="RKIWeb">
-      <HintPath>..\..\..\..\..\..\..\DEVICES\IDTech\sdk\C_Sharp\VP5300\80152801-001-A\80152801-001-A\SDK\RKIWeb.dll</HintPath>
+    <Reference Include="NEO2_ctls, Version=1.2.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_ctls.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_device, Version=1.2.32.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_device.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_emv, Version=1.2.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_emv.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_icc, Version=1.2.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_icc.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_lcd, Version=1.2.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_lcd.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_msr, Version=1.2.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_msr.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_pin, Version=1.2.18.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\NEO2_pin.dll</HintPath>
+    </Reference>
+    <Reference Include="NEO2_ws">
+      <HintPath>..\sdk\NEOII\NEO2_ws.dll</HintPath>
+    </Reference>
+    <Reference Include="PKIWeb">
+      <HintPath>..\sdk\Augusta\PKIWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="RKIUtility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\RKIUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="RKIWeb, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\NEOII\RKIWeb.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

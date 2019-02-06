@@ -47,3 +47,5 @@ This an application to test IDTech Augusta Devices.
 * 20190117 - Enhanced TerminalData processing.
 * 20190118 - Fixes to TerminalData processing.
 * 20190130 - Updated config file.
+* 20190206 - Enhanced log manager.
+

@@ -27,7 +27,7 @@ namespace IPA.DAL.RBADAL.Services
 
         private string serialNumber = "";
         private string EMVKernelVer = "";
-        private static DeviceInfo deviceInfo = new DeviceInfo();
+        private static DeviceInfo deviceInfo = null;
 
         public Device_VP5300(IDTECH_DEVICE_PID mode) : base(mode)
         {
@@ -58,7 +58,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             else
             {
-                Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get serialNumber reason={0}", rt);
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get serialNumber reason={0}", rt);
             }
 
             string firmwareVersion = "";
@@ -73,7 +73,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             else
             {
-                Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get Firmware version reason={0}", rt);
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Firmware version reason={0}", rt);
             }
 
             deviceInfo.ModelName = IDTechSDK.Profile.IDT_DEVICE_String(deviceType, deviceConnect);
@@ -87,7 +87,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             else
             {
-                Debug.WriteLine("DeviceCfg::PopulateDeviceInfo(): failed to get Model number reason={0}", rt);
+                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Model number reason={0}", rt);
             }
 
             EMVKernelVer = "";
@@ -315,7 +315,6 @@ namespace IPA.DAL.RBADAL.Services
                             int majorcfgint = 5;
                             if(Int32.TryParse(majorcfgstr, out majorcfgint))
                             {
-                                //TODO: IDTech.dll reference issue
                                 rt = IDT_NEO2.SharedController.emv_setTerminalMajorConfiguration(majorcfgint);
                                 if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                                 {

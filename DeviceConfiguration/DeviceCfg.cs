@@ -128,8 +128,8 @@ namespace IPA.DAL.RBADAL
                 Debug.WriteLine("DeviceCfg::DeviceInit(): - device TYPE={0}", IDT_Device.getDeviceType());
 
                 // Initialize Universal SDK
-//                IDT_Device.setCallback(MessageCallBack);
-                IDT_Device.setCallbackIP(MessageCallBackIP);
+                IDT_Device.setCallback(MessageCallBack);
+                //IDT_Device.setCallbackIP(MessageCallBackIP);
                 IDT_Device.startUSBMonitoring();
             }
             else
