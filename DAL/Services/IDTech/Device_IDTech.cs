@@ -1799,6 +1799,14 @@ if(empty)
         public virtual void ValidateCapKList(ConfigSerializer serializer)
         {
         }
+        public virtual string [] GetConfigGroup(int group)
+        {
+            return null;
+        }
+
+        public virtual void ValidateConfigGroup(ConfigSerializer serializer)
+        {
+        }
         public virtual void FactoryReset()
         {
         }

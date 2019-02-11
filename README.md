@@ -48,4 +48,4 @@ This an application to test IDTech Augusta Devices.
 * 20190118 - Fixes to TerminalData processing.
 * 20190130 - Updated config file.
 * 20190206 - Enhanced log manager.
-
+* 20190211 - Added device-side Config Groups processing.

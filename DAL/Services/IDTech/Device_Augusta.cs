@@ -790,6 +790,16 @@ namespace IPA.DAL.RBADAL.Services
             }
         }
 
+        public override string [] GetConfigGroup(int group)
+        {
+            string [] data = null;
+            return data;
+        }
+
+        public override void ValidateConfigGroup(ConfigSerializer serializer)
+        {
+        }
+
         public override void FactoryReset()
         {
             try

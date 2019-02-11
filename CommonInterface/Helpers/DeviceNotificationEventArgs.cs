@@ -9,20 +9,21 @@ namespace IPA.CommonInterface.Helpers
     public enum NOTIFICATION_TYPE
     {
         NT_INITIALIZE_DEVICE          = 1,
-        NT_DEVICE_UPDATE_CONFIG       = 2,
-        NT_UNLOAD_DEVICE_CONFIGDOMAIN = 3,
-        NT_PROCESS_CARDDATA           = 4,
-        NT_PROCESS_CARDDATA_ERROR     = 5,
-        NT_GET_DEVICE_CONFIGURATION   = 6,
-        NT_SET_DEVICE_CONFIGURATION   = 7,
-        NT_SET_DEVICE_MODE            = 8,
-        NT_SET_EXECUTE_RESULT         = 9,
-        NT_SHOW_TERMINAL_DATA         = 10,
-        NT_SHOW_JSON_CONFIG           = 11,
-        NT_SHOW_AID_LIST              = 12,
-        NT_SHOW_CAPK_LIST             = 13,
-        NT_UI_ENABLE_BUTTONS          = 14,
-        NT_SET_EMV_MODE_BUTTON        = 15,
+        NT_DEVICE_UPDATE_CONFIG,
+        NT_UNLOAD_DEVICE_CONFIGDOMAIN,
+        NT_PROCESS_CARDDATA,
+        NT_PROCESS_CARDDATA_ERROR,
+        NT_GET_DEVICE_CONFIGURATION,
+        NT_SET_DEVICE_CONFIGURATION,
+        NT_SET_DEVICE_MODE,
+        NT_SET_EXECUTE_RESULT,
+        NT_SHOW_TERMINAL_DATA,
+        NT_SHOW_JSON_CONFIG,
+        NT_SHOW_AID_LIST,
+        NT_SHOW_CAPK_LIST,
+        NT_SHOW_CONFIG_GROUP,
+        NT_UI_ENABLE_BUTTONS,
+        NT_SET_EMV_MODE_BUTTON
     }
 
     [Serializable]

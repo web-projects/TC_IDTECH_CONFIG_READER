@@ -305,6 +305,14 @@ namespace IPA.DAL.RBADAL.Services
         {
             deviceInterface?.ValidateCapKList(serializer);
         }
+        public string [] GetConfigGroup(int group)
+        {
+            return deviceInterface?.GetConfigGroup(group);
+        }
+        public void ValidateConfigGroup(ConfigSerializer serializer)
+        {
+            deviceInterface?.ValidateConfigGroup(serializer);
+        }
         public void FactoryReset()
         {
             deviceInterface?.FactoryReset();

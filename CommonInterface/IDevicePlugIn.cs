@@ -41,6 +41,7 @@ namespace IPA.CommonInterface
     void GetAIDList();
     // CAPK
     void GetCapKList();
+    void GetConfigGroup(int group);
     // Factory Reset
     void FactoryReset();
   }

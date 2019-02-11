@@ -51,7 +51,7 @@ namespace IPA.DAL.RBADAL.Services
         {
             serialNumber = "";
             RETURN_CODE rt = IDT_NEO2.SharedController.config_getSerialNumber(ref serialNumber);
-            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.SerialNumber = serialNumber;
                 Debug.WriteLine("device INFO[Serial Number]     : {0}", (object) deviceInfo.SerialNumber);
@@ -80,7 +80,7 @@ namespace IPA.DAL.RBADAL.Services
             Debug.WriteLine("device INFO[Model Name]        : {0}", (object) deviceInfo.ModelName);
 
             rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref deviceInfo.ModelNumber);
-            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.ModelNumber = deviceInfo?.ModelNumber?.Split(' ')[0] ?? "";
                 Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
@@ -92,7 +92,7 @@ namespace IPA.DAL.RBADAL.Services
 
             EMVKernelVer = "";
             rt = IDT_NEO2.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
-            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.EMVKernelVersion = EMVKernelVer;
                 Debug.WriteLine("device INFO[EMV KERNEL V.]     : {0}", (object) deviceInfo.EMVKernelVersion);
@@ -421,7 +421,7 @@ namespace IPA.DAL.RBADAL.Services
                 }
                 catch(Exception exp)
                 {
-                    Debug.WriteLine("device: GetTerminalData() - exception={0}", (object)exp.Message);
+                    Debug.WriteLine("device: GetAidList() - exception={0}", (object)exp.Message);
                 }
 
             return data;
@@ -639,7 +639,7 @@ namespace IPA.DAL.RBADAL.Services
             }
             catch(Exception exp)
             {
-                Debug.WriteLine("device: GetTerminalData() - exception={0}", (object)exp.Message);
+                Debug.WriteLine("device: GetCapKList() - exception={0}", (object)exp.Message);
             }
 
             return data;
@@ -789,8 +789,191 @@ namespace IPA.DAL.RBADAL.Services
             }
         }
 
-        public override void FactoryReset()
-        {
+         public override string [] GetConfigGroup(int group)
+         {
+            string [] data = null;
+
+            try
+            {
+                byte [] tlv = null;
+                RETURN_CODE rt = IDT_NEO2.SharedController.ctls_getConfigurationGroup(group, ref tlv);
+
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+                    Debug.WriteLine("DEVICE GROUP{0} LIST ----------------------------------------------------------------------", group);
+
+                    Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
+                    List<string> collection = new List<string>();
+
+                    // Compare values and replace if not the same
+                    foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                    {
+                        foreach(var devTag in devCollection)
+                        {
+                            collection.Add(string.Format("{0}:{1}", devTag.Key, devTag.Value).ToUpper());
+                        }
+                    }
+                    data = collection.ToArray();
+                }
+                else
+                {
+                    Debug.WriteLine("device: ctls_getConfigurationGroup() - ERROR={0}", rt);
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: GetConfigGroup() - exception={0}", (object)exp.Message);
+            }
+
+            return data;
+         }
+
+         public override void ValidateConfigGroup(ConfigSerializer serializer)
+         {
+            try
+            {
+                if(serializer != null)
+                {
+                    byte [] keys = null;
+                    RETURN_CODE rt = IDT_NEO2.SharedController.emv_retrieveCAPKList(ref keys);
+                
+                    if (rt == RETURN_CODE.RETURN_CODE_NO_CA_KEY)
+                    {
+                        keys = new byte[0];
+                        rt = RETURN_CODE.RETURN_CODE_DO_SUCCESS;
+                    }
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    {
+                        Debug.WriteLine("VALIDATE CAPK LIST ----------------------------------------------------------------------");
+
+                        // Get Configuration File AID List
+                        CAPKList capK = serializer.GetCapKList();
+
+                        List<Capk> CapKList = new List<Capk>();
+                        List<byte[]> capkNames = new List<byte[]>();
+
+                        // Convert array to array of arrays
+                        for(int i = 0; i < keys.Length; i += 6)
+                        {
+                            byte[] result = new byte[6];
+                            Array.Copy(keys, i, result, 0, 6);
+                            capkNames.Add(result); 
+                        }
+
+                        foreach(byte[] capkName in capkNames)
+                        {
+                            bool delete = true;
+                            bool found  = false;
+                            bool update = false;
+                            KeyValuePair<string, CAPK> cfgCurrentItem = new KeyValuePair<string, CAPK>();
+                            string devCapKName = BitConverter.ToString(capkName).Replace("-", string.Empty);
+
+                            Debug.WriteLine("CAPK: {0} ===============================================", (object) devCapKName);
+
+                            // Is this item in the approved list?
+                            foreach(var cfgItem in capK.CAPK)
+                            {
+                                cfgCurrentItem = cfgItem;
+                                string devRID = cfgItem.Value.RID;
+                                string devIdx = cfgItem.Value.Index;
+                                string devItem = devRID + devIdx;
+                                if(devItem.Equals(devCapKName, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    found  = true;
+                                    byte[] value = null;
+                                    Capk capk = null;
+
+                                    rt = IDT_NEO2.SharedController.emv_retrieveCAPK(capkName, ref value);
+
+                                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                    {
+                                        capk = new Capk(value);
+
+                                        // compare modulus
+                                        string modulus = cfgItem.Value.Modulus;
+                                        update = !modulus.Equals(capk.GetModulus(), StringComparison.CurrentCultureIgnoreCase);
+                                        if(!update)
+                                        {
+                                            // compare exponent
+                                            string exponent = cfgItem.Value.Exponent;
+                                            update = !exponent.Equals(capk.GetExponent(), StringComparison.CurrentCultureIgnoreCase);
+                                        }
+                                    }
+
+                                    delete = false;
+
+                                    if(update && capk != null)
+                                    {
+                                        CapKList.Add(capk);
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine("    : UP-TO-DATE");
+                                    }
+                                }
+                            }
+
+                            // DELETE CAPK(s)
+                            if(delete)
+                            {
+                                byte[] tagName = Device_IDTech.HexStringToByteArray(devCapKName);
+                                rt = IDT_NEO2.SharedController.emv_removeCAPK(tagName);
+                                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                                {
+                                    Debug.WriteLine("CAPK: {0} DELETED (NOT FOUND)", (object) devCapKName);
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("CAPK: {0} DELETE FAILED, ERROR={1}", devCapKName, rt);
+                                }
+                            }
+                            else if(!found)
+                            {
+                                byte[] tagCfgName = Device_IDTech.HexStringToByteArray(cfgCurrentItem.Key);
+
+                                List<byte[]> collection = new List<byte[]>();
+                                string payload = string.Format("{0}{1}{2}{3}{4}{5}{6:X2}{7:X2}{8}",
+                                                                cfgCurrentItem.Value.RID, cfgCurrentItem.Value.Index,
+                                                                _HASH_SHA1_ID_STR, _ENC_RSA_ID_STR,
+                                                                cfgCurrentItem.Value.Checksum, cfgCurrentItem.Value.Exponent,
+                                                                (cfgCurrentItem.Value.Modulus.Length / 2) % 256, (cfgCurrentItem.Value.Modulus.Length / 2) / 256,
+                                                                cfgCurrentItem.Value.Modulus);
+                                byte[] tagCfgValue = Device_IDTech.HexStringToByteArray(payload);
+                                Capk cfgCapK = new Capk(tagCfgValue);
+                                CapKList.Add(cfgCapK);
+                            }
+                        }
+
+                        // Add/Update CAPK(s)
+                        foreach(var capkElement in CapKList)
+                        {
+                            //capkElement.ShowCapkValues();
+                            byte [] capkValue = capkElement.GetCapkValue();
+                            rt = IDT_NEO2.SharedController.emv_setCAPK(capkValue);
+                            if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                            {
+                                Debug.WriteLine("CAPK: {0} UPDATED", (object) capkElement.GetCapkName());
+                            }
+                            else
+                            {
+                                Debug.WriteLine("CAPK: {0} FAILED TO UPDATE - ERROR={1}", capkElement.GetCapkName(), rt);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("CAPK: emv_retrieveCAPKList() - ERROR={0}", rt);
+                    }
+                }
+            }
+            catch(Exception exp)
+            {
+                Debug.WriteLine("device: ValidateAidList() - exception={0}", (object)exp.Message);
+            }
+        }
+
+         public override void FactoryReset()
+         {
             try
             {
                 // TERMINAL DATA

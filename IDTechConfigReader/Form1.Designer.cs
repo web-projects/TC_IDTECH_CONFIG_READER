@@ -32,6 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.picBoxConfigWait1 = new System.Windows.Forms.PictureBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
@@ -53,10 +54,16 @@
             this.picBoxConfigWait4 = new System.Windows.Forms.PictureBox();
             this.listView3 = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.picBoxConfigWait5 = new System.Windows.Forms.PictureBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.listView4 = new System.Windows.Forms.ListView();
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button5 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
@@ -66,6 +73,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait3)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait4)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,6 +84,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(12, 53);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -115,6 +125,16 @@
             this.picBoxConfigWait1.TabStop = false;
             this.picBoxConfigWait1.Visible = false;
             this.picBoxConfigWait1.WaitOnLoad = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(296, 207);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(117, 29);
+            this.button5.TabIndex = 8;
+            this.button5.Text = "EMV Mode Disable";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
             // 
@@ -312,7 +332,7 @@
             // 
             this.listView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader5,
-            this.columnHeader9});
+            this.columnHeader6});
             this.listView3.FullRowSelect = true;
             this.listView3.GridLines = true;
             this.listView3.Location = new System.Drawing.Point(20, 14);
@@ -326,9 +346,80 @@
             // 
             this.columnHeader5.Text = "CAPK";
             // 
-            // columnHeader9
+            // columnHeader6
             // 
-            this.columnHeader9.Text = "MODULUS";
+            this.columnHeader6.Text = "MODULUS";
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.picBoxConfigWait5);
+            this.tabPage5.Controls.Add(this.comboBox1);
+            this.tabPage5.Controls.Add(this.label4);
+            this.tabPage5.Controls.Add(this.listView4);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(692, 581);
+            this.tabPage5.TabIndex = 7;
+            this.tabPage5.Text = "Groups";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // picBoxConfigWait5
+            // 
+            this.picBoxConfigWait5.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait5.Image")));
+            this.picBoxConfigWait5.Location = new System.Drawing.Point(0, 0);
+            this.picBoxConfigWait5.Name = "picBoxConfigWait5";
+            this.picBoxConfigWait5.Size = new System.Drawing.Size(686, 575);
+            this.picBoxConfigWait5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picBoxConfigWait5.TabIndex = 0;
+            this.picBoxConfigWait5.TabStop = false;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboBox1.Location = new System.Drawing.Point(94, 18);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(155, 21);
+            this.comboBox1.TabIndex = 6;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.OnConfigGroupSelectionChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(72, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Config Group:";
+            // 
+            // listView4
+            // 
+            this.listView4.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader7,
+            this.columnHeader8});
+            this.listView4.FullRowSelect = true;
+            this.listView4.GridLines = true;
+            this.listView4.Location = new System.Drawing.Point(0, 72);
+            this.listView4.Name = "listView4";
+            this.listView4.Size = new System.Drawing.Size(689, 509);
+            this.listView4.TabIndex = 4;
+            this.listView4.UseCompatibleStateImageBehavior = false;
+            this.listView4.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "TAG";
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "VALUE";
             // 
             // panel1
             // 
@@ -345,16 +436,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(696, 44);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(296, 207);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(117, 29);
-            this.button5.TabIndex = 8;
-            this.button5.Text = "EMV Mode Disable";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
@@ -378,6 +459,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait3)).EndInit();
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait4)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -399,6 +483,7 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.ListView listView3;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label2;
@@ -409,10 +494,16 @@
         private System.Windows.Forms.PictureBox picBoxConfigWait2;
         private System.Windows.Forms.PictureBox picBoxConfigWait3;
         private System.Windows.Forms.PictureBox picBoxConfigWait4;
-        private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.PictureBox picBoxConfigWait5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.ListView listView4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

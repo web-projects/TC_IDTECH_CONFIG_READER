@@ -169,6 +169,25 @@ namespace IPA.CommonInterface
             return termSettings;
         }
 
+        public string[] GetConfigGroupCollection(int group)
+        {
+            List<string> collection = new List<string>();
+            foreach(var item in capk.CAPK)
+            {
+                CAPK value = item.Value;
+                string payload = "";
+                payload += string.Format("{0}:{1} ", "RID", value.RID);
+                payload += string.Format("{0}:{1} ", "Index", value.Index);
+                payload += string.Format("{0}:{1} ", "Modulus", value.Modulus);
+                payload += string.Format("{0}:{1} ", "Exponent", value.Exponent);
+                payload += string.Format("{0}:{1}", "Checksum", value.Checksum);
+                
+                collection.Add(string.Format("{0}#{1}", item.Key, payload).ToUpper());
+            }
+            string [] data = collection.ToArray();
+            return data;
+        }
+
         public void ReadConfig()
         {
             try

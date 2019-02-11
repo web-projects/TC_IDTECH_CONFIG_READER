@@ -607,6 +607,22 @@ namespace IPA.DAL.RBADAL
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_CAPK_LIST, Message = message });
     }
 
+    public void GetConfigGroup(int group)
+    {
+        string [] message = null;
+        if(configurationMode == ConfigurationModes.FROM_DEVICE)
+        {
+           message = Device.GetConfigGroup(group);
+        }
+        else
+        {
+            Device.ValidateCapKList(serializer);
+            message = serializer.GetConfigGroupCollection(group);
+        }
+
+        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_CONFIG_GROUP, Message = message });
+    }
+
     public string[] GetConfig()
     {
         throw new NotImplementedException();
@@ -764,6 +780,14 @@ namespace IPA.DAL.RBADAL
                   if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                   {
                     Debug.WriteLine("DeviceCfg::SetDeviceMode(): VP3000 - error={0}", rt);
+                  }
+               }
+               else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
+               {
+                  RETURN_CODE rt = IDT_NEO2.SharedController.device_setPollMode(3);
+                  if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                  {
+                    Debug.WriteLine("DeviceCfg::SetDeviceMode(): VP5300 - error={0}", rt);
                   }
                }
             }

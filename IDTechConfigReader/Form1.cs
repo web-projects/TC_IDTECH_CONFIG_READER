@@ -49,11 +49,19 @@ namespace IDTechConfigReader
             tabControl1.TabPages.Remove(tabPage2);
             tabControl1.TabPages.Remove(tabPage3);
             tabControl1.TabPages.Remove(tabPage4);
+            tabControl1.TabPages.Remove(tabPage5);
 
-            // Application Always on Top
-            string always_on_top = System.Configuration.ConfigurationManager.AppSettings["tc_always_on_top"] ?? "true";
-            bool.TryParse(always_on_top, out tc_always_on_top);
-
+            try
+            {
+                // Application Always on Top
+                //string always_on_top = System.Configuration.ConfigurationManager.AppSettings["tc_always_on_top"] ?? "true";
+                //bool.TryParse(always_on_top, out tc_always_on_top);
+                tc_always_on_top = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["tc_always_on_top"] ?? "true");
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("main: Form() - exception={0}", (object) e.Message);
+            }
             SetupLogging();
 
             InitalizeDevice();
@@ -105,6 +113,12 @@ namespace IDTechConfigReader
                     break;
                 }
 
+                case NOTIFICATION_TYPE.NT_SHOW_CONFIG_GROUP:
+                {
+                    ShowConfigGroupUI(sender, args);
+                    break;
+                }
+
                 case NOTIFICATION_TYPE.NT_UI_ENABLE_BUTTONS:
                 {
                     EnableButtonsUI(sender, args);
@@ -141,6 +155,11 @@ namespace IDTechConfigReader
         private void ShowCapKListUI(object sender, DeviceNotificationEventArgs e)
         {
             ShowCapKList(e.Message);
+        }
+
+        private void ShowConfigGroupUI(object sender, DeviceNotificationEventArgs e)
+        {
+            ShowConfigGroup(e.Message);
         }
 
         private void EnableButtonsUI(object sender, DeviceNotificationEventArgs e)
@@ -192,33 +211,40 @@ namespace IDTechConfigReader
 
         void SetupLogging()
         {
-            var logLevels = ConfigurationManager.AppSettings["IPA.DAL.Application.Client.LogLevel"].Split('|') ?? null;
-            if(logLevels.Length > 0)
+            try
             {
-                string fullName = Assembly.GetEntryAssembly().Location;
-                string logname = System.IO.Path.GetFileNameWithoutExtension(fullName) + ".log";
-                string path = System.IO.Directory.GetCurrentDirectory(); 
-                string filepath = path + "\\" + logname;
-
-                int levels = 0;
-                foreach(var item in logLevels)
+                var logLevels = ConfigurationManager.AppSettings["IPA.DAL.Application.Client.LogLevel"]?.Split('|') ?? new string[0];
+                if(logLevels.Length > 0)
                 {
-                    foreach(var level in LogLevels.LogLevelsDictonary.Where(x => x.Value.Equals(item)).Select(x => x.Key))
+                    string fullName = Assembly.GetEntryAssembly().Location;
+                    string logname = System.IO.Path.GetFileNameWithoutExtension(fullName) + ".log";
+                    string path = System.IO.Directory.GetCurrentDirectory(); 
+                    string filepath = path + "\\" + logname;
+
+                    int levels = 0;
+                    foreach(var item in logLevels)
                     {
-                        levels += (int)level;
+                        foreach(var level in LogLevels.LogLevelsDictonary.Where(x => x.Value.Equals(item)).Select(x => x.Key))
+                        {
+                            levels += (int)level;
+                        }
                     }
+
+                    Logger.SetFileLoggerConfiguration(filepath, levels);
+
+                    Logger.info( "LOGGING INITIALIZED.");
+
+                    //Logger.info( "LOG ARG1:", "1111");
+                    //Logger.info( "LOG ARG1:{0}, ARG2:{1}", "1111", "2222");
+                    Logger.debug("THIS IS A DEBUG STRING");
+                    Logger.warning("THIS IS A WARNING");
+                    Logger.error("THIS IS AN ERROR");
+                    Logger.fatal("THIS IS FATAL");
                 }
-
-                Logger.SetFileLoggerConfiguration(filepath, levels);
-
-                Logger.info( "LOGGING INITIALIZED.");
-
-                //Logger.info( "LOG ARG1:", "1111");
-                //Logger.info( "LOG ARG1:{0}, ARG2:{1}", "1111", "2222");
-                Logger.debug("THIS IS A DEBUG STRING");
-                Logger.warning("THIS IS A WARNING");
-                Logger.error("THIS IS AN ERROR");
-                Logger.fatal("THIS IS FATAL");
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("main: SetupLogging() - exception={0}", (object) e.Message);
             }
         }
 
@@ -427,6 +453,12 @@ namespace IDTechConfigReader
                         tabControl1.TabPages.Add(tabPage4);
                     }
                     this.tabPage4.Enabled = true;
+                    // TAB 5
+                    if(!tabControl1.Contains(tabPage5))
+                    {
+                        tabControl1.TabPages.Add(tabPage5);
+                    }
+                    this.tabPage5.Enabled = true;
                 }
                 catch (Exception exp)
                 {
@@ -591,6 +623,70 @@ namespace IDTechConfigReader
             }
         }
 
+        private void ShowConfigGroup(object payload)
+        {
+            // Invoker with Parameter(s)
+            MethodInvoker mi = () =>
+            {
+                try
+                {
+                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+
+                    // Remove previous entries
+                    if(listView4.Items.Count > 0)
+                    {
+                        listView4.Items.Clear();
+                    }
+
+                    foreach(string item in data)
+                    {
+                        string [] components = item.Split(':');
+                        if(components.Length == 2)
+                        {
+                            ListViewItem item1 = new ListViewItem(components[0], 0);
+                            string keyvalue = components[1];
+                            if(keyvalue.Length > 0)
+                            {
+                                // VALUE
+                                item1.SubItems.Add(keyvalue);
+                                listView4.Items.Add(item1);
+                            }
+                        }
+                    }
+
+                    listView4.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    listView4.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    if(!tabControl1.Contains(tabPage5))
+                    {
+                        tabControl1.TabPages.Add(tabPage5);
+                    }
+                    this.tabPage5.Enabled = true;
+                    tabControl1.SelectedTab = this.tabPage5;
+                    this.picBoxConfigWait5.Enabled = false;
+                    this.picBoxConfigWait5.Visible  = false;
+                }
+                catch (Exception exp)
+                {
+                    Debug.WriteLine("main: ShowConfigGroup() - exception={0}", (object) exp.Message);
+                }
+                finally
+                {
+                    this.picBoxConfigWait4.Enabled = false;
+                    this.picBoxConfigWait4.Visible  = false;
+                }
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
         private void EnableButtons()
         {
             MethodInvoker mi = () =>
@@ -685,6 +781,18 @@ namespace IDTechConfigReader
                     this.picBoxConfigWait4.Enabled = true;
                     System.Windows.Forms.Application.DoEvents();
                     new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetCapKList(); } ).Start();
+                }));
+            }
+            else if (tabControl1.SelectedTab.Name.Equals("tabPage5"))
+            {
+                comboBox1.SelectedIndex = 0;
+                int group = Convert.ToInt16(comboBox1.SelectedItem.ToString());
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.picBoxConfigWait5.Visible = true;
+                    this.picBoxConfigWait5.Enabled = true;
+                    System.Windows.Forms.Application.DoEvents();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetConfigGroup(group); } ).Start();
                 }));
             }
         }
@@ -782,6 +890,26 @@ namespace IDTechConfigReader
 
             // Disable Button
             this.button5.Enabled = false;
+        }
+
+        private void OnConfigGroupSelectionChanged(object sender, EventArgs e)
+        {
+            this.picBoxConfigWait5.Visible = true;
+            this.picBoxConfigWait5.Enabled = true;
+            int group = Convert.ToInt16(comboBox1.SelectedItem.ToString());
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                try
+                {
+                    Thread.CurrentThread.IsBackground = true; devicePlugin.GetConfigGroup(group);
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                }
+
+            }).Start();
         }
     }
 }
