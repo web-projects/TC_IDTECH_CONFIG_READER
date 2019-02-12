@@ -616,7 +616,7 @@ namespace IPA.DAL.RBADAL
         }
         else
         {
-            Device.ValidateCapKList(serializer);
+            Device.ValidateConfigGroup(serializer);
             message = serializer.GetConfigGroupCollection(group);
         }
 

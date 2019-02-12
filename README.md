@@ -29,9 +29,10 @@ This an application to test IDTech Augusta Devices.
    $ git config --global core.autocrlf true
 
 * MERGE TO MASTER 
-  $ git fetch origin master
-  $ git merge master
-  $ git push origin development:master
+  $ git checkout -b YYYYMMDD_JB
+  $ git add .; git commit -am ""
+  $ git checkout master
+  $ git pull --rebase; git push
    
 ### HISTORY ###
 

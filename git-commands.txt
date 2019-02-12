@@ -1,0 +1,181 @@
+Git Aliases
+-----------------------------------------------------------------------------------------
+Setup the following [alias] in your ~/.gitconfig file and make sure you have the [user] 
+tag setup with your own name and email. 
+
+[alias]
+co = checkout 
+st = status 
+up = !git pull --rebase --prune $@ && git submodule update --init --recursive 
+cob = checkout -b 
+cm = !git add -A && git commit -m 
+save = !git add -A && git commit -m 'SAVEPOINT' 
+wip = !git add -u && git commit -m "WIP" 
+undo = reset HEAD~1 --mixed 
+amend = commit -a --amend 
+wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard 
+bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs git branch -d; }; f" 
+bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f" 
+[winUpdater] 
+recentlySeenVersion = 2.19.1.windows.1 
+
+[core]
+autocrlf = true 
+[user]
+name = Alphonso Turner 
+email = alphonsot@tcipa.net 
+
+-----------------------------------------------------------------------------------------
+Git / TFS Similarity Table
+-----------------------------------------------------------------------------------------
+
+Git                                 TFSgit stash                           Stash git pull                            Get Latest Version git add -p, git commit, git push    Commit and Push git co <branch_name>                Checkout Branch git co –b <branch_name>             Create Branch 
+-----------------------------------------------------------------------------------------
+Common Commands in Git
+-----------------------------------------------------------------------------------------
+
+Clone a repository 
+* https://ipasolutions.visualstudio.com/IPA/_git/IPA
+* Create directory to place repository in explorer or via Git Bash using “mkdir <directory_name>”
+* git clone https://ipasolutions.visualstudio.com/IPA/_git/IPA <optional_directory_to_clone_into>
+
+Create a new branch
+$ git co –b <branch_name>
+Creates a new branch with the specified branch name. Notice the “-b” flag.
+
+Switch to a new branch
+$ git co <branch_name>
+Checks out the specified branch name.
+
+Pull down latest changes
+$ git pull
+Does a fetch and git merge into your local workspace
+$ git fetch
+
+Pulls the latest changes without git merge which preserves local workspace.
+
+Resetting a workspace
+$ git fetch –all
+Fetches all remote branch changes.
+$ git reset --hard origin/<branch_name>
+Resets your local workspace and discards all changes on the branch specified.
+
+Commit changes to branch
+$ git status
+Displays a list of file changes that have occurred in the local repository.
+$ git add [–p]
+
+Stages all of the files to get committed but requires you to verify all changes individually when using the –p flag.
+$ git commit [-m <WIP|”<commit_message>”]
+Allows you to commit all of your staged file changes to your local repository. If the “-m” switch is used it allows you
+to insert your commit message inline”.
+$ git push [-f]
+Pushes your local repository changes up to the remote repository.
+
+Pulling changes in from another branch
+$ git rebase <branch_name>
+Takes changes from the target branch and attempts to apply the changes in your local repository and branch.
+
+Merging changes locally (informational only and should)
+$ git co <branch_name>
+$ git merge - --no-ff
+
+Grabs changes from your previous branch and merges it into the current target branch. The –no-ff flag prevents git merge from executing a “fast-forward” if it detects that your current HEAD is an ancestor of the commit you’re trying to merge. It helps to maintain your branch history and topology.
+
+Saving unfinished work for later
+$ git stash save “<stash_message>”
+Saves your work in your local stash for later. Similar to TFS Shelve.
+$ git stash save [-u | --include-untracked]
+Saves untracked files in your local workspace.
+Listing all of your stashed work
+$ git stash list
+Lists all of the stashes in your local workspace.
+
+Re-applying your stashed work to the current branch
+$ git stash apply [stash@{<id>}]
+Applies the latest changes to your local workspace allowing for the optional stash id to be specified if you want an older stash item applied.
+$ git stash pop [stash@{<id>}]
+Similar to “apply” but pops the stash item off your stash list after it has been applied to your local workspace.
+
+Comparing stashes
+$ git stash show [-p | stash@{<id>}]
+Compares the most recent stashes and optionally the “-p” flag may be used in order to do a full diff.
+
+Creating a new branch from a stash
+$ git stash branch <branch_name> [stash@{<id>}]
+Creates a new branch from the stash and then deletes the stash item (similar to stash pop)
+
+Clearing all stashes
+$ git stash clear
+Clears all of the stashes in your local workspace.
+$ git stash drop [stash@{<id>}]
+Removes the latest stash from your stash list. Optionally, a stash id may be used.
+
+Delete the last Commit
+$ git push BRANCH_NAME
+$ git reset HEAD^ --hard
+$ git push origin –delete BRANCH_NAME
+
+Display Branches
+$ git branch –a
+
+-----------------------------------------------------------------------------------------
+Learning Branching - https://learngitbranching.js.org/
+-----------------------------------------------------------------------------------------
+
+BRANCHING
+  git checkout HEAD~1
+  git branch -f bugFix HEAD~1
+  git branch -f master C6
+
+REVERSING CHANGES
+  git reset HEAD~1
+  git checkout pushed
+  git revert HEAD
+
+MERGE WITH FILTERING
+  git rebase –i HEAD~3
+  git checkout master
+  git rebase bugFix
+
+MERGE WITH AMMENDING
+  git rebase -i HEAD~2
+  git commit --amend
+  git rebase -i HEAD~2
+  git checkout master
+  git rebase caption
+
+REBASING 9000
+  git rebase master bugFix
+  git rebase bugFix side
+  git rebase side another
+  git rebase another master
+  !!! git branch bugWork master^^2^
+  !!! git branch –f three C2
+
+REMOTE REPOS
+  git checkout origin/master; git commit
+  git fetch
+  git pull: fetch AND merge in a single command
+  git push
+
+REBASING
+  git fetch; git rebase o/master; git push
+  DIVERGENT BRANCH(ES)
+  git pull --rebase; git push
+
+REMOTE TRACKING
+  git checkout –b foo o/master; git commit; git --rebase; git push
+  git branch –u o/master foo
+  git push origin <source>:<destination>
+  git push origin master^:foo
+  git merge master
+
+CLEANING UP
+  git push origin :foo	# delete remote branch
+  git fetch origin :foo	# create local branch (if foo doesn’t exist remotely)
+  git fetch origin --prune	# clean-up remote branch
+
+SIMPLIFIED MERGING
+  git pull origin master	# git fetch origin foo; git merge o/foo
+  git pull origin bar~1:bugFix	# git fetch origin bar~1:bugFix; git merge bugFix
