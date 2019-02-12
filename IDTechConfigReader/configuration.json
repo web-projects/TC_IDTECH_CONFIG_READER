@@ -615,7 +615,8 @@
       "GroupTags": {
         "0": [
           "9F53"
-        ]
+        ],
+        "1" : [ "DEAD", "BEEF" ]
       },
       "DoNotSendTags": [
         "DFED0A",			// Output Fallback Reason (1 = enabled)

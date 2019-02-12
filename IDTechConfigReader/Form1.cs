@@ -669,6 +669,8 @@ namespace IDTechConfigReader
                 catch (Exception exp)
                 {
                     Debug.WriteLine("main: ShowConfigGroup() - exception={0}", (object) exp.Message);
+                    this.picBoxConfigWait5.Enabled = false;
+                    this.picBoxConfigWait5.Visible  = false;
                 }
                 finally
                 {
@@ -786,14 +788,6 @@ namespace IDTechConfigReader
             else if (tabControl1.SelectedTab.Name.Equals("tabPage5"))
             {
                 comboBox1.SelectedIndex = 0;
-                int group = Convert.ToInt16(comboBox1.SelectedItem.ToString());
-                this.Invoke(new MethodInvoker(() =>
-                {
-                    this.picBoxConfigWait5.Visible = true;
-                    this.picBoxConfigWait5.Enabled = true;
-                    System.Windows.Forms.Application.DoEvents();
-                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetConfigGroup(group); } ).Start();
-                }));
             }
         }
 

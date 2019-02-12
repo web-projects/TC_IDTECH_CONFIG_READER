@@ -31,7 +31,8 @@ namespace IPA.CommonInterface
         private TerminalSettings termSettings = new TerminalSettings();
         private EMVTransactionData emvTransactionData = new EMVTransactionData();
         private List<EMVDeviceSettings> emvDeviceSettings = new List<EMVDeviceSettings>();
-//        private ModelFirmware modelFirmware = new ModelFirmware();
+        private List<EMVGroupTags> emvGroupTags = new List<EMVGroupTags>();
+        //private ModelFirmware modelFirmware = new ModelFirmware();
 
         private void DisplayCollection(List<string> collection, string name)
         {
@@ -171,20 +172,27 @@ namespace IPA.CommonInterface
 
         public string[] GetConfigGroupCollection(int group)
         {
-            List<string> collection = new List<string>();
-            foreach(var item in capk.CAPK)
+            string [] data = null;
+            try
             {
-                CAPK value = item.Value;
-                string payload = "";
-                payload += string.Format("{0}:{1} ", "RID", value.RID);
-                payload += string.Format("{0}:{1} ", "Index", value.Index);
-                payload += string.Format("{0}:{1} ", "Modulus", value.Modulus);
-                payload += string.Format("{0}:{1} ", "Exponent", value.Exponent);
-                payload += string.Format("{0}:{1}", "Checksum", value.Checksum);
-                
-                collection.Add(string.Format("{0}#{1}", item.Key, payload).ToUpper());
+                // TODO: MODEL IS CURRENTLY = 0
+                EMVGroupTags tags = emvGroupTags[0];
+                List<string> collection = new List<string>();
+                foreach(var item in tags.Tags.Where(x => x.Key.Equals(Convert.ToString(group))).Select(x => x.Value))
+                {
+                    List<string> value = item;
+                    foreach(var key in value)
+                    {
+                        string payload = string.Format("{0}", key);
+                        collection.Add(string.Format("{0}:{1}", group, payload).ToUpper());
+                    }
+                }
+                data = collection.ToArray();
             }
-            string [] data = collection.ToArray();
+            catch(Exception ex)
+            {
+                Debug.WriteLine("main: exception={0}", (object)ex.Message);
+            }
             return data;
         }
 
@@ -199,6 +207,10 @@ namespace IPA.CommonInterface
 
                 //string s = @"{ ""ModelFirmware"": { ""VP5300"": [ ""VP5300 FW v1.00.028.0192.S"", ""VP5300 FW v1.00.028.0192.S Test"" ] } }";
                 //var Json = JsonConvert.DeserializeObject<EMVDeviceSettings>(s);
+                //string s = @"{ ""GroupTags"": { ""0"": [ ""9F53"" ], ""1"": [ ""DFED0A"" ] } }";
+                //var Json = JsonConvert.DeserializeObject<EMVGroupTags>(s);
+                //string s = @"{ ""GroupTags"": { ""0"": [ ""9F53"" ], ""1"": [ ""DFED0A"" ] } }";
+                //EMVGroupTags Json = JsonConvert.DeserializeObject<EMVGroupTags>(s);
 
                 terminalCfg = JsonConvert.DeserializeObject<TerminalConfiguration>(FILE_CFG);
 
@@ -235,6 +247,11 @@ namespace IPA.CommonInterface
                     //DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");
                     //DisplayCollection(transactionValues.TransactionCompleteTags, "TransactionCompleteTags");
                     emvDeviceSettings = deviceConfig.EMVDeviceSettings;
+                    foreach(var devSettings in emvDeviceSettings)
+                    {
+                        EMVGroupTags item = new EMVGroupTags(devSettings.GroupTags);
+                        emvGroupTags.Add(item);
+                    }
                 }
             }
             catch(Exception ex)

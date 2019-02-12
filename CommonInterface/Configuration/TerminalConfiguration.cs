@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -133,7 +134,23 @@ namespace IPA.CommonInterface
         public Dictionary<string, List<string>> ModelFirmware { get; set; }
         [JsonProperty(PropertyName = "GroupTags", Order = 2)]
         public Dictionary<string, List<string>> GroupTags { get; set; }
+        //public EMVGroupTags GroupTags { get; set; }
         [JsonProperty(PropertyName = "DoNotSendTags", Order = 3)]
         public string[] DoNotSendTags { get; set; }
+    }
+
+    [Serializable]
+    public class EMVGroupTags : IEnumerable
+    {
+        public Dictionary<string, List<string>> Tags { get; set; }
+        public EMVGroupTags(Dictionary<string, List<string>> tags)
+        {
+            Tags = tags;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable)Tags).GetEnumerator();
+        }
     }
 }

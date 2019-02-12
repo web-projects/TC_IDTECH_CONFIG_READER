@@ -415,7 +415,7 @@
             // 
             // columnHeader7
             // 
-            this.columnHeader7.Text = "TAG";
+            this.columnHeader7.Text = "GROUP";
             // 
             // columnHeader8
             // 

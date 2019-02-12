@@ -25,8 +25,8 @@ This an application to test IDTech Augusta Devices.
 
 ### GIT NOTES ###
 
-*  AUTO-CONVERTING CRLF line endings into LF
-   *$ git config --global core.autocrlf true
+* AUTO-CONVERTING CRLF line endings into LF
+  *$ git config --global core.autocrlf true
 
 * MERGE TO MASTER 
   *$ git checkout master
@@ -34,7 +34,8 @@ This an application to test IDTech Augusta Devices.
   *$ git checkout -b YYYYMMDD_JB
   *$ git add .; git commit -am ""
   *$ git checkout master
-  *$ git rebase master YYYYMMDD_JB
+  *$ git rebase YYYYMMDD_JB master
+  *$ git push -f
    
 ### HISTORY ###
 
