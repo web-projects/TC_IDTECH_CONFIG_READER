@@ -810,7 +810,7 @@ namespace IPA.DAL.RBADAL.Services
                     {
                         foreach(var devTag in devCollection)
                         {
-                            collection.Add(string.Format("{0}:{1}", devTag.Key, devTag.Value).ToUpper());
+                            collection.Add(string.Format("{0}:{1}:{2}", "N/A", devTag.Key, devTag.Value).ToUpper());
                         }
                     }
                     data = collection.ToArray();

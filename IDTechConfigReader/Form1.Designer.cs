@@ -62,6 +62,7 @@
             this.listView4 = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
@@ -403,7 +404,8 @@
             // 
             this.listView4.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader7,
-            this.columnHeader8});
+            this.columnHeader8,
+            this.columnHeader9});
             this.listView4.FullRowSelect = true;
             this.listView4.GridLines = true;
             this.listView4.Location = new System.Drawing.Point(0, 72);
@@ -415,11 +417,15 @@
             // 
             // columnHeader7
             // 
-            this.columnHeader7.Text = "GROUP";
+            this.columnHeader7.Text = "AID";
             // 
             // columnHeader8
             // 
-            this.columnHeader8.Text = "VALUE";
+            this.columnHeader8.Text = "TAG";
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "VALUE";
             // 
             // panel1
             // 
@@ -503,6 +509,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ComboBox comboBox1;
     }
 }

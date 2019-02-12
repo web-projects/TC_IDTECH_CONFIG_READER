@@ -641,15 +641,23 @@ namespace IDTechConfigReader
                     foreach(string item in data)
                     {
                         string [] components = item.Split(':');
-                        if(components.Length == 2)
+                        if(components.Length == 3)
                         {
                             ListViewItem item1 = new ListViewItem(components[0], 0);
-                            string keyvalue = components[1];
-                            if(keyvalue.Length > 0)
+                            string keytag = components[1];
+                            if(keytag.Length > 0)
                             {
+                                // TAG
+                                item1.SubItems.Add(keytag);
+
                                 // VALUE
-                                item1.SubItems.Add(keyvalue);
-                                listView4.Items.Add(item1);
+                                string keyvalue = components[2];
+                                if(keyvalue.Length > 0)
+                                {
+                                    // TAG
+                                    item1.SubItems.Add(keyvalue);
+                                    listView4.Items.Add(item1);
+                                }
                             }
                         }
                     }
@@ -751,6 +759,10 @@ namespace IDTechConfigReader
                     if(tabControl1.Contains(tabPage4))
                     {
                         tabControl1.TabPages.Remove(tabPage4);
+                    }
+                    if(tabControl1.Contains(tabPage5))
+                    {
+                        tabControl1.TabPages.Remove(tabPage5);
                     }
                 }));
             }

@@ -183,8 +183,16 @@ namespace IPA.CommonInterface
                     List<string> value = item;
                     foreach(var key in value)
                     {
-                        string payload = string.Format("{0}", key);
-                        collection.Add(string.Format("{0}:{1}", group, payload).ToUpper());
+                        string tag = string.Format("{0}", key);
+                        // Value is in AID
+                        foreach(var wAid in aid.Aid)
+                        {
+                            foreach(var val in wAid.Value.Where(x => x.Key.Equals(tag)).Select(x => x.Value))
+                            {
+                                collection.Add(string.Format("{0}:{1}:{2}", wAid.Key, tag, val).ToUpper());
+                                break;
+                            }
+                        }
                     }
                 }
                 data = collection.ToArray();
