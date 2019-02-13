@@ -52,3 +52,4 @@ This an application to test IDTech Augusta Devices.
 * 20190206 - Enhanced log manager.
 * 20190211 - Added device-side Config Groups processing.
 * 20190212 - Additional fixes to Config Groups.
+* 20190213 - Config Groups, write/update.

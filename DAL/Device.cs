@@ -309,9 +309,13 @@ namespace IPA.DAL.RBADAL.Services
         {
             return deviceInterface?.GetConfigGroup(group);
         }
-        public void ValidateConfigGroup(ConfigSerializer serializer)
+        public void ValidateConfigGroup(ConfigSerializer serializer, int group)
         {
-            deviceInterface?.ValidateConfigGroup(serializer);
+            deviceInterface?.ValidateConfigGroup(serializer, group);
+        }
+        public void CloseDevice()
+        {
+            deviceInterface?.CloseDevice();
         }
         public void FactoryReset()
         {

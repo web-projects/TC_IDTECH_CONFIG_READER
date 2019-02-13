@@ -1803,8 +1803,10 @@ if(empty)
         {
             return null;
         }
-
-        public virtual void ValidateConfigGroup(ConfigSerializer serializer)
+        public virtual void ValidateConfigGroup(ConfigSerializer serializer, int group)
+        {
+        }
+        public virtual void CloseDevice()
         {
         }
         public virtual void FactoryReset()

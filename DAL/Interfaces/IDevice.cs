@@ -65,7 +65,8 @@ namespace IPA.DAL.RBADAL.Interfaces
         string [] GetCapKList();
         void ValidateCapKList(ConfigSerializer serializer);
         string [] GetConfigGroup(int group);
-        void ValidateConfigGroup(ConfigSerializer serializer);
+        void ValidateConfigGroup(ConfigSerializer serializer, int group);
+        void CloseDevice();
         void FactoryReset();
         #endregion
     }

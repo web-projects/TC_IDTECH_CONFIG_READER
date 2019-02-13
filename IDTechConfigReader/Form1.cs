@@ -60,7 +60,7 @@ namespace IDTechConfigReader
             }
             catch(Exception e)
             {
-                Debug.WriteLine("main: Form() - exception={0}", (object) e.Message);
+                Logger.error("main: Form() - exception={0}", (object) e.Message);
             }
             SetupLogging();
 
@@ -203,7 +203,7 @@ namespace IDTechConfigReader
                 }
                 catch(Exception ex)
                 {
-                    Debug.WriteLine("main: Form1_FormClosing() - exception={0}", (object) ex.Message);
+                    Logger.error("main: Form1_FormClosing() - exception={0}", (object) ex.Message);
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace IDTechConfigReader
             }
             catch(Exception e)
             {
-                Debug.WriteLine("main: SetupLogging() - exception={0}", (object) e.Message);
+                Logger.error("main: SetupLogging() - exception={0}", (object) e.Message);
             }
         }
 
@@ -283,7 +283,7 @@ namespace IDTechConfigReader
                     }
                     catch(Exception ex)
                     {
-                        Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                        Logger.error("main: exception={0}", (object)ex.Message);
                         if(ex.Message.Equals("NoDevice"))
                         {
                             WaitForDeviceToConnect();
@@ -304,7 +304,7 @@ namespace IDTechConfigReader
             }
             catch (Exception exp)
             {
-                Debug.WriteLine("main: Initalize() - exception={0}", (object) exp.Message);
+                Logger.error("main: Initalize() - exception={0}", (object) exp.Message);
             }
         }
 
@@ -392,7 +392,7 @@ namespace IDTechConfigReader
                 }
                 catch (Exception exp)
                 {
-                    Debug.WriteLine("main: SetDeviceMode() - exception={0}", (object) exp.Message);
+                    Logger.error("main: SetDeviceMode() - exception={0}", (object) exp.Message);
                 }
             };
 
@@ -462,7 +462,7 @@ namespace IDTechConfigReader
                 }
                 catch (Exception exp)
                 {
-                    Debug.WriteLine("main: ShowTerminalData() - exception={0}", (object) exp.Message);
+                    Logger.error("main: ShowTerminalData() - exception={0}", (object) exp.Message);
                 }
             };
 
@@ -514,7 +514,7 @@ namespace IDTechConfigReader
                 }
                 catch (Exception exp)
                 {
-                    Debug.WriteLine("main: ShowAIDData() - exception={0}", (object) exp.Message);
+                    Logger.error("main: ShowAIDData() - exception={0}", (object) exp.Message);
                 }
                 finally
                 {
@@ -604,7 +604,7 @@ namespace IDTechConfigReader
                 }
                 catch (Exception exp)
                 {
-                    Debug.WriteLine("main: ShowCapKList() - exception={0}", (object) exp.Message);
+                    Logger.error("main: ShowCapKList() - exception={0}", (object) exp.Message);
                 }
                 finally
                 {
@@ -676,7 +676,7 @@ namespace IDTechConfigReader
                 }
                 catch (Exception exp)
                 {
-                    Debug.WriteLine("main: ShowConfigGroup() - exception={0}", (object) exp.Message);
+                    Logger.error("main: ShowConfigGroup() - exception={0}", (object) exp.Message);
                     this.picBoxConfigWait5.Enabled = false;
                     this.picBoxConfigWait5.Visible  = false;
                 }
@@ -868,7 +868,7 @@ namespace IDTechConfigReader
                 }
                 catch(Exception ex)
                 {
-                    Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                    Logger.error("main: exception={0}", (object)ex.Message);
                 }
 
             }).Start();
@@ -889,7 +889,7 @@ namespace IDTechConfigReader
                 }
                 catch(Exception ex)
                 {
-                    Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                    Logger.error("main: exception={0}", (object)ex.Message);
                 }
 
             }).Start();
@@ -912,7 +912,7 @@ namespace IDTechConfigReader
                 }
                 catch(Exception ex)
                 {
-                    Debug.WriteLine("main: exception={0}", (object)ex.Message);
+                    Logger.error("main: exception={0}", (object)ex.Message);
                 }
 
             }).Start();

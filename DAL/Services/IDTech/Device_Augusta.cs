@@ -796,8 +796,21 @@ namespace IPA.DAL.RBADAL.Services
             return data;
         }
 
-        public override void ValidateConfigGroup(ConfigSerializer serializer)
+        public override void ValidateConfigGroup(ConfigSerializer serializer, int group)
         {
+        }
+
+        public override void CloseDevice()
+        {
+            if (Profile.deviceIsInitialized(IDT_DEVICE_Types.IDT_DEVICE_AUGUSTA, DEVICE_INTERFACE_Types.DEVICE_INTERFACE_USB))
+            {
+                Profile.closeDevice(IDT_DEVICE_Types.IDT_DEVICE_AUGUSTA, DEVICE_INTERFACE_Types.DEVICE_INTERFACE_USB);
+            }
+            //if (Profile.deviceIsInitialized(IDT_DEVICE_Types.IDT_DEVICE_AUGUSTA_KB, DEVICE_INTERFACE_Types.DEVICE_INTERFACE_USB))
+            //{
+            //    Profile.closeDevice(IDT_DEVICE_Types.IDT_DEVICE_AUGUSTA_KB, DEVICE_INTERFACE_Types.DEVICE_INTERFACE_USB);
+            //}
+            IDT_Device.stopUSBMonitoring();
         }
 
         public override void FactoryReset()

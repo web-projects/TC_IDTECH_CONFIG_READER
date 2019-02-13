@@ -170,6 +170,11 @@ namespace IPA.CommonInterface
             return termSettings;
         }
 
+        public EMVGroupTags GetConfigGroup(int group)
+        {
+            return emvGroupTags[group];
+        }
+
         public string[] GetConfigGroupCollection(int group)
         {
             string [] data = null;

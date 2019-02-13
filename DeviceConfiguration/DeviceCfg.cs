@@ -19,6 +19,7 @@ using IPA.DAL;
 using IPA.DAL.RBADAL.Services;
 using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using IPA.DAL.RBADAL.Services.Devices.IDTech.Models;
+using IPA.LoggerManager;
 
 namespace IPA.DAL.RBADAL
 {
@@ -174,6 +175,14 @@ namespace IPA.DAL.RBADAL
     public void SetFormClosing(bool state)
     {
       formClosing = state;
+      if(formClosing)
+      {
+            if(deviceInformation.emvConfigSupported)
+            {
+                Debug.WriteLine("DeviceCfg::DISCONNECTING FOR device TYPE={0}", IDT_Device.getDeviceType());
+                Device.CloseDevice();
+            }
+      }
     }
     
     public void NotificationRaise(DeviceNotificationEventArgs e)
@@ -616,7 +625,7 @@ namespace IPA.DAL.RBADAL
         }
         else
         {
-            Device.ValidateConfigGroup(serializer);
+            Device.ValidateConfigGroup(serializer, group);
             message = serializer.GetConfigGroupCollection(group);
         }
 
@@ -794,7 +803,7 @@ namespace IPA.DAL.RBADAL
         }
         catch(Exception exp)
         {
-           Debug.WriteLine("DeviceCfg::SetDeviceMode(): - exception={0}", (object)exp.Message);
+           Logger.error("DeviceCfg::SetDeviceMode(): - exception={0}", (object)exp.Message);
         }
     }    
 
@@ -825,7 +834,7 @@ namespace IPA.DAL.RBADAL
         }
         catch(Exception exp)
         {
-           Debug.WriteLine("DeviceCfg::DisableQCEmvMode(): - exception={0}", (object)exp.Message);
+           Logger.error("DeviceCfg::DisableQCEmvMode(): - exception={0}", (object)exp.Message);
         }
     }    
     
@@ -877,7 +886,7 @@ namespace IPA.DAL.RBADAL
         }
         catch(Exception exp)
         {
-            Debug.WriteLine("device: FactoryReset() - exception={0}", (object)exp.Message);
+           Logger.error("device: FactoryReset() - exception={0}", (object)exp.Message);
         }
         finally
         {
