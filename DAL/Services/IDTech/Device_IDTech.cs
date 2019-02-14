@@ -831,7 +831,7 @@ namespace IPA.DAL.RBADAL.Services
             return deviceInfo;
         }
 
-        public string GetFirmwareVersion()
+        public virtual string GetFirmwareVersion()
         {
             // declare variables
             string firmwareVersion = null;
@@ -1821,6 +1821,7 @@ if(empty)
     {
         public string SerialNumber;
         public string FirmwareVersion;
+        public string FullFirmwareVersion;
         public string EMVKernelVersion;
         public string ModelName;
         public string ModelNumber;

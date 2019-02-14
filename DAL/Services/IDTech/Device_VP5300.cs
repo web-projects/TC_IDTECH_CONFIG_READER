@@ -31,7 +31,7 @@ namespace IPA.DAL.RBADAL.Services
 
         public Device_VP5300(IDTECH_DEVICE_PID mode) : base(mode)
         {
-            deviceType = IDT_DEVICE_Types.IDT_DEVICE_SPECTRUM_PRO;
+            deviceType = IDT_DEVICE_Types.IDT_DEVICE_NEO2;
             deviceMode = mode;
             Debug.WriteLine("device: VP5300 instantiated with PID={0}", deviceMode);
         }
@@ -51,6 +51,12 @@ namespace IPA.DAL.RBADAL.Services
         {
             serialNumber = "";
             RETURN_CODE rt = IDT_NEO2.SharedController.config_getSerialNumber(ref serialNumber);
+            //TODO: ???
+            if (rt == RETURN_CODE.RETURN_CODE_BUSY)
+            {
+                IDT_NEO2.SharedController.emv_cancelTransaction();
+                rt = IDT_NEO2.SharedController.config_getSerialNumber(ref serialNumber);
+            }
             if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.SerialNumber = serialNumber;
@@ -65,11 +71,16 @@ namespace IPA.DAL.RBADAL.Services
             rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref firmwareVersion);
             if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
-                deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                //deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                deviceInfo.FirmwareVersion = firmwareVersion;
                 Debug.WriteLine("device INFO[Firmware Version]  : {0}", (object) deviceInfo.FirmwareVersion);
 
-                deviceInfo.Port = firmwareVersion.Substring(firmwareVersion.IndexOf("USB", StringComparison.Ordinal), 7);
+                //deviceInfo.Port = firmwareVersion.Substring(firmwareVersion.IndexOf("USB", StringComparison.Ordinal), 7);
+                deviceInfo.Port = "HID/USB";
                 Debug.WriteLine("device INFO[Port]              : {0}", (object) deviceInfo.Port);
+
+                deviceInfo.ModelNumber = firmwareVersion.Split(' ')[0] ?? "";
+                Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
             }
             else
             {
@@ -79,16 +90,16 @@ namespace IPA.DAL.RBADAL.Services
             deviceInfo.ModelName = IDTechSDK.Profile.IDT_DEVICE_String(deviceType, deviceConnect);
             Debug.WriteLine("device INFO[Model Name]        : {0}", (object) deviceInfo.ModelName);
 
-            rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref deviceInfo.ModelNumber);
-            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
-            {
-                deviceInfo.ModelNumber = deviceInfo?.ModelNumber?.Split(' ')[0] ?? "";
-                Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
-            }
-            else
-            {
-                Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Model number reason={0}", rt);
-            }
+            //rt = IDT_NEO2.SharedController.config_getModelNumber(ref deviceInfo.ModelNumber);
+            //if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+            //{
+            //    deviceInfo.ModelNumber = deviceInfo?.ModelNumber?.Split(' ')[0] ?? "";
+            //    Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
+            //}
+            //else
+            //{
+            //    Debug.WriteLine("device: PopulateDeviceInfo() - failed to get Model number reason={0}", rt);
+            //}
 
             EMVKernelVer = "";
             rt = IDT_NEO2.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
@@ -112,18 +123,38 @@ namespace IPA.DAL.RBADAL.Services
             return configStatus;
         }
 
+        public override string GetFirmwareVersion()
+        {
+            string firmwareVersion = "";
+            RETURN_CODE rt = IDT_NEO2.SharedController.device_getFirmwareVersion(ref firmwareVersion);
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+            {
+                //deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                //firmwareVersion = deviceInfo.FirmwareVersion;
+                deviceInfo.FirmwareVersion = firmwareVersion;
+                Debug.WriteLine("device INFO[Firmware Version]  : {0}", (object) deviceInfo.FirmwareVersion);
+            }
+            else
+            {
+                Debug.WriteLine("device: GetDeviceFirmwareVersion() - failed to get Firmware version reason={0}", rt);
+            }
+            return firmwareVersion;
+        }
         public override string ParseFirmwareVersion(string firmwareInfo)
         {
             // VP5300 format has no space after V: V1.00
             // Validate the format firmwareInfo see if the version # exists
-            var version = firmwareInfo.Substring(firmwareInfo.IndexOf('V') + 1,
-                                                 firmwareInfo.Length - firmwareInfo.IndexOf('V') - 1).Trim();
-            var mReg = Regex.Match(version, @"[0-9]+\.[0-9]+");
-
-            // If the parse succeeded 
-            if (mReg.Success)
+            var version = firmwareInfo?.Substring(firmwareInfo.IndexOf('V') + 1,
+                                                  firmwareInfo.Length - firmwareInfo.IndexOf('V') - 1).Trim() ?? "";
+            if(version.Length > 0)
             {
-                version = mReg.Value;
+                var mReg = Regex.Match(version, @"[0-9]+\.[0-9]+");
+
+                // If the parse succeeded 
+                if (mReg.Success)
+                {
+                    version = mReg.Value;
+                }
             }
 
             return version;
@@ -198,7 +229,7 @@ namespace IPA.DAL.RBADAL.Services
             }
          }
 
-         public override string [] GetTerminalData()
+        public override string [] GetTerminalData()
          {
             string [] data = null;
 
@@ -235,7 +266,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
         }
 
-         public override void ValidateTerminalData(ConfigSerializer serializer)
+        public override void ValidateTerminalData(ConfigSerializer serializer)
          {
             try
             {
@@ -372,7 +403,7 @@ namespace IPA.DAL.RBADAL.Services
                 Debug.WriteLine("device: ValidateTerminalData() - exception={0}", (object)exp.Message);
             }
         }
-         public override string [] GetAidList()
+        public override string [] GetAidList()
          {
             string [] data = null;
 
@@ -427,7 +458,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
          }
 
-         public override void ValidateAidList(ConfigSerializer serializer)
+        public override void ValidateAidList(ConfigSerializer serializer)
          {
             try
             {
@@ -585,7 +616,7 @@ namespace IPA.DAL.RBADAL.Services
             }
          }
     
-         public override string [] GetCapKList()
+        public override string [] GetCapKList()
          {
             string [] data = null;
 
@@ -645,7 +676,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
          }
 
-         public override void ValidateCapKList(ConfigSerializer serializer)
+        public override void ValidateCapKList(ConfigSerializer serializer)
          {
             try
             {
@@ -789,7 +820,7 @@ namespace IPA.DAL.RBADAL.Services
             }
         }
 
-         public override string [] GetConfigGroup(int group)
+        public override string [] GetConfigGroup(int group)
          {
             string [] data = null;
 
@@ -828,7 +859,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
          }
 
-         public override void ValidateConfigGroup(ConfigSerializer serializer, int group)
+        public override void ValidateConfigGroup(ConfigSerializer serializer, int group)
          {
             try
             {
@@ -907,7 +938,7 @@ namespace IPA.DAL.RBADAL.Services
             }
         }
 
-         public override void CloseDevice()
+        public override void CloseDevice()
          {
             if (Profile.deviceIsInitialized(IDT_DEVICE_Types.IDT_DEVICE_NEO2, DEVICE_INTERFACE_Types.DEVICE_INTERFACE_USB))
             {
@@ -916,7 +947,7 @@ namespace IPA.DAL.RBADAL.Services
             IDT_Device.stopUSBMonitoring();
          }
 
-         public override void FactoryReset()
+        public override void FactoryReset()
          {
             try
             {

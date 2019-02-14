@@ -42,6 +42,8 @@ namespace IPA.CommonInterface
     // CAPK
     void GetCapKList();
     void GetConfigGroup(int group);
+    // Firmware update
+    void FirmwareUpdate(string filename);
     // Factory Reset
     void FactoryReset();
   }

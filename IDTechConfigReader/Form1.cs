@@ -87,6 +87,11 @@ namespace IDTechConfigReader
                 {
                     break;
                 }
+                case NOTIFICATION_TYPE.NT_DEVICE_UPDATE_CONFIG:
+                {
+                    UpdateUI();
+                    break;
+                }
                 case NOTIFICATION_TYPE.NT_UNLOAD_DEVICE_CONFIGDOMAIN:
                 {
                     UnloadDeviceConfigurationDomainUI(sender, args);
@@ -130,6 +135,12 @@ namespace IDTechConfigReader
                     SetEmvButtonUI(sender, args);
                     break;
                 }
+
+                case NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_COMPLETE:
+                {
+                    EnableMainFormUI(sender, args);
+                    break;
+                }
             }
         }
         private void UnloadDeviceConfigurationDomainUI(object sender, DeviceNotificationEventArgs e)
@@ -171,9 +182,72 @@ namespace IDTechConfigReader
         {
             SetEmvButton(e.Message);
         }
+        private void EnableMainFormUI(object sender, DeviceNotificationEventArgs e)
+        {
+            EnableMainForm(e.Message);
+        }
+        #endregion
+
+        /********************************************************************************************************/
+        // GUI - DELEGATE SECTION
+        /********************************************************************************************************/
+        #region -- gui delegate section --
+
+        private void ClearUI()
+        {
+            if (InvokeRequired)
+            {
+                MethodInvoker Callback = new MethodInvoker(ClearUI);
+                Invoke(Callback);
+            }
+            else
+            {
+            }
+        }
+
+        private void UpdateUI()
+        {
+            if (InvokeRequired)
+            {
+                MethodInvoker Callback = new MethodInvoker(UpdateUI);
+                Invoke(Callback);
+            }
+            else
+            {
+                SetConfiguration();
+            }
+        }
 
         #endregion
 
+        /********************************************************************************************************/
+        // DEVICE ARTIFACTS
+        /********************************************************************************************************/
+        #region -- device artifacts --
+        private void SetConfiguration()
+        {
+            Debug.WriteLine("main: update GUI elements =========================================================");
+
+            try
+            {
+                string[] config = devicePlugin.GetConfig();
+
+                if (config != null)
+                {
+                    // value expected: either dashed or space separated
+                    if(config[1] != null)
+                    {
+                        this.lblFirmwareVersion.Text = config[1];
+                        this.btnFirmwareUpdate.Enabled = true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.error("main: SetConfiguration() exception={0}", (object)ex.Message);
+            }
+        }
+        #endregion
         /********************************************************************************************************/
         // FORM ELEMENTS
         /********************************************************************************************************/
@@ -316,6 +390,8 @@ namespace IDTechConfigReader
                 {
                     this.picBoxConfigWait1.Enabled = true;
                     this.picBoxConfigWait1.Visible  = true;
+                    this.btnFirmwareUpdate.Enabled = false;
+                    this.lblFirmwareVersion.Text = "UNKNOWN";
                 }));
             }
 
@@ -741,6 +817,28 @@ namespace IDTechConfigReader
             }
         }
 
+        private void EnableMainForm(object payload)
+        {
+            MethodInvoker mi = () =>
+            {
+                string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+
+                this.lblFirmwareVersion.Text = data[0];
+                this.btnFirmwareUpdate.Enabled = false;
+                this.picBoxConfigWait1.Enabled = false;
+                this.picBoxConfigWait1.Visible  = false;
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
         private void OnSelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab.Name.Equals("tabPage1"))
@@ -861,9 +959,9 @@ namespace IDTechConfigReader
             string mode = this.button4.Text;
             new Thread(() =>
             {
-                Thread.CurrentThread.IsBackground = true;
                 try
                 {
+                    Thread.CurrentThread.IsBackground = true;
                     devicePlugin.SetDeviceMode(mode);
                 }
                 catch(Exception ex)
@@ -882,9 +980,9 @@ namespace IDTechConfigReader
         {
             new Thread(() =>
             {
-                Thread.CurrentThread.IsBackground = true;
                 try
                 {
+                    Thread.CurrentThread.IsBackground = true;
                     devicePlugin.DisableQCEmvMode();
                 }
                 catch(Exception ex)
@@ -905,10 +1003,10 @@ namespace IDTechConfigReader
             int group = Convert.ToInt16(comboBox1.SelectedItem.ToString());
             new Thread(() =>
             {
-                Thread.CurrentThread.IsBackground = true;
                 try
                 {
-                    Thread.CurrentThread.IsBackground = true; devicePlugin.GetConfigGroup(group);
+                    Thread.CurrentThread.IsBackground = true; 
+                    devicePlugin.GetConfigGroup(group);
                 }
                 catch(Exception ex)
                 {
@@ -916,6 +1014,39 @@ namespace IDTechConfigReader
                 }
 
             }).Start();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = "FIRMWARE UPDATE";
+            openFileDialog1.Filter = "NGA FW Files|*.fm";
+            openFileDialog1.InitialDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Assets";
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                // Firmware Update
+                new Thread(() =>
+                {
+                    try
+                    {
+                        Thread.CurrentThread.IsBackground = true;
+                        devicePlugin.FirmwareUpdate(openFileDialog1.FileName);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.error("main: exception={0}", (object)ex.Message);
+                    }
+
+                }).Start();
+
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.picBoxConfigWait1.Enabled = true;
+                    this.picBoxConfigWait1.Visible  = true;
+                    this.lblFirmwareVersion.Text = "UPDATING...";
+                    System.Windows.Forms.Application.DoEvents();
+                }));
+            }
         }
     }
 }

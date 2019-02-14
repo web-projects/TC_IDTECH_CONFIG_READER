@@ -47,6 +47,7 @@ namespace IPA.DAL.RBADAL
     private bool attached;
     private bool connected;
     private bool formClosing;
+    private bool firmwareUpdate;
 
     private readonly object discoveryLock = new object();
 
@@ -126,12 +127,13 @@ namespace IPA.DAL.RBADAL
 
             if(deviceInformation.emvConfigSupported)
             {
-                Debug.WriteLine("DeviceCfg::DeviceInit(): - device TYPE={0}", IDT_Device.getDeviceType());
-
                 // Initialize Universal SDK
                 IDT_Device.setCallback(MessageCallBack);
                 //IDT_Device.setCallbackIP(MessageCallBackIP);
                 IDT_Device.startUSBMonitoring();
+                Debug.WriteLine("DeviceCfg::DeviceInit(): - device TYPE={0}", IDT_Device.getDeviceType());
+
+                NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_INITIALIZE_DEVICE, Message = new object[]{ "COMPLETED" } });
             }
             else
             {
@@ -150,14 +152,6 @@ namespace IPA.DAL.RBADAL
       {
           throw xcp;
       }
-
-      // Update Device Configuration
-      string [] message = { "COMPLETED" };
-      NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_INITIALIZE_DEVICE, Message = message });
-
-      // Initialize Configuration Serializer
-      serializer = new ConfigSerializer();
-      serializer.ReadConfig();
     }
 
     public ConfigSerializer GetConfigSerializer()
@@ -171,6 +165,28 @@ namespace IPA.DAL.RBADAL
     // MAIN INTERFACE
     /********************************************************************************************************/
     #region -- main interface --
+
+    public string [] GetConfig()
+    {
+      if (!attached) 
+      { 
+        return null; 
+      }
+
+      string firmwareVersion = Device?.ParseFirmwareVersion(deviceInformation.FirmwareVersion) ?? "";
+      Debug.WriteLine("GetConfig(): firmware parsed version={0}", (object) firmwareVersion);
+
+      // Get Configuration
+      string [] config = new string[5];
+        
+      config[0] = deviceInformation.SerialNumber;
+      config[1] = deviceInformation.FirmwareVersion;
+      config[2] = deviceInformation.ModelName;
+      config[3] = deviceInformation.ModelNumber;
+      config[4] = deviceInformation.Port;
+   
+      return config;
+    }
 
     public void SetFormClosing(bool state)
     {
@@ -325,7 +341,7 @@ namespace IPA.DAL.RBADAL
           deviceProtocol = comm.getDeviceProtocol();
       }
 
-      //Debug.WriteLine("device discovery: state={0}", state);
+      Debug.WriteLine("DeviceCfg::MessageCallBack: device discovery: state={0}", state);
 
       switch (state)
       {
@@ -342,22 +358,35 @@ namespace IPA.DAL.RBADAL
           Debug.WriteLine("device connected: {0}", (object) IDTechSDK.Profile.IDT_DEVICE_String(type, deviceConnect));
 
           // Populate Device Configuration
-          new Thread(() =>
+          if(!connected && !firmwareUpdate)
           {
-             Thread.CurrentThread.IsBackground = false;
+              new Thread(() =>
+              {
+                 Thread.CurrentThread.IsBackground = false;
+                 connected = true;
 
-             // Get Device Configuration
-             SetDeviceConfig();
+                 // Get Device Configuration
+                 SetDeviceConfig();
 
-             Thread.Sleep(100);
-             connected = true;
+                 Thread.Sleep(100);
 
-             // Get Device Information
-             ///GetDeviceInformation();
+                 // Get Device Information
+                 GetDeviceInformation();
 
-          }).Start();
+              }).Start();
+          }
 
           break;
+        }
+
+        case DeviceState.Disconnected:
+        {
+            if(!firmwareUpdate)
+            {
+                connected = false;
+                DeviceRemovedHandler();
+            }
+            break;
         }
 
         case DeviceState.DefaultDeviceTypeChange:
@@ -542,6 +571,61 @@ namespace IPA.DAL.RBADAL
           NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_PROCESS_CARDDATA_ERROR, Message = message });
           break;
         }
+
+        case DeviceState.FirmwareUpdate:
+        {
+            switch (transactionResultCode)
+            {
+                case RETURN_CODE.RETURN_CODE_FW_STARTING_UPDATE:
+                {
+                    Logger.debug("device: starting Firmware Update");
+                    break;
+                }
+                case RETURN_CODE.RETURN_CODE_DO_SUCCESS:
+                {
+                    Logger.debug("device: firmware Update Successful");
+                    new Thread(() =>
+                    {
+                        Thread.CurrentThread.IsBackground = false;
+                        firmwareUpdate = false;
+
+                        // Get Device Configuration
+                        SetDeviceFirmwareVersion();
+
+                    }).Start();
+
+                    break;
+                }
+                case RETURN_CODE.RETURN_CODE_APPLYING_FIRMWARE_UPDATE:
+                {
+                    Logger.debug("device: applying Firmware Update....");
+                    break;
+                }
+                case RETURN_CODE.RETURN_CODE_ENTERING_BOOTLOADER_MODE:
+                {
+                    Logger.debug("device: entering Bootloader Mode....");
+                    break;
+                }
+                case RETURN_CODE.RETURN_CODE_BLOCK_TRANSFER_SUCCESS:
+                {
+                    int start = data[0];
+                    int end = data[1];
+                    if (data.Length == 4)
+                    {
+                        start = data[0] * 0x100 + data[1];
+                        end = data[2] * 0x100 + data[3];
+                    }
+                    Logger.debug("device: sent block {0} of {1}", start.ToString(), end.ToString());
+                    break;
+                }
+                default:
+                {
+                    Logger.debug("device: firmware Update Error Code: 0x{0:X} : {1}", (ushort)transactionResultCode, IDTechSDK.errorCode.getErrorString(transactionResultCode));
+                    break;
+                }
+            }
+            break;
+        }
       }
     }
     
@@ -561,6 +645,15 @@ namespace IPA.DAL.RBADAL
         configurationMode = mode;
     }
 
+    public void GetDeviceInformation()
+    {
+        if(serializer == null)
+        {
+            serializer = new ConfigSerializer();
+        }
+        serializer.ReadConfig();
+    }
+
     public void GetTerminalData()
     {
         string [] message = null;
@@ -570,12 +663,6 @@ namespace IPA.DAL.RBADAL
         }
         else
         {
-            if(serializer == null)
-            {
-                serializer = new ConfigSerializer();
-                serializer.ReadConfig();        
-            }
-
             Device.ValidateTerminalData(serializer);
 
             message = serializer.GetTerminalDataString(deviceInformation.SerialNumber, deviceInformation.EMVKernelVersion);
@@ -632,9 +719,11 @@ namespace IPA.DAL.RBADAL
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_CONFIG_GROUP, Message = message });
     }
 
-    public string[] GetConfig()
+    public void SetDeviceFirmwareVersion()
     {
-        throw new NotImplementedException();
+        deviceInformation.FirmwareVersion  = Device.GetFirmwareVersion();
+        string [] message = { deviceInformation.FirmwareVersion };
+        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_COMPLETE, Message = message });
     }
 
     public void GetCardData()
@@ -877,6 +966,31 @@ namespace IPA.DAL.RBADAL
     public string GetErrorMessage(string data)
     {
         throw new NotImplementedException();
+    }
+    public void FirmwareUpdate(string filename)
+    {
+        try
+        {
+            byte[] file = System.IO.File.ReadAllBytes(filename);
+            if(file.Length > 0)
+            {
+                RETURN_CODE rt = IDT_Device.SharedController.device_updateDeviceFirmware(file);
+                if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                {
+
+                    Logger.debug("device: firmware Update Started...");
+                    firmwareUpdate = true;
+                }
+                else
+                {
+                    Logger.debug("device: firmware Update Failed Error Code: 0x{0:X}", (ushort)rt);
+                }
+            }
+        }
+        catch(Exception exp)
+        {
+           Logger.error("device: FirmwareUpdate() - exception={0}", (object)exp.Message);
+        }
     }
     public void FactoryReset()
     {

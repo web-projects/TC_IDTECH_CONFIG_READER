@@ -65,6 +65,10 @@
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnFirmwareUpdate = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lblFirmwareVersion = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
@@ -96,6 +100,9 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.picBoxConfigWait1);
+            this.tabPage1.Controls.Add(this.lblFirmwareVersion);
+            this.tabPage1.Controls.Add(this.btnFirmwareUpdate);
+            this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.label3);
@@ -118,9 +125,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picBoxConfigWait1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.picBoxConfigWait1.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait1.Image")));
-            this.picBoxConfigWait1.Location = new System.Drawing.Point(20, 14);
+            this.picBoxConfigWait1.Location = new System.Drawing.Point(3, 3);
             this.picBoxConfigWait1.Name = "picBoxConfigWait1";
-            this.picBoxConfigWait1.Size = new System.Drawing.Size(652, 553);
+            this.picBoxConfigWait1.Size = new System.Drawing.Size(686, 582);
             this.picBoxConfigWait1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picBoxConfigWait1.TabIndex = 3;
             this.picBoxConfigWait1.TabStop = false;
@@ -443,6 +450,39 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(40, 517);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Firmware Version:";
+            // 
+            // btnFirmwareUpdate
+            // 
+            this.btnFirmwareUpdate.Enabled = false;
+            this.btnFirmwareUpdate.Location = new System.Drawing.Point(43, 538);
+            this.btnFirmwareUpdate.Name = "btnFirmwareUpdate";
+            this.btnFirmwareUpdate.Size = new System.Drawing.Size(75, 29);
+            this.btnFirmwareUpdate.TabIndex = 10;
+            this.btnFirmwareUpdate.Text = "Update";
+            this.btnFirmwareUpdate.UseVisualStyleBackColor = true;
+            this.btnFirmwareUpdate.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // lblFirmwareVersion
+            // 
+            this.lblFirmwareVersion.AutoSize = true;
+            this.lblFirmwareVersion.Location = new System.Drawing.Point(136, 517);
+            this.lblFirmwareVersion.Name = "lblFirmwareVersion";
+            this.lblFirmwareVersion.Size = new System.Drawing.Size(117, 13);
+            this.lblFirmwareVersion.TabIndex = 12;
+            this.lblFirmwareVersion.Text = "FIRMWARE VERSION";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -511,6 +551,10 @@
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button btnFirmwareUpdate;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label lblFirmwareVersion;
     }
 }
 

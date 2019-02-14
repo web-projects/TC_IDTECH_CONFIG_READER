@@ -257,7 +257,14 @@ namespace IPA.DAL.RBADAL.Services
         {
             return deviceInterface.GetDeviceInfo();
         }
-
+        public string GetFirmwareVersion()
+        {
+            return deviceInterface.GetFirmwareVersion();
+        }
+        public string ParseFirmwareVersion(string firmwareInfo)
+        {
+            return deviceInterface?.ParseFirmwareVersion(firmwareInfo);
+        }
          #region -- keyboard mode overrides --
         public void SetVP3000DeviceHidMode()
         {

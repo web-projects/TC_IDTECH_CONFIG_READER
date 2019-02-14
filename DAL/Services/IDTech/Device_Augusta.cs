@@ -113,6 +113,22 @@ namespace IPA.DAL.RBADAL.Services
             return configStatus;
         }
 
+        public override string GetFirmwareVersion()
+        {
+            string firmwareVersion = "";
+            RETURN_CODE rt = IDT_Augusta.SharedController.device_getFirmwareVersion(ref firmwareVersion);
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+            {
+                deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                firmwareVersion = deviceInfo.FirmwareVersion;
+                Debug.WriteLine("device INFO[Firmware Version]  : {0}", (object) deviceInfo.FirmwareVersion);
+            }
+            else
+            {
+                Debug.WriteLine("device: GetDeviceFirmwareVersion() - failed to get Firmware version reason={0}", rt);
+            }
+            return firmwareVersion;
+        }
         public override string ParseFirmwareVersion(string firmwareInfo)
         {
             // Augusta format has no space after V: V1.00

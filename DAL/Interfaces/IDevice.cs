@@ -34,11 +34,12 @@ namespace IPA.DAL.RBADAL.Interfaces
         void Abort(DeviceAbortType abortType);
         void Process(DeviceProcess process);
         void ClearBuffer();
-
         void BadRead();
         ///Signature Signature();
         bool UpdateDevice(DeviceUpdateType updateType);
         string GetSerialNumber();
+        string GetFirmwareVersion();
+        string ParseFirmwareVersion(string firmwareInfo);
         DeviceInfo GetDeviceInfo();
         bool Reset();
         bool SetUSBHIDMode();
