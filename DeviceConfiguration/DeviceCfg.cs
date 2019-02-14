@@ -578,12 +578,17 @@ namespace IPA.DAL.RBADAL
             {
                 case RETURN_CODE.RETURN_CODE_FW_STARTING_UPDATE:
                 {
-                    Logger.debug("device: starting Firmware Update");
+                    string [] message = { "STARTING FIRMWARE UPDATE...." };
+                    Logger.debug("device: {0}", (object) message[0]);
+                    NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STATUS, Message = message });
                     break;
                 }
                 case RETURN_CODE.RETURN_CODE_DO_SUCCESS:
                 {
-                    Logger.debug("device: firmware Update Successful");
+                    string [] message = { "FIRMWARE UPDATE SUCCESSFUL" };
+                    Logger.debug("device: {0}", (object) message[0]);
+                    NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STATUS, Message = message });
+
                     new Thread(() =>
                     {
                         Thread.CurrentThread.IsBackground = false;
@@ -598,7 +603,9 @@ namespace IPA.DAL.RBADAL
                 }
                 case RETURN_CODE.RETURN_CODE_APPLYING_FIRMWARE_UPDATE:
                 {
-                    Logger.debug("device: applying Firmware Update....");
+                    string [] message = { "APPLYING FIRMWARE UPDATE...." };
+                    Logger.debug("device: {0}", (object) message[0]);
+                    NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STATUS, Message = message });
                     break;
                 }
                 case RETURN_CODE.RETURN_CODE_ENTERING_BOOTLOADER_MODE:
@@ -616,6 +623,8 @@ namespace IPA.DAL.RBADAL
                         end = data[2] * 0x100 + data[3];
                     }
                     Logger.debug("device: sent block {0} of {1}", start.ToString(), end.ToString());
+                    string [] message = { start.ToString() };
+                    NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STEP, Message = message });
                     break;
                 }
                 default:
@@ -967,18 +976,35 @@ namespace IPA.DAL.RBADAL
     {
         throw new NotImplementedException();
     }
-    public void FirmwareUpdate(string filename)
+    public void FirmwareUpdate(string fullPathfilename, byte[] bytes)
     {
         try
         {
-            byte[] file = System.IO.File.ReadAllBytes(filename);
-            if(file.Length > 0)
+            if(bytes.Length > 0)
             {
-                RETURN_CODE rt = IDT_Device.SharedController.device_updateDeviceFirmware(file);
+                /*TODO: GUI UNIT TEST
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = false;
+
+                    for(int i = 1; i <= bytes.Length / 1024; i++)
+                    {
+                        Debug.WriteLine("device: sent block {0} of {1}", i.ToString(), (bytes.Length / 1024).ToString());
+                        string [] message = { i.ToString() };
+                        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STEP, Message = message });
+                        Thread.Sleep(10);
+                    }
+                    Thread.Sleep(1000);
+                    SetDeviceFirmwareVersion();
+                }).Start();
+
+                return;*/
+
+                RETURN_CODE rt = IDT_Device.SharedController.device_updateDeviceFirmware(bytes);
                 if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                 {
-
-                    Logger.debug("device: firmware Update Started...");
+                    string filename = System.IO.Path.GetFileName(fullPathfilename);
+                    Logger.debug("device: firmware update started for: {0}", filename);
                     firmwareUpdate = true;
                 }
                 else

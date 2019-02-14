@@ -69,6 +69,7 @@
             this.btnFirmwareUpdate = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.lblFirmwareVersion = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
@@ -99,6 +100,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.progressBar1);
             this.tabPage1.Controls.Add(this.picBoxConfigWait1);
             this.tabPage1.Controls.Add(this.lblFirmwareVersion);
             this.tabPage1.Controls.Add(this.btnFirmwareUpdate);
@@ -127,7 +129,7 @@
             this.picBoxConfigWait1.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait1.Image")));
             this.picBoxConfigWait1.Location = new System.Drawing.Point(3, 3);
             this.picBoxConfigWait1.Name = "picBoxConfigWait1";
-            this.picBoxConfigWait1.Size = new System.Drawing.Size(686, 582);
+            this.picBoxConfigWait1.Size = new System.Drawing.Size(686, 490);
             this.picBoxConfigWait1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picBoxConfigWait1.TabIndex = 3;
             this.picBoxConfigWait1.TabStop = false;
@@ -483,6 +485,14 @@
             this.lblFirmwareVersion.TabIndex = 12;
             this.lblFirmwareVersion.Text = "FIRMWARE VERSION";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(43, 538);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(627, 29);
+            this.progressBar1.TabIndex = 13;
+            this.progressBar1.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -555,6 +565,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label lblFirmwareVersion;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

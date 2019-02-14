@@ -43,7 +43,7 @@ namespace IPA.CommonInterface
     void GetCapKList();
     void GetConfigGroup(int group);
     // Firmware update
-    void FirmwareUpdate(string filename);
+    void FirmwareUpdate(string filename, byte[] bytes);
     // Factory Reset
     void FactoryReset();
   }

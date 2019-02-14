@@ -27,3 +27,4 @@
 /DeviceConfiguration/obj/*
 /LoggerManager/bin/*
 /LoggerManager/obj/*
+/ConfigReader.Test/obj/Debug

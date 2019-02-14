@@ -136,6 +136,18 @@ namespace IDTechConfigReader
                     break;
                 }
 
+                case NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STEP:
+                {
+                    FirmwareUpdateProgressUI(sender, args);
+                    break;
+                }
+
+                case NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_STATUS:
+                {
+                    FirmwareUpdateStatusUI(sender, args);
+                    break;
+                }
+
                 case NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_COMPLETE:
                 {
                     EnableMainFormUI(sender, args);
@@ -181,6 +193,14 @@ namespace IDTechConfigReader
         private void SetEmvButtonUI(object sender, DeviceNotificationEventArgs e)
         {
             SetEmvButton(e.Message);
+        }
+        private void FirmwareUpdateProgressUI(object sender, DeviceNotificationEventArgs e)
+        {
+            FirmwareUpdateProgress(e.Message);
+        }
+        private void FirmwareUpdateStatusUI(object sender, DeviceNotificationEventArgs e)
+        {
+            FirmwareUpdateStatus(e.Message);
         }
         private void EnableMainFormUI(object sender, DeviceNotificationEventArgs e)
         {
@@ -239,6 +259,8 @@ namespace IDTechConfigReader
                     {
                         this.lblFirmwareVersion.Text = config[1];
                         this.btnFirmwareUpdate.Enabled = true;
+                        this.btnFirmwareUpdate.Visible = true;
+                        this.progressBar1.Visible      = false;
                     }
                 }
             }
@@ -816,6 +838,41 @@ namespace IDTechConfigReader
                 Invoke(mi);
             }
         }
+        
+        private void FirmwareUpdateProgress(object payload)
+        {
+            MethodInvoker mi = () =>
+            {
+                string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                this.progressBar1.PerformStep();
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+        private void FirmwareUpdateStatus(object payload)
+        {
+            MethodInvoker mi = () =>
+            {
+                string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                this.lblFirmwareVersion.Text = data[0];
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
 
         private void EnableMainForm(object payload)
         {
@@ -824,9 +881,11 @@ namespace IDTechConfigReader
                 string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
 
                 this.lblFirmwareVersion.Text = data[0];
+                this.btnFirmwareUpdate.Visible = true;
                 this.btnFirmwareUpdate.Enabled = false;
                 this.picBoxConfigWait1.Enabled = false;
-                this.picBoxConfigWait1.Visible  = false;
+                this.picBoxConfigWait1.Visible = false;
+                this.progressBar1.Visible      = false;
             };
 
             if (InvokeRequired)
@@ -1024,28 +1083,39 @@ namespace IDTechConfigReader
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                // Firmware Update
-                new Thread(() =>
+                byte[] bytes = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                if(bytes.Length > 0)
                 {
-                    try
-                    {
-                        Thread.CurrentThread.IsBackground = true;
-                        devicePlugin.FirmwareUpdate(openFileDialog1.FileName);
-                    }
-                    catch(Exception ex)
-                    {
-                        Logger.error("main: exception={0}", (object)ex.Message);
-                    }
+                    // Set the initial value of the ProgressBar.
+	                this.progressBar1.Value = 0;
+                    this.progressBar1.Maximum = bytes.Length / 1024;
+                    this.progressBar1.Step = 1;
 
-                }).Start();
+                    // Firmware Update
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            Thread.CurrentThread.IsBackground = true;
+                            devicePlugin.FirmwareUpdate(openFileDialog1.FileName, bytes);
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.error("main: exception={0}", (object)ex.Message);
+                        }
 
-                this.Invoke(new MethodInvoker(() =>
-                {
-                    this.picBoxConfigWait1.Enabled = true;
-                    this.picBoxConfigWait1.Visible  = true;
-                    this.lblFirmwareVersion.Text = "UPDATING...";
-                    System.Windows.Forms.Application.DoEvents();
-                }));
+                    }).Start();
+
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        this.picBoxConfigWait1.Enabled = true;
+                        this.picBoxConfigWait1.Visible  = true;
+                        this.lblFirmwareVersion.Text = "UPDATING FIRMWARE (PLEASE DON'T INTERRUPT)...";
+                        this.btnFirmwareUpdate.Visible = false;
+                        this.progressBar1.Visible = true;
+                        System.Windows.Forms.Application.DoEvents();
+                    }));
+                }
             }
         }
     }

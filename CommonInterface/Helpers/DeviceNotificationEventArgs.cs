@@ -24,6 +24,8 @@ namespace IPA.CommonInterface.Helpers
         NT_SHOW_CONFIG_GROUP,
         NT_UI_ENABLE_BUTTONS,
         NT_SET_EMV_MODE_BUTTON,
+        NT_FIRMWARE_UPDATE_STEP,
+        NT_FIRMWARE_UPDATE_STATUS,
         NT_FIRMWARE_UPDATE_COMPLETE
     }
 
