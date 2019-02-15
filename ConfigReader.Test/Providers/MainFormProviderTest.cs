@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using IPA.DAL.RBADAL;
 using IPA.CommonInterface;
+using IPA.CommonInterface.Interfaces;
 using IPA.CommonInterface.Helpers;
 
 namespace IDTechConfigReader

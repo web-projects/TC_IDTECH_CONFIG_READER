@@ -28,3 +28,4 @@
 /LoggerManager/bin/*
 /LoggerManager/obj/*
 /ConfigReader.Test/obj/Debug
+/ConfigReader.Test/bin/Debug

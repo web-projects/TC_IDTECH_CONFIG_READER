@@ -17,6 +17,7 @@ using IPA.DAL.RBADAL;
 using IPA.DAL.RBADAL.Services;
 using IPA.LoggerManager;
 using IPA.CommonInterface;
+using IPA.CommonInterface.Interfaces;
 using IPA.CommonInterface.Helpers;
 using System.Reflection;
 using System.Configuration;

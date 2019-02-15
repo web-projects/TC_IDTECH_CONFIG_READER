@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using IPA.CommonInterface.Helpers;
+using IPA.CommonInterface.Interfaces;
 
 namespace IPA.CommonInterface
 {
