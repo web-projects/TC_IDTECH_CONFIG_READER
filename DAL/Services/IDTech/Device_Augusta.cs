@@ -17,6 +17,10 @@ namespace IPA.DAL.RBADAL.Services
 {
     class Device_Augusta : Device_IDTech
     {
+        /********************************************************************************************************/
+        // ATTRIBUTES
+        /********************************************************************************************************/
+        #region -- attributes --
         internal static string _HASH_SHA1_ID_STR = "01";
         internal static string _ENC_RSA_ID_STR   = "01";
 
@@ -28,6 +32,7 @@ namespace IPA.DAL.RBADAL.Services
         private string serialNumber = "";
         private string EMVKernelVer = "";
         private static DeviceInfo deviceInfo = null;
+        #endregion
 
         public Device_Augusta(IDTECH_DEVICE_PID mode) : base(mode)
         {
@@ -215,7 +220,7 @@ namespace IPA.DAL.RBADAL.Services
             }
          }
 
-         public override string [] GetTerminalData()
+        public override string [] GetTerminalData()
          {
             string [] data = null;
 
@@ -252,7 +257,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
         }
 
-         public override void ValidateTerminalData(ConfigSerializer serializer)
+        public override void ValidateTerminalData(ConfigSerializer serializer)
          {
             try
             {
@@ -389,7 +394,8 @@ namespace IPA.DAL.RBADAL.Services
                 Debug.WriteLine("device: ValidateTerminalData() - exception={0}", (object)exp.Message);
             }
         }
-         public override string [] GetAidList()
+        
+        public override string [] GetAidList()
          {
             string [] data = null;
 
@@ -444,7 +450,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
          }
 
-         public override void ValidateAidList(ConfigSerializer serializer)
+        public override void ValidateAidList(ConfigSerializer serializer)
          {
             try
             {
@@ -602,7 +608,7 @@ namespace IPA.DAL.RBADAL.Services
             }
          }
     
-         public override string [] GetCapKList()
+        public override string [] GetCapKList()
          {
             string [] data = null;
 
@@ -662,7 +668,7 @@ namespace IPA.DAL.RBADAL.Services
             return data;
          }
 
-         public override void ValidateCapKList(ConfigSerializer serializer)
+        public override void ValidateCapKList(ConfigSerializer serializer)
          {
             try
             {

@@ -26,6 +26,10 @@ namespace IDTechConfigReader
 {
     public partial class Form1 : Form
     {
+        /********************************************************************************************************/
+        // ATTRIBUTES
+        /********************************************************************************************************/
+        #region -- attributes --
         [DllImport("user32.dll")]
         static extern bool HideCaret(IntPtr hWnd);
         [DllImport("user32.dll")]
@@ -42,6 +46,7 @@ namespace IDTechConfigReader
         IDevicePlugIn devicePlugin;
 
         bool formClosing = false;
+        #endregion
 
         public Form1()
         {

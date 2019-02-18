@@ -17,6 +17,10 @@ namespace IPA.CommonInterface
     [Serializable]
     public class ConfigSerializer
     {
+        /********************************************************************************************************/
+        // ATTRIBUTES
+        /********************************************************************************************************/
+        #region -- attributes --
         private const string JSON_CONFIG = "configuration.json";
         private const string TERMINAL_CONFIG = "TerminalData";
 
@@ -34,6 +38,7 @@ namespace IPA.CommonInterface
         private List<EMVDeviceSettings> emvDeviceSettings = new List<EMVDeviceSettings>();
         private List<EMVGroupTags> emvGroupTags = new List<EMVGroupTags>();
         //private ModelFirmware modelFirmware = new ModelFirmware();
+        #endregion
 
         private void DisplayCollection(List<string> collection, string name)
         {

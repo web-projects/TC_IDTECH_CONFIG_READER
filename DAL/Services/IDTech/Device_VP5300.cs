@@ -17,6 +17,10 @@ namespace IPA.DAL.RBADAL.Services
 {
     class Device_VP5300 : Device_IDTech
     {
+        /********************************************************************************************************/
+        // ATTRIBUTES
+        /********************************************************************************************************/
+        #region -- attributes --
         internal static string _HASH_SHA1_ID_STR = "01";
         internal static string _ENC_RSA_ID_STR   = "01";
 
@@ -28,6 +32,7 @@ namespace IPA.DAL.RBADAL.Services
         private string serialNumber = "";
         private string EMVKernelVer = "";
         private static DeviceInfo deviceInfo = null;
+        #endregion
 
         public Device_VP5300(IDTECH_DEVICE_PID mode) : base(mode)
         {
