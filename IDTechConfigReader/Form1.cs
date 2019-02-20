@@ -525,44 +525,53 @@ namespace IDTechConfigReader
                         listView1.Items.Clear();
                     }
 
-                    foreach(string val in data)
+                    // Check for ERRORS
+                    if(!data[0].Equals("NO FIRMWARE VERSION MATCH"))
                     {
-                        string [] tlv = val.Split(':');
-                        ListViewItem item1 = new ListViewItem(tlv[0], 0);
-                        item1.SubItems.Add(tlv[1]);
+                        foreach(string val in data)
+                        {
+                            string [] tlv = val.Split(':');
+                            ListViewItem item1 = new ListViewItem(tlv[0], 0);
+                            item1.SubItems.Add(tlv[1]);
+                            listView1.Items.Add(item1);
+                        }
+
+                        // TAB 2
+                        if(!tabControl1.Contains(tabPage2))
+                        {
+                            tabControl1.TabPages.Add(tabPage2);
+                        }
+                        this.tabPage2.Enabled = true;
+                        tabControl1.SelectedTab = this.tabPage2;
+                        // TAB 3
+                        if(!tabControl1.Contains(tabPage3))
+                        {
+                            tabControl1.TabPages.Add(tabPage3);
+                        }
+                        this.tabPage3.Enabled = true;
+                        // TAB 4
+                        if(!tabControl1.Contains(tabPage4))
+                        {
+                            tabControl1.TabPages.Add(tabPage4);
+                        }
+                        this.tabPage4.Enabled = true;
+                        // TAB 5
+                        if(!tabControl1.Contains(tabPage5))
+                        {
+                            tabControl1.TabPages.Add(tabPage5);
+                        }
+                        this.tabPage5.Enabled = true;
+                    }
+                    else
+                    {
+                        ListViewItem item1 = new ListViewItem("ERROR", 0);
+                        item1.SubItems.Add(data[0]);
                         listView1.Items.Add(item1);
                     }
-
                     listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
-                    // TAB 2
-                    if(!tabControl1.Contains(tabPage2))
-                    {
-                        tabControl1.TabPages.Add(tabPage2);
-                    }
-                    this.tabPage2.Enabled = true;
                     this.picBoxConfigWait2.Enabled = false;
                     this.picBoxConfigWait2.Visible  = false;
-                    tabControl1.SelectedTab = this.tabPage2;
-                    // TAB 3
-                    if(!tabControl1.Contains(tabPage3))
-                    {
-                        tabControl1.TabPages.Add(tabPage3);
-                    }
-                    this.tabPage3.Enabled = true;
-                    // TAB 4
-                    if(!tabControl1.Contains(tabPage4))
-                    {
-                        tabControl1.TabPages.Add(tabPage4);
-                    }
-                    this.tabPage4.Enabled = true;
-                    // TAB 5
-                    if(!tabControl1.Contains(tabPage5))
-                    {
-                        tabControl1.TabPages.Add(tabPage5);
-                    }
-                    this.tabPage5.Enabled = true;
                 }
                 catch (Exception exp)
                 {
@@ -734,47 +743,56 @@ namespace IDTechConfigReader
             {
                 try
                 {
-                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
-
                     // Remove previous entries
                     if(listView4.Items.Count > 0)
                     {
                         listView4.Items.Clear();
                     }
 
-                    foreach(string item in data)
+                    if(payload != null)
                     {
-                        string [] components = item.Split(':');
-                        if(components.Length == 3)
-                        {
-                            ListViewItem item1 = new ListViewItem(components[0], 0);
-                            string keytag = components[1];
-                            if(keytag.Length > 0)
-                            {
-                                // TAG
-                                item1.SubItems.Add(keytag);
+                        string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
 
-                                // VALUE
-                                string keyvalue = components[2];
-                                if(keyvalue.Length > 0)
+                        foreach(string item in data)
+                        {
+                            string [] components = item.Split(':');
+                            if(components.Length == 3)
+                            {
+                                ListViewItem item1 = new ListViewItem(components[0], 0);
+                                string keytag = components[1];
+                                if(keytag.Length > 0)
                                 {
                                     // TAG
-                                    item1.SubItems.Add(keyvalue);
-                                    listView4.Items.Add(item1);
+                                    item1.SubItems.Add(keytag);
+
+                                    // VALUE
+                                    string keyvalue = components[2];
+                                    if(keyvalue.Length > 0)
+                                    {
+                                        // TAG
+                                        item1.SubItems.Add(keyvalue);
+                                        listView4.Items.Add(item1);
+                                    }
                                 }
                             }
                         }
-                    }
 
+                        if(!tabControl1.Contains(tabPage5))
+                        {
+                            tabControl1.TabPages.Add(tabPage5);
+                        }
+                        this.tabPage5.Enabled = true;
+                        tabControl1.SelectedTab = this.tabPage5;
+                    }
+                    else
+                    {
+                        ListViewItem item1 = new ListViewItem("INFO", 0);
+                        item1.SubItems.Add("UNDEFINED");
+                        item1.SubItems.Add("NO GROUP DEFINITIONS IN CONFIG");
+                        listView4.Items.Add(item1);
+                    }
                     listView4.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     listView4.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
-                    if(!tabControl1.Contains(tabPage5))
-                    {
-                        tabControl1.TabPages.Add(tabPage5);
-                    }
-                    this.tabPage5.Enabled = true;
-                    tabControl1.SelectedTab = this.tabPage5;
                     this.picBoxConfigWait5.Enabled = false;
                     this.picBoxConfigWait5.Visible  = false;
                 }

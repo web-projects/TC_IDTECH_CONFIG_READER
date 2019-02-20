@@ -186,27 +186,34 @@ namespace IPA.CommonInterface
             string [] data = null;
             try
             {
-                // TODO: MODEL IS CURRENTLY = 0
-                EMVGroupTags tags = emvGroupTags[0];
-                List<string> collection = new List<string>();
-                foreach(var item in tags.Tags.Where(x => x.Key.Equals(Convert.ToString(group))).Select(x => x.Value))
+                bool match = false;
+                foreach(EMVGroupTags tags in emvGroupTags)
                 {
-                    List<string> value = item;
-                    foreach(var key in value)
+                    List<string> collection = new List<string>();
+                    foreach(var item in tags.Tags.Where(x => x.Key.Equals(Convert.ToString(group))).Select(x => x.Value))
                     {
-                        string tag = string.Format("{0}", key);
-                        // Value is in AID
-                        foreach(var wAid in aid.Aid)
+                        List<string> value = item;
+                        foreach(var key in value)
                         {
-                            foreach(var val in wAid.Value.Where(x => x.Key.Equals(tag)).Select(x => x.Value))
+                            string tag = string.Format("{0}", key);
+                            // Value is in AID
+                            foreach(var wAid in aid.Aid)
                             {
-                                collection.Add(string.Format("{0}:{1}:{2}", wAid.Key, tag, val).ToUpper());
-                                break;
+                                foreach(var val in wAid.Value.Where(x => x.Key.Equals(tag)).Select(x => x.Value))
+                                {
+                                    collection.Add(string.Format("{0}:{1}:{2}", wAid.Key, tag, val).ToUpper());
+                                    break;
+                                }
                             }
                         }
+                        match = true;
+                    }
+                    if(match)
+                    {
+                        data = collection.ToArray();
+                        break;
                     }
                 }
-                data = collection.ToArray();
             }
             catch(Exception ex)
             {
@@ -215,6 +222,58 @@ namespace IPA.CommonInterface
             return data;
         }
 
+        public string [] GetDeviceFirmware(string model)
+        {
+            string [] result = null;
+            try
+            {
+                List<string> collection = new List<string>();
+                foreach(var version in emvDeviceSettings.Where(x => x.ModelFirmware.Any(y => y.Key.Contains(model))).SelectMany(z => z.ModelFirmware.Values).ToList())
+                {
+                    foreach(var item in version)
+                    {
+                        collection.Add(item);
+                    }
+                }
+                result = collection.ToArray();
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("main: exception={0}", (object)ex.Message);
+            }
+            return result;
+        }
+        public bool DeviceFirmwareMatches(string model, string firmware)
+        {
+            bool matched = false;
+            string [] result = GetDeviceFirmware(model);
+            foreach(var version in result)
+            {
+                if(version.Equals(firmware))
+                {
+                    matched = true;
+                    break;
+                }
+            }
+            return matched;
+        }
+        public bool DoNotSendTagsMatch(string tag)
+        {
+            bool matched = false;
+            try
+            {
+                foreach(var version in emvDeviceSettings.Where(x => x.DoNotSendTags.Any(y => y.Contains(tag))).SelectMany(z => z.DoNotSendTags.ToList()))
+                {
+                    matched = true;
+                    break;
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("main: exception={0}", (object)ex.Message);
+            }
+            return matched;
+        }
         public void ReadConfig()
         {
             try

@@ -610,7 +610,7 @@
     "EMVDeviceSettings": [
     {
       "ModelFirmware": {
-        "VP5300": [ "VP5300 FW v1.00.028.0192.S", "VP5300 FW v1.00.028.0192.S Test" ]
+        "VP5300": [ "VP5300 FW v1.00.028.0192.S", "VP5300 FW v1.00.028.0192.S Test", "VP5300 FW v1.00.029.0193.S" ]
       },
       "GroupTags": {
         "0": [

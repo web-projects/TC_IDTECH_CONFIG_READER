@@ -280,7 +280,8 @@ namespace IPA.DAL.RBADAL.Services
                     byte [] tlv = null;
                     RETURN_CODE rt = IDT_NEO2.SharedController.emv_retrieveTerminalData(ref tlv);
                 
-                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                    if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS ||
+                       rt == RETURN_CODE.RETURN_CODE_P2_DATA_DOES_NOT_EXIST)
                     {
                         Debug.WriteLine("VALIDATE TERMINAL DATA ----------------------------------------------------------------------");
 
@@ -288,56 +289,58 @@ namespace IPA.DAL.RBADAL.Services
                         SortedDictionary<string, string> cfgTerminalData = serializer.GetTerminalData(serialNumber, EMVKernelVer);
                         Dictionary<string, Dictionary<string, string>> dict = Common.processTLV(tlv);
 
-                        bool update = false;
+                        bool update = (rt == RETURN_CODE.RETURN_CODE_P2_DATA_DOES_NOT_EXIST) ? true : false;
 
-                        // TAGS from device
-                        foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
+                        if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
                         {
-                            foreach(var devTag in devCollection)
+                            // TAGS from device
+                            foreach(Dictionary<string, string> devCollection in dict.Where(x => x.Key.Equals("unencrypted")).Select(x => x.Value))
                             {
-                                string devTagName = devTag.Key;
-                                string cfgTagValue = "";
-                                bool tagfound = false;
-                                bool tagmatch = false;
-                                foreach(var cfgTag in cfgTerminalData)
+                                foreach(var devTag in devCollection)
                                 {
-                                    // Matching TAGNAME: compare keys
-                                    if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
+                                    string devTagName = devTag.Key;
+                                    string cfgTagValue = "";
+                                    bool tagfound = false;
+                                    bool tagmatch = false;
+                                    foreach(var cfgTag in cfgTerminalData)
                                     {
-                                        tagfound = true;
-                                        //Debug.Write("key: " + devTag.Key);
+                                        // Matching TAGNAME: compare keys
+                                        if(devTag.Key.Equals(cfgTag.Key, StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            tagfound = true;
 
-                                        // Compare value
-                                        if(cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase))
-                                        {
-                                            tagmatch = true;
-                                            //Debug.WriteLine(" matches value: {0}", (object) devTag.Value);
+                                            // Compare value
+                                            if(cfgTag.Value.Equals(devTag.Value, StringComparison.CurrentCultureIgnoreCase))
+                                            {
+                                                tagmatch = true;
+                                                Debug.WriteLine("key: {0} matches value: {1}", devTag.Key, devTag.Value);
+                                            }
+                                            else
+                                            {
+                                                //Debug.WriteLine("key: {0} DOES NOT match value: {1}!={2}", devTag.Key, devTag.Value, cfgTag.Value);
+                                                cfgTagValue = cfgTag.Value;
+                                                update = true;
+                                            }
+                                            break;
                                         }
-                                        else
+                                        if(tagfound)
                                         {
-                                            //Debug.WriteLine(" DOES NOT match value: {0}!={1}", devTag.Value, cfgTag.Value);
-                                            cfgTagValue = cfgTag.Value;
-                                            update = true;
+                                            break;
                                         }
-                                        break;
                                     }
                                     if(tagfound)
                                     {
-                                        break;
+                                        Debug.WriteLine("TAG: {0} FOUND AND IT {1}", devTagName.PadRight(6,' '), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
+                                        if(!tagmatch)
+                                        {
+                                            Debug.WriteLine("{0}!={1}", devTag.Value, cfgTagValue);
+                                        }
                                     }
-                                }
-                                if(tagfound)
-                                {
-                                    Debug.WriteLine("TAG: {0} FOUND AND IT {1}", devTagName.PadRight(6,' '), (tagmatch ? "MATCHES" : "DOES NOT MATCH"));
-                                    if(!tagmatch)
+                                    else
                                     {
-                                        Debug.WriteLine("{0}!={1}", devTag.Value, cfgTagValue);
+                                        Debug.WriteLine("TAG: {0} NOT FOUND", (object) devTagName.PadRight(6,' '));
+                                        update = true;
                                     }
-                                }
-                                else
-                                {
-                                    Debug.WriteLine("TAG: {0} NOT FOUND", (object) devTagName.PadRight(6,' '));
-                                    update = true;
                                 }
                             }
                         }
@@ -356,9 +359,20 @@ namespace IPA.DAL.RBADAL.Services
                                 {
                                     try
                                     {
+                                        bool matched = serializer.DeviceFirmwareMatches(deviceInfo.ModelNumber, deviceInfo.FirmwareVersion);
                                         List<byte[]> collection = new List<byte[]>();
                                         foreach(var item in cfgTerminalData)
                                         {
+                                            // DoNotSendTags
+                                            if(matched)
+                                            {
+                                                if(serializer.DoNotSendTagsMatch(item.Key))
+                                                {
+                                                    Logger.debug( "device: TERMINAL DATA - DO NOT SEND TAG={0}", (object)item.Key);
+                                                    continue;
+                                                }
+                                            }
+
                                             byte [] bytes = null;
                                             string payload = string.Format("{0}{1:X2}{2}", item.Key, item.Value.Length / 2, item.Value).ToUpper();
                                             if (System.Text.RegularExpressions.Regex.IsMatch(item.Value, @"[g-zG-Z\x20\x2E]+"))

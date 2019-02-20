@@ -662,20 +662,30 @@ namespace IPA.DAL.RBADAL
             serializer = new ConfigSerializer();
         }
         serializer.ReadConfig();
+
+        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_UI_ENABLE_BUTTONS });
     }
 
     public void GetTerminalData()
     {
-        string [] message = null;
+        string [] message = { "" };
         if(configurationMode == ConfigurationModes.FROM_DEVICE)
         {
             message = Device.GetTerminalData();
         }
         else
         {
-            Device.ValidateTerminalData(serializer);
-
-            message = serializer.GetTerminalDataString(deviceInformation.SerialNumber, deviceInformation.EMVKernelVersion);
+            if(serializer.DeviceFirmwareMatches(deviceInformation.ModelNumber, deviceInformation.FirmwareVersion))
+            {
+                Logger.info("DEVICE INFO: MODEL={0}, FIRMWARE={1}", deviceInformation.ModelNumber, serializer.GetDeviceFirmware(deviceInformation.ModelNumber));
+                Device.ValidateTerminalData(serializer);
+                message = serializer.GetTerminalDataString(deviceInformation.SerialNumber, deviceInformation.EMVKernelVersion);
+            }
+            else
+            {
+                Logger.error("DEVICE INFO: MODEL={0} - NO VERSION MATCHING [{1}]", deviceInformation.ModelNumber, deviceInformation.FirmwareVersion);
+                message[0] = "NO FIRMWARE VERSION MATCH";
+            }
         }
 
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_SHOW_TERMINAL_DATA, Message = message });

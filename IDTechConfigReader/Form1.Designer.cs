@@ -31,7 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.picBoxConfigWait1 = new System.Windows.Forms.PictureBox();
+            this.lblFirmwareVersion = new System.Windows.Forms.Label();
+            this.btnFirmwareUpdate = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -65,11 +69,7 @@
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnFirmwareUpdate = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.lblFirmwareVersion = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
@@ -120,6 +120,14 @@
             this.tabPage1.Text = "Configuration";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(43, 538);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(627, 29);
+            this.progressBar1.TabIndex = 13;
+            this.progressBar1.Visible = false;
+            // 
             // picBoxConfigWait1
             // 
             this.picBoxConfigWait1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -133,8 +141,36 @@
             this.picBoxConfigWait1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picBoxConfigWait1.TabIndex = 3;
             this.picBoxConfigWait1.TabStop = false;
-            this.picBoxConfigWait1.Visible = false;
             this.picBoxConfigWait1.WaitOnLoad = true;
+            // 
+            // lblFirmwareVersion
+            // 
+            this.lblFirmwareVersion.AutoSize = true;
+            this.lblFirmwareVersion.Location = new System.Drawing.Point(136, 517);
+            this.lblFirmwareVersion.Name = "lblFirmwareVersion";
+            this.lblFirmwareVersion.Size = new System.Drawing.Size(117, 13);
+            this.lblFirmwareVersion.TabIndex = 12;
+            this.lblFirmwareVersion.Text = "FIRMWARE VERSION";
+            // 
+            // btnFirmwareUpdate
+            // 
+            this.btnFirmwareUpdate.Enabled = false;
+            this.btnFirmwareUpdate.Location = new System.Drawing.Point(43, 538);
+            this.btnFirmwareUpdate.Name = "btnFirmwareUpdate";
+            this.btnFirmwareUpdate.Size = new System.Drawing.Size(75, 29);
+            this.btnFirmwareUpdate.TabIndex = 10;
+            this.btnFirmwareUpdate.Text = "Update";
+            this.btnFirmwareUpdate.UseVisualStyleBackColor = true;
+            this.btnFirmwareUpdate.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(40, 517);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Firmware Version:";
             // 
             // button5
             // 
@@ -452,46 +488,9 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(40, 517);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Firmware Version:";
-            // 
-            // btnFirmwareUpdate
-            // 
-            this.btnFirmwareUpdate.Enabled = false;
-            this.btnFirmwareUpdate.Location = new System.Drawing.Point(43, 538);
-            this.btnFirmwareUpdate.Name = "btnFirmwareUpdate";
-            this.btnFirmwareUpdate.Size = new System.Drawing.Size(75, 29);
-            this.btnFirmwareUpdate.TabIndex = 10;
-            this.btnFirmwareUpdate.Text = "Update";
-            this.btnFirmwareUpdate.UseVisualStyleBackColor = true;
-            this.btnFirmwareUpdate.Click += new System.EventHandler(this.button6_Click);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // lblFirmwareVersion
-            // 
-            this.lblFirmwareVersion.AutoSize = true;
-            this.lblFirmwareVersion.Location = new System.Drawing.Point(136, 517);
-            this.lblFirmwareVersion.Name = "lblFirmwareVersion";
-            this.lblFirmwareVersion.Size = new System.Drawing.Size(117, 13);
-            this.lblFirmwareVersion.TabIndex = 12;
-            this.lblFirmwareVersion.Text = "FIRMWARE VERSION";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(43, 538);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(627, 29);
-            this.progressBar1.TabIndex = 13;
-            this.progressBar1.Visible = false;
             // 
             // Form1
             // 
