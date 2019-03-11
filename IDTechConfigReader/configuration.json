@@ -625,6 +625,11 @@
         "DFEF7E",			// Fallback response code list (list of response codes that trigger fallback)
         "FFEE01"
       ]
+    },
+    {
+      "ModelFirmware": {
+        "IDEM-25XX": [ "1.02" ]
+      }
     }
     ]    
   }

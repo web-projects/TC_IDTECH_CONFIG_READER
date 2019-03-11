@@ -26,6 +26,7 @@ namespace IPA.CommonInterface.Helpers
         NT_SET_EMV_MODE_BUTTON,
         NT_FIRMWARE_UPDATE_STEP,
         NT_FIRMWARE_UPDATE_STATUS,
+        NT_FIRMWARE_UPDATE_FAILED,
         NT_FIRMWARE_UPDATE_COMPLETE
     }
 

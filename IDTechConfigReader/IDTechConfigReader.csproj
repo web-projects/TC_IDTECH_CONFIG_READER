@@ -193,6 +193,9 @@
     <None Include="Assets\Augusta v1.02.020 ICC304R-AJT.fm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Assets\AugustaS v1.02.013.S ICC304R-ABT.fm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Assets\VP5300 v1.00.029.0193.S.fm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

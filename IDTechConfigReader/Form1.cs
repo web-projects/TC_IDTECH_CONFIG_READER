@@ -154,6 +154,12 @@ namespace IDTechConfigReader
                     break;
                 }
 
+                case NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_FAILED:
+                {
+                    FirmwareUpdateFailedUI(sender, args);
+                    break;
+                }
+
                 case NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_COMPLETE:
                 {
                     EnableMainFormUI(sender, args);
@@ -207,6 +213,10 @@ namespace IDTechConfigReader
         private void FirmwareUpdateStatusUI(object sender, DeviceNotificationEventArgs e)
         {
             FirmwareUpdateStatus(e.Message);
+        }
+        private void FirmwareUpdateFailedUI(object sender, DeviceNotificationEventArgs e)
+        {
+            FirmwareUpdateFailed(e.Message);
         }
         private void EnableMainFormUI(object sender, DeviceNotificationEventArgs e)
         {
@@ -898,6 +908,30 @@ namespace IDTechConfigReader
             }
         }
 
+        private void FirmwareUpdateFailed(object payload)
+        {
+            MethodInvoker mi = () =>
+            {
+                string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                this.lblFirmwareVersion.Text = data[0];
+                Thread.Sleep(3000);
+                this.btnFirmwareUpdate.Visible = true;
+                this.btnFirmwareUpdate.Enabled = true;
+                this.picBoxConfigWait1.Enabled = false;
+                this.picBoxConfigWait1.Visible = false;
+                this.progressBar1.Visible      = false;
+            };
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(mi);
+            }
+            else
+            {
+                Invoke(mi);
+            }
+        }
+
         private void EnableMainForm(object payload)
         {
             MethodInvoker mi = () =>
@@ -1115,6 +1149,16 @@ namespace IDTechConfigReader
                     this.progressBar1.Maximum = bytes.Length / 1024;
                     this.progressBar1.Step = 1;
 
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        this.picBoxConfigWait1.Enabled = true;
+                        this.picBoxConfigWait1.Visible  = true;
+                        this.lblFirmwareVersion.Text = "UPDATING FIRMWARE (PLEASE DON'T INTERRUPT)...";
+                        this.btnFirmwareUpdate.Visible = false;
+                        this.progressBar1.Visible = true;
+                        System.Windows.Forms.Application.DoEvents();
+                    }));
+
                     // Firmware Update
                     new Thread(() =>
                     {
@@ -1129,16 +1173,6 @@ namespace IDTechConfigReader
                         }
 
                     }).Start();
-
-                    this.Invoke(new MethodInvoker(() =>
-                    {
-                        this.picBoxConfigWait1.Enabled = true;
-                        this.picBoxConfigWait1.Visible  = true;
-                        this.lblFirmwareVersion.Text = "UPDATING FIRMWARE (PLEASE DON'T INTERRUPT)...";
-                        this.btnFirmwareUpdate.Visible = false;
-                        this.progressBar1.Visible = true;
-                        System.Windows.Forms.Application.DoEvents();
-                    }));
                 }
             }
         }

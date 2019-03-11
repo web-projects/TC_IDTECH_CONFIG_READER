@@ -21,6 +21,7 @@ using IPA.DAL.RBADAL.Services;
 using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using IPA.DAL.RBADAL.Services.Devices.IDTech.Models;
 using IPA.LoggerManager;
+using System.IO;
 
 namespace IPA.DAL.RBADAL
 {
@@ -39,7 +40,7 @@ namespace IPA.DAL.RBADAL
     private DEVICE_INTERFACE_Types     deviceConnect;
     private DEVICE_PROTOCOL_Types      deviceProtocol;
 
-    private static DeviceInformation deviceInformation;
+    private static DeviceInformation DeviceInformation;
 
     // Device Events back to Main Form
     public event EventHandler<DeviceNotificationEventArgs> OnDeviceNotification;
@@ -89,7 +90,7 @@ namespace IPA.DAL.RBADAL
       connected = false;
 
       // Create Device info object
-      deviceInformation = new DeviceInformation();
+      DeviceInformation = new DeviceInformation();
 
       try
       {
@@ -121,12 +122,12 @@ namespace IPA.DAL.RBADAL
             device.Removed += DeviceRemovedHandler;
             Device.OnNotification += OnNotification;
 
-            Device.Init(SerialPortService.GetAvailablePorts(), ref deviceInformation.deviceMode);
+            Device.Init(SerialPortService.GetAvailablePorts(), ref DeviceInformation.deviceMode);
 
             // Notify Main Form
-            SetDeviceMode(deviceInformation.deviceMode);
+            SetDeviceMode(DeviceInformation.deviceMode);
 
-            if(deviceInformation.emvConfigSupported)
+            if(DeviceInformation.emvConfigSupported)
             {
                 // Initialize Universal SDK
                 IDT_Device.setCallback(MessageCallBack);
@@ -174,17 +175,17 @@ namespace IPA.DAL.RBADAL
         return null; 
       }
 
-      string firmwareVersion = Device?.ParseFirmwareVersion(deviceInformation.FirmwareVersion) ?? "";
+      string firmwareVersion = Device?.ParseFirmwareVersion(DeviceInformation.FirmwareVersion) ?? "";
       Debug.WriteLine("GetConfig(): firmware parsed version={0}", (object) firmwareVersion);
 
       // Get Configuration
       string [] config = new string[5];
         
-      config[0] = deviceInformation.SerialNumber;
-      config[1] = deviceInformation.FirmwareVersion;
-      config[2] = deviceInformation.ModelName;
-      config[3] = deviceInformation.ModelNumber;
-      config[4] = deviceInformation.Port;
+      config[0] = DeviceInformation.SerialNumber;
+      config[1] = DeviceInformation.FirmwareVersion;
+      config[2] = DeviceInformation.ModelName;
+      config[3] = DeviceInformation.ModelNumber;
+      config[4] = DeviceInformation.Port;
    
       return config;
     }
@@ -194,7 +195,7 @@ namespace IPA.DAL.RBADAL
       formClosing = state;
       if(formClosing)
       {
-            if(deviceInformation.emvConfigSupported)
+            if(DeviceInformation.emvConfigSupported)
             {
                 Debug.WriteLine("DeviceCfg::DISCONNECTING FOR device TYPE={0}", IDT_Device.getDeviceType());
                 Device.CloseDevice();
@@ -290,21 +291,21 @@ namespace IPA.DAL.RBADAL
            Device.Configure(settings);
 
            // Create Device info object
-           if(deviceInformation == null)
+           if(DeviceInformation == null)
            {
-              deviceInformation = new DeviceInformation();
+              DeviceInformation = new DeviceInformation();
            }
 
            DeviceInfo devInfo = Device.GetDeviceInfo();
 
            if(devInfo != null)
            {
-              deviceInformation.SerialNumber     = devInfo.SerialNumber;
-              deviceInformation.FirmwareVersion  = devInfo.FirmwareVersion;
-              deviceInformation.EMVKernelVersion = devInfo.EMVKernelVersion;
-              deviceInformation.ModelName        = devInfo.ModelName;
-              deviceInformation.ModelNumber      = devInfo.ModelNumber;
-              deviceInformation.Port             = devInfo.Port;
+              DeviceInformation.SerialNumber     = devInfo.SerialNumber;
+              DeviceInformation.FirmwareVersion  = devInfo.FirmwareVersion;
+              DeviceInformation.EMVKernelVersion = devInfo.EMVKernelVersion;
+              DeviceInformation.ModelName        = devInfo.ModelName;
+              DeviceInformation.ModelNumber      = devInfo.ModelNumber;
+              DeviceInformation.Port             = devInfo.Port;
            }
 
            // Update Device Configuration
@@ -675,15 +676,15 @@ namespace IPA.DAL.RBADAL
         }
         else
         {
-            if(serializer.DeviceFirmwareMatches(deviceInformation.ModelNumber, deviceInformation.FirmwareVersion))
+            if(serializer.DeviceFirmwareMatches(DeviceInformation.ModelNumber, DeviceInformation.FirmwareVersion))
             {
-                Logger.info("DEVICE INFO: MODEL={0}, FIRMWARE={1}", deviceInformation.ModelNumber, serializer.GetDeviceFirmware(deviceInformation.ModelNumber));
+                Logger.info("DEVICE INFO: MODEL={0}, FIRMWARE={1}", DeviceInformation.ModelNumber, serializer.GetDeviceFirmware(DeviceInformation.ModelNumber));
                 Device.ValidateTerminalData(serializer);
-                message = serializer.GetTerminalDataString(deviceInformation.SerialNumber, deviceInformation.EMVKernelVersion);
+                message = serializer.GetTerminalDataString(DeviceInformation.SerialNumber, DeviceInformation.EMVKernelVersion);
             }
             else
             {
-                Logger.error("DEVICE INFO: MODEL={0} - NO VERSION MATCHING [{1}]", deviceInformation.ModelNumber, deviceInformation.FirmwareVersion);
+                Logger.error("DEVICE INFO: MODEL={0} - NO VERSION MATCHING [{1}]", DeviceInformation.ModelNumber, DeviceInformation.FirmwareVersion);
                 message[0] = "NO FIRMWARE VERSION MATCH";
             }
         }
@@ -741,8 +742,8 @@ namespace IPA.DAL.RBADAL
 
     public void SetDeviceFirmwareVersion()
     {
-        deviceInformation.FirmwareVersion  = Device.GetFirmwareVersion();
-        string [] message = { deviceInformation.FirmwareVersion };
+        DeviceInformation.FirmwareVersion  = Device.GetFirmwareVersion();
+        string [] message = { DeviceInformation.FirmwareVersion };
         NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_COMPLETE, Message = message });
     }
 
@@ -770,8 +771,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.AUGUSTA_KYB:
             {
                 useUniversalSDK = true;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTA_KYB;
-                deviceInformation.emvConfigSupported = false;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTA_KYB;
+                DeviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -779,8 +780,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.AUGUSTA_HID:
             {
                 useUniversalSDK = true;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTA_HID;
-                deviceInformation.emvConfigSupported = true;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTA_HID;
+                DeviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -788,8 +789,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.AUGUSTAS_KYB:
             {
                 useUniversalSDK = true;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTAS_KYB;
-                deviceInformation.emvConfigSupported = false;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTAS_KYB;
+                DeviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -797,8 +798,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.AUGUSTAS_HID:
             {
                 useUniversalSDK = true;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTAS_HID;
-                deviceInformation.emvConfigSupported = true;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.AUGUSTAS_HID;
+                DeviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -806,8 +807,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.VP3000_HID:
             {
                 useUniversalSDK = true;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_HID;
-                deviceInformation.emvConfigSupported = true;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_HID;
+                DeviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -815,8 +816,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.VP3000_KYB:
             {
                 useUniversalSDK = false;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_KYB;
-                deviceInformation.emvConfigSupported = false;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.VP3000_KYB;
+                DeviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -824,8 +825,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.VP5300_HID:
             {
                 useUniversalSDK = true;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_HID;
-                deviceInformation.emvConfigSupported = true;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_HID;
+                DeviceInformation.emvConfigSupported = true;
                 message[0] = USK_DEVICE_MODE.USB_KYB;
                 break;
             }
@@ -833,8 +834,8 @@ namespace IPA.DAL.RBADAL
             case IDTECH_DEVICE_PID.VP5300_KYB:
             {
                 useUniversalSDK = false;
-                deviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_KYB;
-                deviceInformation.emvConfigSupported = false;
+                DeviceInformation.deviceMode = IDTECH_DEVICE_PID.VP5300_KYB;
+                DeviceInformation.emvConfigSupported = false;
                 message[0] = USK_DEVICE_MODE.USB_HID;
                 break;
             }
@@ -858,8 +859,8 @@ namespace IPA.DAL.RBADAL
 
             if(mode.Equals(USK_DEVICE_MODE.USB_HID))
             {
-               if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB ||
-                  deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
+               if(DeviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB ||
+                  DeviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
                {
                     // Set Device to HID MODE
                     if(!Device.SetUSBHIDMode())
@@ -872,15 +873,15 @@ namespace IPA.DAL.RBADAL
                         //Debug.WriteLine("DeviceCfg::SetDeviceMode(): - RESET status={0}", status);
                     //}
                }
-               else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_KYB)
+               else if(DeviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_KYB)
                {
                     Device.SetVP3000DeviceHidMode();
                }
             }
             else if(mode.Equals(USK_DEVICE_MODE.USB_KYB))
             {
-               if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
-                  deviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID)
+               if(DeviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID  ||
+                  DeviceInformation.deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID)
                {
                     // TURN ON QUICK CHIP MODE
                     string command = USDK_CONFIGURATION_COMMANDS.ENABLE_QUICK_CHIP_MODE;
@@ -892,7 +893,7 @@ namespace IPA.DAL.RBADAL
                     // Restart device discovery
                     DeviceRemovedHandler();
                }
-               else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
+               else if(DeviceInformation.deviceMode == IDTECH_DEVICE_PID.VP3000_HID)
                {
                   RETURN_CODE rt = IDT_VP3300.SharedController.device_setPollMode(3);
                   if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
@@ -900,7 +901,7 @@ namespace IPA.DAL.RBADAL
                     Debug.WriteLine("DeviceCfg::SetDeviceMode(): VP3000 - error={0}", rt);
                   }
                }
-               else if(deviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
+               else if(DeviceInformation.deviceMode == IDTECH_DEVICE_PID.VP5300_HID)
                {
                   RETURN_CODE rt = IDT_NEO2.SharedController.device_setPollMode(3);
                   if(rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS)
@@ -1011,16 +1012,59 @@ namespace IPA.DAL.RBADAL
 
                 return;*/
 
-                RETURN_CODE rt = IDT_Device.SharedController.device_updateDeviceFirmware(bytes);
-                if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                // Validate FW Signature
+                byte[] FirmwareSignature = new byte[64];
+                Array.Copy(bytes, 64, FirmwareSignature, 0, 32);
+                DeviceFirmwareSignature Signature = new DeviceFirmwareSignature();
+                Dictionary<string, string> Values = Common.processTLVUnencrypted(FirmwareSignature);
+
+                foreach(var Item in Values)
                 {
-                    string filename = System.IO.Path.GetFileName(fullPathfilename);
-                    Logger.debug("device: firmware update started for: {0}", filename);
-                    firmwareUpdate = true;
+                    switch(Int32.Parse(Item.Key))
+                    {
+                        case (int)DeviceFirmwareSignature.SignatureIndex.SIG_VERSION:
+                        {
+                            Signature.Version = Common.hexStringToString(Item.Value);
+                            break;
+                        }
+
+                        case (int)DeviceFirmwareSignature.SignatureIndex.SIG_MODELNAME:
+                        {
+                            Signature.ModelName = Common.hexStringToString(Item.Value);
+                            break;
+                        }
+
+                        case (int)DeviceFirmwareSignature.SignatureIndex.SIG_TYPE:
+                        {
+                            Signature.Type = Item.Value;
+                            break;
+                        }
+                    }
                 }
-                else
+
+                foreach(var ModelName in Signature.Devices.Where(x => x.Key.Equals(DeviceInformation.ModelName, StringComparison.CurrentCultureIgnoreCase)).Select(y => y.Value))
                 {
-                    Logger.debug("device: firmware Update Failed Error Code: 0x{0:X}", (ushort)rt);
+                    if(ModelName.Equals(Signature.ModelName, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        RETURN_CODE rt = IDT_Device.SharedController.device_updateDeviceFirmware(bytes);
+                        if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+                        {
+                            string filename = System.IO.Path.GetFileName(fullPathfilename);
+                            Logger.debug("device: firmware update started for: {0}", filename);
+                            firmwareUpdate = true;
+                        }
+                        else
+                        {
+                            Logger.error("device: firmware Update Failed Error Code: 0x{0:X}", (ushort)rt);
+                        }
+                    }
+                    else
+                    {
+                        string [] message = { string.Format("UPDATE FAILED: [{0}] FIRMWARE DOESN'T MATCH DEVICE MODEL {1}", Signature.ModelName, DeviceInformation.ModelName) };
+                        Logger.error("device: {0}", message[0]);
+                        NotificationRaise(new DeviceNotificationEventArgs { NotificationType = NOTIFICATION_TYPE.NT_FIRMWARE_UPDATE_FAILED, Message = message });
+                        break;
+                    }
                 }
             }
         }
@@ -1091,5 +1135,22 @@ namespace IPA.DAL.RBADAL
      internal const string ENABLE_QUICK_CHIP_MODE  = "72 53 01 29 01 31";
   }
 
+  internal class DeviceFirmwareSignature
+  {
+    public enum SignatureIndex
+    {
+        SIG_VERSION   = 1,
+        SIG_MODELNAME = 2,
+        SIG_TYPE      = 3
+    }
+    internal Dictionary<string, string> Devices = new Dictionary<string, string> {
+        { "Augusta (USB HID)"           , "Augusta"   },
+        { "Augusta SRED (USB HID)"      , "Augusta S" },
+        { "VP5300 / SpectrumPro 2 (USB)", "NEO_II"    }
+    };
+    internal string ModelName { get; set; }
+    internal string Version { get; set; }
+    internal string Type { get; set; }
+  }
   #endregion
 }
