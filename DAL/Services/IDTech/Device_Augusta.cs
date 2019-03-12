@@ -57,7 +57,7 @@ namespace IPA.DAL.RBADAL.Services
         {
             serialNumber = "";
             RETURN_CODE rt = IDT_Augusta.SharedController.config_getSerialNumber(ref serialNumber);
-            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.SerialNumber = serialNumber;
                 Debug.WriteLine("device INFO[Serial Number]     : {0}", (object) deviceInfo.SerialNumber);
@@ -71,10 +71,21 @@ namespace IPA.DAL.RBADAL.Services
             rt = IDT_Augusta.SharedController.device_getFirmwareVersion(ref firmwareVersion);
             if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
-                deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                if(deviceMode == IDTECH_DEVICE_PID.AUGUSTA_KYB || deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_KYB)
+                {
+                    var result = Regex.Match(firmwareVersion, @"^N\v\n");
+                    if(result.Success)
+                        deviceInfo.FirmwareVersion = firmwareVersion.Substring(result.Index + result.Length);
+                    else
+                        deviceInfo.FirmwareVersion = firmwareVersion.Trim();
+                    deviceInfo.Port = "USB-KB";
+                }
+                else
+                {
+                    deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                    deviceInfo.Port = firmwareVersion.Substring(firmwareVersion.IndexOf("USB", StringComparison.Ordinal), 7);
+                }
                 Debug.WriteLine("device INFO[Firmware Version]  : {0}", (object) deviceInfo.FirmwareVersion);
-
-                deviceInfo.Port = firmwareVersion.Substring(firmwareVersion.IndexOf("USB", StringComparison.Ordinal), 7);
                 Debug.WriteLine("device INFO[Port]              : {0}", (object) deviceInfo.Port);
             }
             else
@@ -86,9 +97,12 @@ namespace IPA.DAL.RBADAL.Services
             Debug.WriteLine("device INFO[Model Name]        : {0}", (object) deviceInfo.ModelName);
 
             rt = IDT_Augusta.SharedController.config_getModelNumber(ref deviceInfo.ModelNumber);
-            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
-                deviceInfo.ModelNumber = deviceInfo?.ModelNumber?.Split(' ')[0] ?? "";
+                if(deviceMode != IDTECH_DEVICE_PID.AUGUSTA_KYB && deviceMode != IDTECH_DEVICE_PID.AUGUSTAS_KYB)
+                {
+                    deviceInfo.ModelNumber = deviceInfo?.ModelNumber?.Split(' ')[0] ?? "";
+                }
                 Debug.WriteLine("device INFO[Model Number]      : {0}", (object) deviceInfo.ModelNumber);
             }
             else
@@ -98,7 +112,7 @@ namespace IPA.DAL.RBADAL.Services
 
             EMVKernelVer = "";
             rt = IDT_Augusta.SharedController.emv_getEMVKernelVersion(ref EMVKernelVer);
-            if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
             {
                 deviceInfo.EMVKernelVersion = EMVKernelVer;
                 Debug.WriteLine("device INFO[EMV KERNEL V.]     : {0}", (object) deviceInfo.EMVKernelVersion);
@@ -118,22 +132,6 @@ namespace IPA.DAL.RBADAL.Services
             return configStatus;
         }
 
-        public override string GetFirmwareVersion()
-        {
-            string firmwareVersion = "";
-            RETURN_CODE rt = IDT_Augusta.SharedController.device_getFirmwareVersion(ref firmwareVersion);
-            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
-            {
-                deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
-                firmwareVersion = deviceInfo.FirmwareVersion;
-                Debug.WriteLine("device INFO[Firmware Version]  : {0}", (object) deviceInfo.FirmwareVersion);
-            }
-            else
-            {
-                Debug.WriteLine("device: GetDeviceFirmwareVersion() - failed to get Firmware version reason={0}", rt);
-            }
-            return firmwareVersion;
-        }
         public override string ParseFirmwareVersion(string firmwareInfo)
         {
             // Augusta format has no space after V: V1.00
@@ -156,7 +154,7 @@ namespace IPA.DAL.RBADAL.Services
            string serialNumber = "";
            RETURN_CODE rt = IDT_Augusta.SharedController.config_getSerialNumber(ref serialNumber);
 
-          if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt)
+          if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
           {
               deviceInfo.SerialNumber = serialNumber;
               Debug.WriteLine("device::GetSerialNumber(): {0}", (object) deviceInfo.SerialNumber);
@@ -169,6 +167,22 @@ namespace IPA.DAL.RBADAL.Services
           return serialNumber;
         }
 
+        public override string GetFirmwareVersion()
+        {
+            string firmwareVersion = "";
+            RETURN_CODE rt = IDT_Augusta.SharedController.device_getFirmwareVersion(ref firmwareVersion);
+            if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS)
+            {
+                deviceInfo.FirmwareVersion = ParseFirmwareVersion(firmwareVersion);
+                firmwareVersion = deviceInfo.FirmwareVersion;
+                Debug.WriteLine("device INFO[Firmware Version]  : {0}", (object) deviceInfo.FirmwareVersion);
+            }
+            else
+            {
+                Debug.WriteLine("device: GetDeviceFirmwareVersion() - failed to get Firmware version reason={0}", rt);
+            }
+            return firmwareVersion;
+        }
         public override DeviceInfo GetDeviceInfo()
         {
             if(deviceMode == IDTECH_DEVICE_PID.AUGUSTA_HID || deviceMode == IDTECH_DEVICE_PID.AUGUSTAS_HID)
@@ -191,13 +205,13 @@ namespace IPA.DAL.RBADAL.Services
                 string response = null;
                 RETURN_CODE rt = IDT_Augusta.SharedController.device_getFirmwareVersion(ref response);
 
-                if (RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt && !string.IsNullOrWhiteSpace(response))
+                if (rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS && !string.IsNullOrWhiteSpace(response))
                 {
                     //serializer.terminalCfg.general_configuration.Terminal_info.firmware_ver = response;
                 }
                 response = "";
                 rt = IDT_Augusta.SharedController.emv_getEMVKernelVersion(ref response);
-                if(RETURN_CODE.RETURN_CODE_DO_SUCCESS == rt && !string.IsNullOrWhiteSpace(response))
+                if(rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS && !string.IsNullOrWhiteSpace(response))
                 {
                     //serializer.terminalCfg.general_configuration.Terminal_info.contact_emv_kernel_ver = response;
                 }
