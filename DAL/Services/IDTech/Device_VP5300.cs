@@ -1,6 +1,5 @@
 ﻿using IDTechSDK;
 using IPA.CommonInterface;
-using IPA.CommonInterface.Factory;
 using IPA.Core.Shared.Enums;
 using IPA.DAL.RBADAL.Interfaces;
 using IPA.LoggerManager;
@@ -12,6 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using IPA.CommonInterface.ConfigSphere;
+using IPA.CommonInterface.ConfigSphere.Configuration;
+using IPA.CommonInterface.ConfigSphere.Factory;
 
 namespace IPA.DAL.RBADAL.Services
 {

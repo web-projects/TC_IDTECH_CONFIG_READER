@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IPA.CommonInterface
+namespace IPA.CommonInterface.ConfigSphere.Configuration
 {
     [Serializable]
     public class Capk

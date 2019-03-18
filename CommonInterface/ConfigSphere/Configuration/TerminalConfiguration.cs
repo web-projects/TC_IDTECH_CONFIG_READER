@@ -11,16 +11,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace IPA.CommonInterface
+namespace IPA.CommonInterface.ConfigSphere.Configuration
 {
     [Serializable]
     public class TerminalConfiguration
     {
-        public List<Configuration> Configuration { get; set; }
+        public List<DeviceConfiguration> Configuration { get; set; }
     }
 
     [Serializable]
-    public class Configuration
+    public class DeviceConfiguration
     {
         [JsonProperty(PropertyName = "ConfigurationID", Order = 1)]
         public ConfigurationID ConfigurationID { get; set; }

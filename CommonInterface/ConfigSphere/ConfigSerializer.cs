@@ -11,8 +11,9 @@ using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using IPA.CommonInterface.Helpers;
 using IPA.CommonInterface.Interfaces;
+using IPA.CommonInterface.ConfigSphere.Configuration;
 
-namespace IPA.CommonInterface
+namespace IPA.CommonInterface.ConfigSphere
 {
     [Serializable]
     public class ConfigSerializer
@@ -28,7 +29,7 @@ namespace IPA.CommonInterface
         private string fileName;
         
         // Accessors
-        private Configuration deviceConfig;
+        private DeviceConfiguration DeviceConfig;
         private string[] md = new string[0];
         private AIDList aid = new AIDList();
         private CAPKList capk = new CAPKList();
@@ -295,20 +296,20 @@ namespace IPA.CommonInterface
                 if(terminalCfg != null)
                 {
                     // devConfig
-                    deviceConfig = terminalCfg.Configuration.First();
+                    DeviceConfig = terminalCfg.Configuration.First();
                     // Manufacturer
-                    Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) deviceConfig.ConfigurationID.Manufacturer);
+                    Debug.WriteLine("device configuration: manufacturer ----------------: [{0}]", (object) DeviceConfig.ConfigurationID.Manufacturer);
                     // Models
-                    md = deviceConfig.ConfigurationID.Models;
+                    md = DeviceConfig.ConfigurationID.Models;
                     //DisplayCollection(mf.modelFirmware, "modelFirmware");
                     // AID List
-                    aid.Aid = deviceConfig.EMVConfiguration.AIDList;
+                    aid.Aid = DeviceConfig.EMVConfiguration.AIDList;
                     //DisplayCollection(aid.Aid, "AIDList");
                     // CAPK List
-                    capk.CAPK = deviceConfig.EMVConfiguration.CAPKList;
+                    capk.CAPK = DeviceConfig.EMVConfiguration.CAPKList;
                     //DisplayCollection(capk.Capk, "CapkList");
                     // Terminal Settings
-                    termSettings = deviceConfig.EMVConfiguration.TerminalSettings;
+                    termSettings = DeviceConfig.EMVConfiguration.TerminalSettings;
                     //Debug.WriteLine("device configuration: Terminal Settings --------------");
                     //Debug.WriteLine("MajorConfiguration        : {0}", (object) termSettings.MajorConfiguration);
                     //Debug.WriteLine("MajorConfigurationChecksum: {0}", (object) termSettings.MajorConfigurationChecksum[0]);
@@ -319,12 +320,12 @@ namespace IPA.CommonInterface
                     // TransactionTagsRequested
                     //DisplayCollection(termSettings.TransactionTags, "TransactionTagsRequested");
                     // TransactionValues
-                    emvTransactionData = deviceConfig.EMVTransactionData;
+                    emvTransactionData = DeviceConfig.EMVTransactionData;
                     //DisplayCollection(transactionValues.EMVKernelMapping, "EMVKernelMapping");
                     //DisplayCollection(transactionValues.TransactionStartTags, "TransactionStartTags");
                     //DisplayCollection(transactionValues.TransactionAuthenticateTags, "TransactionAuthenticateTags");
                     //DisplayCollection(transactionValues.TransactionCompleteTags, "TransactionCompleteTags");
-                    emvDeviceSettings = deviceConfig.EMVDeviceSettings;
+                    emvDeviceSettings = DeviceConfig.EMVDeviceSettings;
                     foreach(var devSettings in emvDeviceSettings)
                     {
                         EMVGroupTags item = new EMVGroupTags(devSettings.GroupTags);

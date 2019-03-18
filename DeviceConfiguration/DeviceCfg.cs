@@ -22,6 +22,7 @@ using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using IPA.DAL.RBADAL.Services.Devices.IDTech.Models;
 using IPA.LoggerManager;
 using System.IO;
+using IPA.CommonInterface.ConfigSphere;
 
 namespace IPA.DAL.RBADAL
 {

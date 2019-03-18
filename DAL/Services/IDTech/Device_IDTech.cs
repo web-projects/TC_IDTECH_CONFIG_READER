@@ -14,11 +14,9 @@ using HidLibrary;
 using IPA.DAL.RBADAL.Services.Devices.IDTech;
 using IPA.DAL.RBADAL.Services.Devices.IDTech.Models;
 using System.Collections.Generic;
-///using IPA.Core.XO.TCCustAttribute;
 using System.Threading.Tasks;
-//using IPA.Core.Shared.Helpers;
 using IPA.Core.Shared.Helpers.StatusCode;
-using IPA.CommonInterface;
+using IPA.CommonInterface.ConfigSphere;
 
 namespace IPA.DAL.RBADAL.Services
 {

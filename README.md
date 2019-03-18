@@ -57,3 +57,4 @@ This an application to test IDTech Augusta Devices.
              Firmware update feature additions.
 * 20190220 - Implemented DoNotSendTags feature.
 * 20190311 - Enhanced firmware update file selection.
+* 20190318 - Organized Configuration reader.
