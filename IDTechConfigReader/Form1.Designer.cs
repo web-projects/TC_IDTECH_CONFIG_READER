@@ -29,542 +29,684 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.picBoxConfigWait1 = new System.Windows.Forms.PictureBox();
+            this.tabControlMain = new System.Windows.Forms.TabControl();
+            this.ApplicationtabPage = new System.Windows.Forms.TabPage();
+            this.ConfigurationtabPage = new System.Windows.Forms.TabPage();
+            this.ConfigurationPanel2 = new System.Windows.Forms.Panel();
+            this.ConfigurationExpandButton = new System.Windows.Forms.Button();
+            this.tabControlConfiguration = new System.Windows.Forms.TabControl();
+            this.ConfigurationTerminalDatatabPage = new System.Windows.Forms.TabPage();
+            this.ConfigurationTerminalDatapicBoxWait = new System.Windows.Forms.PictureBox();
+            this.ConfigurationTerminalDatalistView = new System.Windows.Forms.ListView();
+            this.ConfigurationTerminalDatacolumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationTerminalDatacolumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationAIDStabPage = new System.Windows.Forms.TabPage();
+            this.ConfigurationAIDSpicBoxWait = new System.Windows.Forms.PictureBox();
+            this.ConfigurationAIDSlistView = new System.Windows.Forms.ListView();
+            this.ConfigurationAIDStabPageColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationAIDStabPageColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationCAPKStabPage = new System.Windows.Forms.TabPage();
+            this.ConfigurationCAPKSpicBoxWait = new System.Windows.Forms.PictureBox();
+            this.ConfigurationCAPKSlistView = new System.Windows.Forms.ListView();
+            this.ConfigurationCAPKStabPageColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationCAPKStabPageColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationGROUPStabPage = new System.Windows.Forms.TabPage();
+            this.ConfigurationGROUPSpicBoxWait = new System.Windows.Forms.PictureBox();
+            this.ConfigurationGROUPSConfigurationPanel1label1 = new System.Windows.Forms.Label();
+            this.ConfigurationGROUPStabPagecomboBox1 = new System.Windows.Forms.ComboBox();
+            this.ConfigurationGROUPSlistView = new System.Windows.Forms.ListView();
+            this.ConfigurationGROUPStabPageColumnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationGROUPStabPageColumnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationGROUPStabPageColumnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ConfigurationPanel1 = new System.Windows.Forms.Panel();
+            this.ConfigurationPanel1pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ConfigurationPanel1label2 = new System.Windows.Forms.Label();
+            this.ConfigurationPanel1btnDeviceMode = new System.Windows.Forms.Button();
+            this.ConfigurationPanel1btnEMVMode = new System.Windows.Forms.Button();
+            this.ConfigurationPanel1label1 = new System.Windows.Forms.Label();
+            this.ConfigurationPanel1btnFactoryReset = new System.Windows.Forms.Button();
+            this.ConfigurationCollapseButton = new System.Windows.Forms.Button();
+            this.ConfigurationSplitter1 = new System.Windows.Forms.Splitter();
+            this.ConfigurationGroupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioLoadFromDevice = new System.Windows.Forms.RadioButton();
+            this.radioLoadFromFile = new System.Windows.Forms.RadioButton();
+            this.FirmwaretabPage = new System.Windows.Forms.TabPage();
             this.lblFirmwareVersion = new System.Windows.Forms.Label();
             this.btnFirmwareUpdate = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.picBoxConfigWait2 = new System.Windows.Forms.PictureBox();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.picBoxConfigWait3 = new System.Windows.Forms.PictureBox();
-            this.listView2 = new System.Windows.Forms.ListView();
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.picBoxConfigWait4 = new System.Windows.Forms.PictureBox();
-            this.listView3 = new System.Windows.Forms.ListView();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.picBoxConfigWait5 = new System.Windows.Forms.PictureBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.listView4 = new System.Windows.Forms.ListView();
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait2)).BeginInit();
-            this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait3)).BeginInit();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait4)).BeginInit();
-            this.tabPage5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.FirmwareConfigurationPanel1label1 = new System.Windows.Forms.Label();
+            this.FirmwareprogressBar1 = new System.Windows.Forms.ProgressBar();
+            this.ApplicationpicBoxWait = new System.Windows.Forms.PictureBox();
+            this.FirmwareopenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.tabControlMain.SuspendLayout();
+            this.ConfigurationtabPage.SuspendLayout();
+            this.ConfigurationPanel2.SuspendLayout();
+            this.tabControlConfiguration.SuspendLayout();
+            this.ConfigurationTerminalDatatabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationTerminalDatapicBoxWait)).BeginInit();
+            this.ConfigurationAIDStabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationAIDSpicBoxWait)).BeginInit();
+            this.ConfigurationCAPKStabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationCAPKSpicBoxWait)).BeginInit();
+            this.ConfigurationGROUPStabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationGROUPSpicBoxWait)).BeginInit();
+            this.ConfigurationPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationPanel1pictureBox1)).BeginInit();
+            this.ConfigurationGroupBox1.SuspendLayout();
+            this.FirmwaretabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ApplicationpicBoxWait)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // tabControlMain
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Location = new System.Drawing.Point(12, 53);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(700, 607);
-            this.tabControl1.TabIndex = 14;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
+            this.tabControlMain.Controls.Add(this.ApplicationtabPage);
+            this.tabControlMain.Controls.Add(this.ConfigurationtabPage);
+            this.tabControlMain.Controls.Add(this.FirmwaretabPage);
+            this.tabControlMain.Location = new System.Drawing.Point(12, 53);
+            this.tabControlMain.Name = "tabControlMain";
+            this.tabControlMain.SelectedIndex = 0;
+            this.tabControlMain.Size = new System.Drawing.Size(830, 607);
+            this.tabControlMain.TabIndex = 0;
+            this.tabControlMain.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
             // 
-            // tabPage1
+            // ApplicationtabPage
             // 
-            this.tabPage1.Controls.Add(this.progressBar1);
-            this.tabPage1.Controls.Add(this.picBoxConfigWait1);
-            this.tabPage1.Controls.Add(this.lblFirmwareVersion);
-            this.tabPage1.Controls.Add(this.btnFirmwareUpdate);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.button5);
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.button1);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(692, 581);
-            this.tabPage1.TabIndex = 7;
-            this.tabPage1.Text = "Configuration";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.ApplicationtabPage.Location = new System.Drawing.Point(4, 22);
+            this.ApplicationtabPage.Name = "ApplicationtabPage";
+            this.ApplicationtabPage.Size = new System.Drawing.Size(822, 581);
+            this.ApplicationtabPage.TabIndex = 1;
+            this.ApplicationtabPage.Text = "Application";
+            this.ApplicationtabPage.UseVisualStyleBackColor = true;
             // 
-            // progressBar1
+            // ConfigurationtabPage
             // 
-            this.progressBar1.Location = new System.Drawing.Point(43, 538);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(627, 29);
-            this.progressBar1.TabIndex = 13;
-            this.progressBar1.Visible = false;
+            this.ConfigurationtabPage.Controls.Add(this.ConfigurationPanel2);
+            this.ConfigurationtabPage.Controls.Add(this.ConfigurationPanel1);
+            this.ConfigurationtabPage.Location = new System.Drawing.Point(4, 22);
+            this.ConfigurationtabPage.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationtabPage.Name = "ConfigurationtabPage";
+            this.ConfigurationtabPage.Padding = new System.Windows.Forms.Padding(2);
+            this.ConfigurationtabPage.Size = new System.Drawing.Size(822, 581);
+            this.ConfigurationtabPage.TabIndex = 1;
+            this.ConfigurationtabPage.Text = "Configuration";
+            this.ConfigurationtabPage.UseVisualStyleBackColor = true;
             // 
-            // picBoxConfigWait1
+            // ConfigurationPanel2
             // 
-            this.picBoxConfigWait1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ConfigurationPanel2.BackColor = System.Drawing.Color.Transparent;
+            this.ConfigurationPanel2.Controls.Add(this.ConfigurationExpandButton);
+            this.ConfigurationPanel2.Controls.Add(this.tabControlConfiguration);
+            this.ConfigurationPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConfigurationPanel2.Location = new System.Drawing.Point(352, 2);
+            this.ConfigurationPanel2.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationPanel2.Name = "ConfigurationPanel2";
+            this.ConfigurationPanel2.Size = new System.Drawing.Size(468, 577);
+            this.ConfigurationPanel2.TabIndex = 1;
+            this.ConfigurationPanel2.Visible = false;
+            // 
+            // ConfigurationExpandButton
+            // 
+            this.ConfigurationExpandButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.ConfigurationExpandButton.Location = new System.Drawing.Point(445, 0);
+            this.ConfigurationExpandButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ConfigurationExpandButton.Name = "ConfigurationExpandButton";
+            this.ConfigurationExpandButton.Size = new System.Drawing.Size(27, 579);
+            this.ConfigurationExpandButton.TabIndex = 1;
+            this.ConfigurationExpandButton.Text = ">>";
+            this.ConfigurationExpandButton.UseVisualStyleBackColor = true;
+            this.ConfigurationExpandButton.Visible = false;
+            this.ConfigurationExpandButton.Click += new System.EventHandler(this.OnExpandConfigurationView);
+            // 
+            // tabControlConfiguration
+            // 
+            this.tabControlConfiguration.Controls.Add(this.ConfigurationTerminalDatatabPage);
+            this.tabControlConfiguration.Controls.Add(this.ConfigurationAIDStabPage);
+            this.tabControlConfiguration.Controls.Add(this.ConfigurationCAPKStabPage);
+            this.tabControlConfiguration.Controls.Add(this.ConfigurationGROUPStabPage);
+            this.tabControlConfiguration.Location = new System.Drawing.Point(20, 15);
+            this.tabControlConfiguration.Margin = new System.Windows.Forms.Padding(2);
+            this.tabControlConfiguration.Name = "tabControlConfiguration";
+            this.tabControlConfiguration.SelectedIndex = 0;
+            this.tabControlConfiguration.Size = new System.Drawing.Size(379, 522);
+            this.tabControlConfiguration.TabIndex = 0;
+            this.tabControlConfiguration.SelectedIndexChanged += new System.EventHandler(this.OnConfigurationListItemSelectedIndexChanged);
+            this.tabControlConfiguration.VisibleChanged += new System.EventHandler(this.OnConfigurationTabControlVisibilityChanged);
+            // 
+            // ConfigurationTerminalDatatabPage
+            // 
+            this.ConfigurationTerminalDatatabPage.Controls.Add(this.ConfigurationTerminalDatapicBoxWait);
+            this.ConfigurationTerminalDatatabPage.Controls.Add(this.ConfigurationTerminalDatalistView);
+            this.ConfigurationTerminalDatatabPage.Location = new System.Drawing.Point(4, 22);
+            this.ConfigurationTerminalDatatabPage.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationTerminalDatatabPage.Name = "ConfigurationTerminalDatatabPage";
+            this.ConfigurationTerminalDatatabPage.Size = new System.Drawing.Size(371, 496);
+            this.ConfigurationTerminalDatatabPage.TabIndex = 3;
+            this.ConfigurationTerminalDatatabPage.Text = "Terminal Data";
+            this.ConfigurationTerminalDatatabPage.UseVisualStyleBackColor = true;
+            // 
+            // ConfigurationTerminalDatapicBoxWait
+            // 
+            this.ConfigurationTerminalDatapicBoxWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBoxConfigWait1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.picBoxConfigWait1.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait1.Image")));
-            this.picBoxConfigWait1.Location = new System.Drawing.Point(3, 3);
-            this.picBoxConfigWait1.Name = "picBoxConfigWait1";
-            this.picBoxConfigWait1.Size = new System.Drawing.Size(686, 490);
-            this.picBoxConfigWait1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.picBoxConfigWait1.TabIndex = 3;
-            this.picBoxConfigWait1.TabStop = false;
-            this.picBoxConfigWait1.WaitOnLoad = true;
+            this.ConfigurationTerminalDatapicBoxWait.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ConfigurationTerminalDatapicBoxWait.Image = ((System.Drawing.Image)(resources.GetObject("ConfigurationTerminalDatapicBoxWait.Image")));
+            this.ConfigurationTerminalDatapicBoxWait.Location = new System.Drawing.Point(2, 0);
+            this.ConfigurationTerminalDatapicBoxWait.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationTerminalDatapicBoxWait.Name = "ConfigurationTerminalDatapicBoxWait";
+            this.ConfigurationTerminalDatapicBoxWait.Size = new System.Drawing.Size(367, 496);
+            this.ConfigurationTerminalDatapicBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ConfigurationTerminalDatapicBoxWait.TabIndex = 4;
+            this.ConfigurationTerminalDatapicBoxWait.TabStop = false;
+            this.ConfigurationTerminalDatapicBoxWait.Visible = false;
+            this.ConfigurationTerminalDatapicBoxWait.WaitOnLoad = true;
             // 
-            // lblFirmwareVersion
+            // ConfigurationTerminalDatalistView
             // 
-            this.lblFirmwareVersion.AutoSize = true;
-            this.lblFirmwareVersion.Location = new System.Drawing.Point(136, 517);
-            this.lblFirmwareVersion.Name = "lblFirmwareVersion";
-            this.lblFirmwareVersion.Size = new System.Drawing.Size(117, 13);
-            this.lblFirmwareVersion.TabIndex = 12;
-            this.lblFirmwareVersion.Text = "FIRMWARE VERSION";
+            this.ConfigurationTerminalDatalistView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ConfigurationTerminalDatacolumnHeader1,
+            this.ConfigurationTerminalDatacolumnHeader2});
+            this.ConfigurationTerminalDatalistView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConfigurationTerminalDatalistView.FullRowSelect = true;
+            this.ConfigurationTerminalDatalistView.GridLines = true;
+            this.ConfigurationTerminalDatalistView.Location = new System.Drawing.Point(0, 0);
+            this.ConfigurationTerminalDatalistView.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationTerminalDatalistView.Name = "ConfigurationTerminalDatalistView";
+            this.ConfigurationTerminalDatalistView.Size = new System.Drawing.Size(371, 496);
+            this.ConfigurationTerminalDatalistView.TabIndex = 1;
+            this.ConfigurationTerminalDatalistView.UseCompatibleStateImageBehavior = false;
+            this.ConfigurationTerminalDatalistView.View = System.Windows.Forms.View.Details;
             // 
-            // btnFirmwareUpdate
+            // ConfigurationTerminalDatacolumnHeader1
             // 
-            this.btnFirmwareUpdate.Enabled = false;
-            this.btnFirmwareUpdate.Location = new System.Drawing.Point(43, 538);
-            this.btnFirmwareUpdate.Name = "btnFirmwareUpdate";
-            this.btnFirmwareUpdate.Size = new System.Drawing.Size(75, 29);
-            this.btnFirmwareUpdate.TabIndex = 10;
-            this.btnFirmwareUpdate.Text = "Update";
-            this.btnFirmwareUpdate.UseVisualStyleBackColor = true;
-            this.btnFirmwareUpdate.Click += new System.EventHandler(this.button6_Click);
+            this.ConfigurationTerminalDatacolumnHeader1.Text = "TAG";
             // 
-            // label5
+            // ConfigurationTerminalDatacolumnHeader2
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(40, 517);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Firmware Version:";
+            this.ConfigurationTerminalDatacolumnHeader2.Text = "VALUE";
             // 
-            // button5
+            // ConfigurationAIDStabPage
             // 
-            this.button5.Location = new System.Drawing.Point(296, 207);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(117, 29);
-            this.button5.TabIndex = 8;
-            this.button5.Text = "EMV Mode Disable";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.ConfigurationAIDStabPage.Controls.Add(this.ConfigurationAIDSpicBoxWait);
+            this.ConfigurationAIDStabPage.Controls.Add(this.ConfigurationAIDSlistView);
+            this.ConfigurationAIDStabPage.Location = new System.Drawing.Point(4, 22);
+            this.ConfigurationAIDStabPage.Margin = new System.Windows.Forms.Padding(1);
+            this.ConfigurationAIDStabPage.Name = "ConfigurationAIDStabPage";
+            this.ConfigurationAIDStabPage.Size = new System.Drawing.Size(371, 496);
+            this.ConfigurationAIDStabPage.TabIndex = 0;
+            this.ConfigurationAIDStabPage.Text = "AIDS";
+            this.ConfigurationAIDStabPage.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // ConfigurationAIDSpicBoxWait
             // 
-            this.button4.Location = new System.Drawing.Point(183, 207);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 29);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "UNKNOWN";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(40, 215);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Device Mode:";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(183, 124);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 29);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Factory";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 132);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Reset Configuration:";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(296, 47);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 29);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Device";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(183, 47);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 29);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "File";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 55);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Load Configuration From:";
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.picBoxConfigWait2);
-            this.tabPage2.Controls.Add(this.listView1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(692, 581);
-            this.tabPage2.TabIndex = 4;
-            this.tabPage2.Text = "Terminal Data";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // picBoxConfigWait2
-            // 
-            this.picBoxConfigWait2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ConfigurationAIDSpicBoxWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBoxConfigWait2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.picBoxConfigWait2.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait2.Image")));
-            this.picBoxConfigWait2.Location = new System.Drawing.Point(20, 14);
-            this.picBoxConfigWait2.Name = "picBoxConfigWait2";
-            this.picBoxConfigWait2.Size = new System.Drawing.Size(660, 553);
-            this.picBoxConfigWait2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.picBoxConfigWait2.TabIndex = 4;
-            this.picBoxConfigWait2.TabStop = false;
-            this.picBoxConfigWait2.Visible = false;
-            this.picBoxConfigWait2.WaitOnLoad = true;
+            this.ConfigurationAIDSpicBoxWait.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ConfigurationAIDSpicBoxWait.Image = ((System.Drawing.Image)(resources.GetObject("ConfigurationAIDSpicBoxWait.Image")));
+            this.ConfigurationAIDSpicBoxWait.Location = new System.Drawing.Point(2, 2);
+            this.ConfigurationAIDSpicBoxWait.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationAIDSpicBoxWait.Name = "ConfigurationAIDSpicBoxWait";
+            this.ConfigurationAIDSpicBoxWait.Size = new System.Drawing.Size(367, 494);
+            this.ConfigurationAIDSpicBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ConfigurationAIDSpicBoxWait.TabIndex = 4;
+            this.ConfigurationAIDSpicBoxWait.TabStop = false;
+            this.ConfigurationAIDSpicBoxWait.Visible = false;
+            this.ConfigurationAIDSpicBoxWait.WaitOnLoad = true;
             // 
-            // listView1
+            // ConfigurationAIDSlistView
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.listView1.FullRowSelect = true;
-            this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(20, 14);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(652, 553);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.ConfigurationAIDSlistView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ConfigurationAIDStabPageColumnHeader1,
+            this.ConfigurationAIDStabPageColumnHeader2});
+            this.ConfigurationAIDSlistView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConfigurationAIDSlistView.GridLines = true;
+            this.ConfigurationAIDSlistView.Location = new System.Drawing.Point(0, 0);
+            this.ConfigurationAIDSlistView.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationAIDSlistView.Name = "ConfigurationAIDSlistView";
+            this.ConfigurationAIDSlistView.Size = new System.Drawing.Size(371, 496);
+            this.ConfigurationAIDSlistView.TabIndex = 0;
+            this.ConfigurationAIDSlistView.UseCompatibleStateImageBehavior = false;
+            this.ConfigurationAIDSlistView.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader1
+            // ConfigurationAIDStabPageColumnHeader1
             // 
-            this.columnHeader1.Text = "TAG";
+            this.ConfigurationAIDStabPageColumnHeader1.Text = "TAG";
             // 
-            // columnHeader2
+            // ConfigurationAIDStabPageColumnHeader2
             // 
-            this.columnHeader2.Text = "VALUE";
+            this.ConfigurationAIDStabPageColumnHeader2.Text = "VALUE";
             // 
-            // tabPage3
+            // ConfigurationCAPKStabPage
             // 
-            this.tabPage3.Controls.Add(this.picBoxConfigWait3);
-            this.tabPage3.Controls.Add(this.listView2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(692, 581);
-            this.tabPage3.TabIndex = 5;
-            this.tabPage3.Text = "AID List";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.ConfigurationCAPKStabPage.Controls.Add(this.ConfigurationCAPKSpicBoxWait);
+            this.ConfigurationCAPKStabPage.Controls.Add(this.ConfigurationCAPKSlistView);
+            this.ConfigurationCAPKStabPage.Location = new System.Drawing.Point(4, 22);
+            this.ConfigurationCAPKStabPage.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationCAPKStabPage.Name = "ConfigurationCAPKStabPage";
+            this.ConfigurationCAPKStabPage.Padding = new System.Windows.Forms.Padding(2);
+            this.ConfigurationCAPKStabPage.Size = new System.Drawing.Size(371, 496);
+            this.ConfigurationCAPKStabPage.TabIndex = 1;
+            this.ConfigurationCAPKStabPage.Text = "CAPKS";
+            this.ConfigurationCAPKStabPage.UseVisualStyleBackColor = true;
             // 
-            // picBoxConfigWait3
+            // ConfigurationCAPKSpicBoxWait
             // 
-            this.picBoxConfigWait3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ConfigurationCAPKSpicBoxWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBoxConfigWait3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.picBoxConfigWait3.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait3.Image")));
-            this.picBoxConfigWait3.Location = new System.Drawing.Point(20, 14);
-            this.picBoxConfigWait3.Name = "picBoxConfigWait3";
-            this.picBoxConfigWait3.Size = new System.Drawing.Size(653, 554);
-            this.picBoxConfigWait3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.picBoxConfigWait3.TabIndex = 4;
-            this.picBoxConfigWait3.TabStop = false;
-            this.picBoxConfigWait3.Visible = false;
-            this.picBoxConfigWait3.WaitOnLoad = true;
+            this.ConfigurationCAPKSpicBoxWait.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ConfigurationCAPKSpicBoxWait.Image = ((System.Drawing.Image)(resources.GetObject("ConfigurationCAPKSpicBoxWait.Image")));
+            this.ConfigurationCAPKSpicBoxWait.Location = new System.Drawing.Point(2, 2);
+            this.ConfigurationCAPKSpicBoxWait.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationCAPKSpicBoxWait.Name = "ConfigurationCAPKSpicBoxWait";
+            this.ConfigurationCAPKSpicBoxWait.Size = new System.Drawing.Size(367, 494);
+            this.ConfigurationCAPKSpicBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ConfigurationCAPKSpicBoxWait.TabIndex = 4;
+            this.ConfigurationCAPKSpicBoxWait.TabStop = false;
+            this.ConfigurationCAPKSpicBoxWait.Visible = false;
+            this.ConfigurationCAPKSpicBoxWait.WaitOnLoad = true;
             // 
-            // listView2
+            // ConfigurationCAPKSlistView
             // 
-            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3,
-            this.columnHeader4});
-            this.listView2.FullRowSelect = true;
-            this.listView2.GridLines = true;
-            this.listView2.Location = new System.Drawing.Point(20, 14);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(652, 553);
-            this.listView2.TabIndex = 2;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
+            this.ConfigurationCAPKSlistView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ConfigurationCAPKStabPageColumnHeader1,
+            this.ConfigurationCAPKStabPageColumnHeader2});
+            this.ConfigurationCAPKSlistView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConfigurationCAPKSlistView.GridLines = true;
+            this.ConfigurationCAPKSlistView.Location = new System.Drawing.Point(2, 2);
+            this.ConfigurationCAPKSlistView.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationCAPKSlistView.Name = "ConfigurationCAPKSlistView";
+            this.ConfigurationCAPKSlistView.Size = new System.Drawing.Size(367, 492);
+            this.ConfigurationCAPKSlistView.TabIndex = 1;
+            this.ConfigurationCAPKSlistView.UseCompatibleStateImageBehavior = false;
+            this.ConfigurationCAPKSlistView.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader3
+            // ConfigurationCAPKStabPageColumnHeader1
             // 
-            this.columnHeader3.Text = "AID";
+            this.ConfigurationCAPKStabPageColumnHeader1.Text = "TAG";
             // 
-            // columnHeader4
+            // ConfigurationCAPKStabPageColumnHeader2
             // 
-            this.columnHeader4.Text = "VALUES";
+            this.ConfigurationCAPKStabPageColumnHeader2.Text = "VALUE";
             // 
-            // tabPage4
+            // ConfigurationGROUPStabPage
             // 
-            this.tabPage4.Controls.Add(this.picBoxConfigWait4);
-            this.tabPage4.Controls.Add(this.listView3);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(692, 581);
-            this.tabPage4.TabIndex = 6;
-            this.tabPage4.Text = "CAPK";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.ConfigurationGROUPStabPage.Controls.Add(this.ConfigurationGROUPSpicBoxWait);
+            this.ConfigurationGROUPStabPage.Controls.Add(this.ConfigurationGROUPSConfigurationPanel1label1);
+            this.ConfigurationGROUPStabPage.Controls.Add(this.ConfigurationGROUPStabPagecomboBox1);
+            this.ConfigurationGROUPStabPage.Controls.Add(this.ConfigurationGROUPSlistView);
+            this.ConfigurationGROUPStabPage.Location = new System.Drawing.Point(4, 22);
+            this.ConfigurationGROUPStabPage.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationGROUPStabPage.Name = "ConfigurationGROUPStabPage";
+            this.ConfigurationGROUPStabPage.Size = new System.Drawing.Size(371, 496);
+            this.ConfigurationGROUPStabPage.TabIndex = 2;
+            this.ConfigurationGROUPStabPage.Text = "GROUPS";
+            this.ConfigurationGROUPStabPage.UseVisualStyleBackColor = true;
             // 
-            // picBoxConfigWait4
+            // ConfigurationGROUPSpicBoxWait
             // 
-            this.picBoxConfigWait4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ConfigurationGROUPSpicBoxWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBoxConfigWait4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.picBoxConfigWait4.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait4.Image")));
-            this.picBoxConfigWait4.Location = new System.Drawing.Point(20, 14);
-            this.picBoxConfigWait4.Name = "picBoxConfigWait4";
-            this.picBoxConfigWait4.Size = new System.Drawing.Size(652, 553);
-            this.picBoxConfigWait4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.picBoxConfigWait4.TabIndex = 5;
-            this.picBoxConfigWait4.TabStop = false;
-            this.picBoxConfigWait4.Visible = false;
-            this.picBoxConfigWait4.WaitOnLoad = true;
+            this.ConfigurationGROUPSpicBoxWait.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ConfigurationGROUPSpicBoxWait.Image = ((System.Drawing.Image)(resources.GetObject("ConfigurationGROUPSpicBoxWait.Image")));
+            this.ConfigurationGROUPSpicBoxWait.Location = new System.Drawing.Point(2, 2);
+            this.ConfigurationGROUPSpicBoxWait.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationGROUPSpicBoxWait.Name = "ConfigurationGROUPSpicBoxWait";
+            this.ConfigurationGROUPSpicBoxWait.Size = new System.Drawing.Size(367, 494);
+            this.ConfigurationGROUPSpicBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ConfigurationGROUPSpicBoxWait.TabIndex = 4;
+            this.ConfigurationGROUPSpicBoxWait.TabStop = false;
+            this.ConfigurationGROUPSpicBoxWait.Visible = false;
+            this.ConfigurationGROUPSpicBoxWait.WaitOnLoad = true;
             // 
-            // listView3
+            // ConfigurationGROUPSConfigurationPanel1label1
             // 
-            this.listView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-            this.listView3.FullRowSelect = true;
-            this.listView3.GridLines = true;
-            this.listView3.Location = new System.Drawing.Point(20, 14);
-            this.listView3.Name = "listView3";
-            this.listView3.Size = new System.Drawing.Size(652, 553);
-            this.listView3.TabIndex = 3;
-            this.listView3.UseCompatibleStateImageBehavior = false;
-            this.listView3.View = System.Windows.Forms.View.Details;
+            this.ConfigurationGROUPSConfigurationPanel1label1.Location = new System.Drawing.Point(20, 17);
+            this.ConfigurationGROUPSConfigurationPanel1label1.Name = "ConfigurationGROUPSConfigurationPanel1label1";
+            this.ConfigurationGROUPSConfigurationPanel1label1.Size = new System.Drawing.Size(100, 23);
+            this.ConfigurationGROUPSConfigurationPanel1label1.TabIndex = 12;
+            this.ConfigurationGROUPSConfigurationPanel1label1.Text = "Config Group:";
             // 
-            // columnHeader5
+            // ConfigurationGROUPStabPagecomboBox1
             // 
-            this.columnHeader5.Text = "CAPK";
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "MODULUS";
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.picBoxConfigWait5);
-            this.tabPage5.Controls.Add(this.comboBox1);
-            this.tabPage5.Controls.Add(this.label4);
-            this.tabPage5.Controls.Add(this.listView4);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(692, 581);
-            this.tabPage5.TabIndex = 7;
-            this.tabPage5.Text = "Groups";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // picBoxConfigWait5
-            // 
-            this.picBoxConfigWait5.Image = ((System.Drawing.Image)(resources.GetObject("picBoxConfigWait5.Image")));
-            this.picBoxConfigWait5.Location = new System.Drawing.Point(0, 0);
-            this.picBoxConfigWait5.Name = "picBoxConfigWait5";
-            this.picBoxConfigWait5.Size = new System.Drawing.Size(686, 575);
-            this.picBoxConfigWait5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.picBoxConfigWait5.TabIndex = 0;
-            this.picBoxConfigWait5.TabStop = false;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.ConfigurationGROUPStabPagecomboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConfigurationGROUPStabPagecomboBox1.FormattingEnabled = true;
+            this.ConfigurationGROUPStabPagecomboBox1.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
             "3",
             "4",
             "5"});
-            this.comboBox1.Location = new System.Drawing.Point(94, 18);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(155, 21);
-            this.comboBox1.TabIndex = 6;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.OnConfigGroupSelectionChanged);
+            this.ConfigurationGROUPStabPagecomboBox1.Location = new System.Drawing.Point(137, 17);
+            this.ConfigurationGROUPStabPagecomboBox1.Name = "ConfigurationGROUPStabPagecomboBox1";
+            this.ConfigurationGROUPStabPagecomboBox1.Size = new System.Drawing.Size(155, 21);
+            this.ConfigurationGROUPStabPagecomboBox1.TabIndex = 11;
+            this.ConfigurationGROUPStabPagecomboBox1.SelectedIndexChanged += new System.EventHandler(this.OnConfigGroupSelectionChanged);
             // 
-            // label4
+            // ConfigurationGROUPSlistView
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 21);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Config Group:";
+            this.ConfigurationGROUPSlistView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ConfigurationGROUPStabPageColumnHeader1,
+            this.ConfigurationGROUPStabPageColumnHeader2,
+            this.ConfigurationGROUPStabPageColumnHeader3});
+            this.ConfigurationGROUPSlistView.GridLines = true;
+            this.ConfigurationGROUPSlistView.Location = new System.Drawing.Point(0, 54);
+            this.ConfigurationGROUPSlistView.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationGROUPSlistView.Name = "ConfigurationGROUPSlistView";
+            this.ConfigurationGROUPSlistView.Size = new System.Drawing.Size(371, 442);
+            this.ConfigurationGROUPSlistView.TabIndex = 1;
+            this.ConfigurationGROUPSlistView.UseCompatibleStateImageBehavior = false;
+            this.ConfigurationGROUPSlistView.View = System.Windows.Forms.View.Details;
             // 
-            // listView4
+            // ConfigurationGROUPStabPageColumnHeader1
             // 
-            this.listView4.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader7,
-            this.columnHeader8,
-            this.columnHeader9});
-            this.listView4.FullRowSelect = true;
-            this.listView4.GridLines = true;
-            this.listView4.Location = new System.Drawing.Point(0, 72);
-            this.listView4.Name = "listView4";
-            this.listView4.Size = new System.Drawing.Size(689, 509);
-            this.listView4.TabIndex = 4;
-            this.listView4.UseCompatibleStateImageBehavior = false;
-            this.listView4.View = System.Windows.Forms.View.Details;
+            this.ConfigurationGROUPStabPageColumnHeader1.Text = "AID";
             // 
-            // columnHeader7
+            // ConfigurationGROUPStabPageColumnHeader2
             // 
-            this.columnHeader7.Text = "AID";
+            this.ConfigurationGROUPStabPageColumnHeader2.Text = "TAG";
             // 
-            // columnHeader8
+            // ConfigurationGROUPStabPageColumnHeader3
             // 
-            this.columnHeader8.Text = "TAG";
+            this.ConfigurationGROUPStabPageColumnHeader3.Text = "VALUE";
             // 
-            // columnHeader9
+            // ConfigurationPanel1
             // 
-            this.columnHeader9.Text = "VALUE";
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationPanel1pictureBox1);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationPanel1label2);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationPanel1btnDeviceMode);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationPanel1btnEMVMode);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationPanel1label1);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationPanel1btnFactoryReset);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationCollapseButton);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationSplitter1);
+            this.ConfigurationPanel1.Controls.Add(this.ConfigurationGroupBox1);
+            this.ConfigurationPanel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ConfigurationPanel1.Location = new System.Drawing.Point(2, 2);
+            this.ConfigurationPanel1.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationPanel1.Name = "ConfigurationPanel1";
+            this.ConfigurationPanel1.Size = new System.Drawing.Size(350, 577);
+            this.ConfigurationPanel1.TabIndex = 0;
             // 
-            // panel1
+            // ConfigurationPanel1pictureBox1
             // 
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 100);
-            this.panel1.TabIndex = 0;
+            this.ConfigurationPanel1pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("ConfigurationPanel1pictureBox1.Image")));
+            this.ConfigurationPanel1pictureBox1.Location = new System.Drawing.Point(0, 3);
+            this.ConfigurationPanel1pictureBox1.Name = "ConfigurationPanel1pictureBox1";
+            this.ConfigurationPanel1pictureBox1.Size = new System.Drawing.Size(319, 571);
+            this.ConfigurationPanel1pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ConfigurationPanel1pictureBox1.TabIndex = 19;
+            this.ConfigurationPanel1pictureBox1.TabStop = false;
+            this.ConfigurationPanel1pictureBox1.Visible = false;
             // 
-            // pictureBox1
+            // ConfigurationPanel1label2
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(696, 44);
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            this.ConfigurationPanel1label2.AutoSize = true;
+            this.ConfigurationPanel1label2.Location = new System.Drawing.Point(29, 194);
+            this.ConfigurationPanel1label2.Name = "ConfigurationPanel1label2";
+            this.ConfigurationPanel1label2.Size = new System.Drawing.Size(74, 13);
+            this.ConfigurationPanel1label2.TabIndex = 17;
+            this.ConfigurationPanel1label2.Text = "Device Mode:";
             // 
-            // openFileDialog1
+            // ConfigurationPanel1btnDeviceMode
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.ConfigurationPanel1btnDeviceMode.Location = new System.Drawing.Point(172, 194);
+            this.ConfigurationPanel1btnDeviceMode.Name = "ConfigurationPanel1btnDeviceMode";
+            this.ConfigurationPanel1btnDeviceMode.Size = new System.Drawing.Size(75, 23);
+            this.ConfigurationPanel1btnDeviceMode.TabIndex = 18;
+            this.ConfigurationPanel1btnDeviceMode.Text = "MODE";
+            this.ConfigurationPanel1btnDeviceMode.Click += new System.EventHandler(this.OnSetDeviceMode);
+            // 
+            // ConfigurationPanel1btnEMVMode
+            // 
+            this.ConfigurationPanel1btnEMVMode.Location = new System.Drawing.Point(32, 248);
+            this.ConfigurationPanel1btnEMVMode.Name = "ConfigurationPanel1btnEMVMode";
+            this.ConfigurationPanel1btnEMVMode.Size = new System.Drawing.Size(117, 23);
+            this.ConfigurationPanel1btnEMVMode.TabIndex = 16;
+            this.ConfigurationPanel1btnEMVMode.Text = "EMV Mode Disable";
+            this.ConfigurationPanel1btnEMVMode.Click += new System.EventHandler(this.OnEMVModeDisable);
+            // 
+            // ConfigurationPanel1label1
+            // 
+            this.ConfigurationPanel1label1.AutoSize = true;
+            this.ConfigurationPanel1label1.Location = new System.Drawing.Point(29, 131);
+            this.ConfigurationPanel1label1.Name = "ConfigurationPanel1label1";
+            this.ConfigurationPanel1label1.Size = new System.Drawing.Size(103, 13);
+            this.ConfigurationPanel1label1.TabIndex = 6;
+            this.ConfigurationPanel1label1.Text = "Reset Configuration:";
+            // 
+            // ConfigurationPanel1btnFactoryReset
+            // 
+            this.ConfigurationPanel1btnFactoryReset.Location = new System.Drawing.Point(172, 123);
+            this.ConfigurationPanel1btnFactoryReset.Name = "ConfigurationPanel1btnFactoryReset";
+            this.ConfigurationPanel1btnFactoryReset.Size = new System.Drawing.Size(75, 29);
+            this.ConfigurationPanel1btnFactoryReset.TabIndex = 7;
+            this.ConfigurationPanel1btnFactoryReset.Text = "Factory";
+            this.ConfigurationPanel1btnFactoryReset.UseVisualStyleBackColor = true;
+            this.ConfigurationPanel1btnFactoryReset.Click += new System.EventHandler(this.OnLoadFactory);
+            // 
+            // ConfigurationCollapseButton
+            // 
+            this.ConfigurationCollapseButton.Location = new System.Drawing.Point(320, -2);
+            this.ConfigurationCollapseButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ConfigurationCollapseButton.Name = "ConfigurationCollapseButton";
+            this.ConfigurationCollapseButton.Size = new System.Drawing.Size(27, 579);
+            this.ConfigurationCollapseButton.TabIndex = 5;
+            this.ConfigurationCollapseButton.Text = "<<";
+            this.ConfigurationCollapseButton.UseVisualStyleBackColor = true;
+            this.ConfigurationCollapseButton.Visible = false;
+            this.ConfigurationCollapseButton.Click += new System.EventHandler(this.OnCollapseConfigurationView);
+            // 
+            // ConfigurationSplitter1
+            // 
+            this.ConfigurationSplitter1.Location = new System.Drawing.Point(0, 0);
+            this.ConfigurationSplitter1.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationSplitter1.Name = "ConfigurationSplitter1";
+            this.ConfigurationSplitter1.Size = new System.Drawing.Size(2, 577);
+            this.ConfigurationSplitter1.TabIndex = 4;
+            this.ConfigurationSplitter1.TabStop = false;
+            // 
+            // ConfigurationGroupBox1
+            // 
+            this.ConfigurationGroupBox1.Controls.Add(this.radioLoadFromDevice);
+            this.ConfigurationGroupBox1.Controls.Add(this.radioLoadFromFile);
+            this.ConfigurationGroupBox1.Location = new System.Drawing.Point(32, 26);
+            this.ConfigurationGroupBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.ConfigurationGroupBox1.Name = "ConfigurationGroupBox1";
+            this.ConfigurationGroupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.ConfigurationGroupBox1.Size = new System.Drawing.Size(262, 63);
+            this.ConfigurationGroupBox1.TabIndex = 3;
+            this.ConfigurationGroupBox1.TabStop = false;
+            this.ConfigurationGroupBox1.Text = "LOAD FROM: ";
+            // 
+            // radioLoadFromDevice
+            // 
+            this.radioLoadFromDevice.AutoSize = true;
+            this.radioLoadFromDevice.Location = new System.Drawing.Point(77, 28);
+            this.radioLoadFromDevice.Margin = new System.Windows.Forms.Padding(2);
+            this.radioLoadFromDevice.Name = "radioLoadFromDevice";
+            this.radioLoadFromDevice.Size = new System.Drawing.Size(64, 17);
+            this.radioLoadFromDevice.TabIndex = 2;
+            this.radioLoadFromDevice.TabStop = true;
+            this.radioLoadFromDevice.Text = "DEVICE";
+            this.radioLoadFromDevice.UseVisualStyleBackColor = true;
+            this.radioLoadFromDevice.CheckedChanged += new System.EventHandler(this.OnLoadFromDevice);
+            // 
+            // radioLoadFromFile
+            // 
+            this.radioLoadFromFile.AutoSize = true;
+            this.radioLoadFromFile.Location = new System.Drawing.Point(19, 28);
+            this.radioLoadFromFile.Margin = new System.Windows.Forms.Padding(2);
+            this.radioLoadFromFile.Name = "radioLoadFromFile";
+            this.radioLoadFromFile.Size = new System.Drawing.Size(47, 17);
+            this.radioLoadFromFile.TabIndex = 1;
+            this.radioLoadFromFile.TabStop = true;
+            this.radioLoadFromFile.Text = "FILE";
+            this.radioLoadFromFile.UseVisualStyleBackColor = true;
+            this.radioLoadFromFile.CheckedChanged += new System.EventHandler(this.OnLoadFromFile);
+            // 
+            // FirmwaretabPage
+            // 
+            this.FirmwaretabPage.Controls.Add(this.lblFirmwareVersion);
+            this.FirmwaretabPage.Controls.Add(this.btnFirmwareUpdate);
+            this.FirmwaretabPage.Controls.Add(this.FirmwareConfigurationPanel1label1);
+            this.FirmwaretabPage.Controls.Add(this.FirmwareprogressBar1);
+            this.FirmwaretabPage.Location = new System.Drawing.Point(4, 22);
+            this.FirmwaretabPage.Name = "FirmwaretabPage";
+            this.FirmwaretabPage.Size = new System.Drawing.Size(822, 581);
+            this.FirmwaretabPage.TabIndex = 2;
+            this.FirmwaretabPage.Text = "Firmware";
+            this.FirmwaretabPage.UseVisualStyleBackColor = true;
+            // 
+            // lblFirmwareVersion
+            // 
+            this.lblFirmwareVersion.AutoSize = true;
+            this.lblFirmwareVersion.Location = new System.Drawing.Point(128, 55);
+            this.lblFirmwareVersion.Name = "lblFirmwareVersion";
+            this.lblFirmwareVersion.Size = new System.Drawing.Size(65, 13);
+            this.lblFirmwareVersion.TabIndex = 12;
+            this.lblFirmwareVersion.Text = "UNKNOWN";
+            // 
+            // btnFirmwareUpdate
+            // 
+            this.btnFirmwareUpdate.Enabled = false;
+            this.btnFirmwareUpdate.Location = new System.Drawing.Point(26, 79);
+            this.btnFirmwareUpdate.Name = "btnFirmwareUpdate";
+            this.btnFirmwareUpdate.Size = new System.Drawing.Size(75, 29);
+            this.btnFirmwareUpdate.TabIndex = 10;
+            this.btnFirmwareUpdate.Text = "Update";
+            this.btnFirmwareUpdate.UseVisualStyleBackColor = true;
+            this.btnFirmwareUpdate.Click += new System.EventHandler(this.OnFirmwareUpdate);
+            // 
+            // FirmwareConfigurationPanel1label1
+            // 
+            this.FirmwareConfigurationPanel1label1.Location = new System.Drawing.Point(23, 53);
+            this.FirmwareConfigurationPanel1label1.Name = "FirmwareConfigurationPanel1label1";
+            this.FirmwareConfigurationPanel1label1.Size = new System.Drawing.Size(100, 23);
+            this.FirmwareConfigurationPanel1label1.TabIndex = 14;
+            this.FirmwareConfigurationPanel1label1.Text = "Firmware Version:";
+            // 
+            // FirmwareprogressBar1
+            // 
+            this.FirmwareprogressBar1.Location = new System.Drawing.Point(26, 203);
+            this.FirmwareprogressBar1.Name = "FirmwareprogressBar1";
+            this.FirmwareprogressBar1.Size = new System.Drawing.Size(627, 29);
+            this.FirmwareprogressBar1.TabIndex = 13;
+            this.FirmwareprogressBar1.Visible = false;
+            // 
+            // ApplicationpicBoxWait
+            // 
+            this.ApplicationpicBoxWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ApplicationpicBoxWait.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ApplicationpicBoxWait.Location = new System.Drawing.Point(2, 2);
+            this.ApplicationpicBoxWait.Margin = new System.Windows.Forms.Padding(2);
+            this.ApplicationpicBoxWait.Name = "ApplicationpicBoxWait";
+            this.ApplicationpicBoxWait.Size = new System.Drawing.Size(367, 494);
+            this.ApplicationpicBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ApplicationpicBoxWait.TabIndex = 4;
+            this.ApplicationpicBoxWait.TabStop = false;
+            this.ApplicationpicBoxWait.Visible = false;
+            this.ApplicationpicBoxWait.WaitOnLoad = true;
+            // 
+            // FirmwareopenFileDialog1
+            // 
+            this.FirmwareopenFileDialog1.FileName = "FirmwareopenFileDialog1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(727, 680);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.tabControl1);
+            this.ClientSize = new System.Drawing.Size(854, 680);
+            this.Controls.Add(this.tabControlMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "IDTech Configuration Reader";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Load += new System.EventHandler(this.OnFormLoad);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait2)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait3)).EndInit();
-            this.tabPage4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait4)).EndInit();
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxConfigWait5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabControlMain.ResumeLayout(false);
+            this.ConfigurationtabPage.ResumeLayout(false);
+            this.ConfigurationPanel2.ResumeLayout(false);
+            this.tabControlConfiguration.ResumeLayout(false);
+            this.ConfigurationTerminalDatatabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationTerminalDatapicBoxWait)).EndInit();
+            this.ConfigurationAIDStabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationAIDSpicBoxWait)).EndInit();
+            this.ConfigurationCAPKStabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationCAPKSpicBoxWait)).EndInit();
+            this.ConfigurationGROUPStabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationGROUPSpicBoxWait)).EndInit();
+            this.ConfigurationPanel1.ResumeLayout(false);
+            this.ConfigurationPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigurationPanel1pictureBox1)).EndInit();
+            this.ConfigurationGroupBox1.ResumeLayout(false);
+            this.ConfigurationGroupBox1.PerformLayout();
+            this.FirmwaretabPage.ResumeLayout(false);
+            this.FirmwaretabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ApplicationpicBoxWait)).EndInit();
             this.ResumeLayout(false);
 
         }
-
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TabPage tabPage1;
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.ListView listView2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.ListView listView3;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox picBoxConfigWait1;
-        private System.Windows.Forms.PictureBox picBoxConfigWait2;
-        private System.Windows.Forms.PictureBox picBoxConfigWait3;
-        private System.Windows.Forms.PictureBox picBoxConfigWait4;
-        private System.Windows.Forms.PictureBox picBoxConfigWait5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.ListView listView4;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.ColumnHeader columnHeader9;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TabControl tabControlMain;
+        // TAB: APPLICATION
+        private System.Windows.Forms.TabPage ApplicationtabPage;
+        private System.Windows.Forms.PictureBox ApplicationpicBoxWait;
+        // TAB: CONFIGURATION
+        private System.Windows.Forms.TabControl tabControlConfiguration;
+        private System.Windows.Forms.TabPage ConfigurationtabPage;
+        private System.Windows.Forms.Panel ConfigurationPanel1;
+        private System.Windows.Forms.PictureBox ConfigurationPanel1pictureBox1;
+        private System.Windows.Forms.Panel ConfigurationPanel2;
+        private System.Windows.Forms.RadioButton radioLoadFromDevice;
+        private System.Windows.Forms.RadioButton radioLoadFromFile;
+        private System.Windows.Forms.GroupBox ConfigurationGroupBox1;
+        private System.Windows.Forms.Label ConfigurationPanel1label1;
+        private System.Windows.Forms.Label ConfigurationPanel1label2;
+        private System.Windows.Forms.Button ConfigurationPanel1btnFactoryReset;
+        private System.Windows.Forms.Button ConfigurationPanel1btnDeviceMode;
+        private System.Windows.Forms.Button ConfigurationPanel1btnEMVMode;
+        private System.Windows.Forms.Splitter ConfigurationSplitter1;
+        private System.Windows.Forms.Button ConfigurationCollapseButton;
+        private System.Windows.Forms.Button ConfigurationExpandButton;
+        // SUB-TAB: TERMINAL DATA
+        private System.Windows.Forms.TabPage ConfigurationTerminalDatatabPage;
+        private System.Windows.Forms.ListView ConfigurationTerminalDatalistView;
+        private System.Windows.Forms.ColumnHeader ConfigurationTerminalDatacolumnHeader1;
+        private System.Windows.Forms.ColumnHeader ConfigurationTerminalDatacolumnHeader2;
+        private System.Windows.Forms.PictureBox ConfigurationTerminalDatapicBoxWait;
+        // SUB-TAB: AID LIST
+        private System.Windows.Forms.TabPage ConfigurationAIDStabPage;
+        private System.Windows.Forms.ListView ConfigurationAIDSlistView;
+        private System.Windows.Forms.ColumnHeader ConfigurationAIDStabPageColumnHeader1;
+        private System.Windows.Forms.ColumnHeader ConfigurationAIDStabPageColumnHeader2;
+        private System.Windows.Forms.PictureBox ConfigurationAIDSpicBoxWait;
+        // SUB-TAB: CAPK LIST
+        private System.Windows.Forms.TabPage ConfigurationCAPKStabPage;
+        private System.Windows.Forms.ListView ConfigurationCAPKSlistView;
+        private System.Windows.Forms.ColumnHeader ConfigurationCAPKStabPageColumnHeader1;
+        private System.Windows.Forms.ColumnHeader ConfigurationCAPKStabPageColumnHeader2;
+        private System.Windows.Forms.PictureBox ConfigurationCAPKSpicBoxWait;
+        // SUB-TAB: GROUPS
+        private System.Windows.Forms.TabPage ConfigurationGROUPStabPage;
+        private System.Windows.Forms.Label ConfigurationGROUPSConfigurationPanel1label1;
+        private System.Windows.Forms.PictureBox ConfigurationGROUPSpicBoxWait;
+        private System.Windows.Forms.ListView ConfigurationGROUPSlistView;
+        private System.Windows.Forms.ColumnHeader ConfigurationGROUPStabPageColumnHeader1;
+        private System.Windows.Forms.ColumnHeader ConfigurationGROUPStabPageColumnHeader2;
+        private System.Windows.Forms.ColumnHeader ConfigurationGROUPStabPageColumnHeader3;
+        private System.Windows.Forms.ComboBox ConfigurationGROUPStabPagecomboBox1;
+        // TAB: FIRMWARE
+        private System.Windows.Forms.TabPage FirmwaretabPage;
         private System.Windows.Forms.Button btnFirmwareUpdate;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label lblFirmwareVersion;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label FirmwareConfigurationPanel1label1;
+        private System.Windows.Forms.OpenFileDialog FirmwareopenFileDialog1;
+        private System.Windows.Forms.ProgressBar FirmwareprogressBar1;
     }
 }
 

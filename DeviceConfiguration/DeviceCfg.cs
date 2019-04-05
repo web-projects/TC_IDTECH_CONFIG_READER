@@ -344,7 +344,7 @@ namespace IPA.DAL.RBADAL
           deviceProtocol = comm.getDeviceProtocol();
       }
 
-      Debug.WriteLine("DeviceCfg::MessageCallBack: device discovery: state={0}", state);
+      //Debug.WriteLine("DeviceCfg::MessageCallBack: device discovery: state={0}", state);
 
       switch (state)
       {

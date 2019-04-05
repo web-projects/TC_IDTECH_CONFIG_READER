@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Runtime.InteropServices;   
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace IDTechConfigReader
 {
@@ -169,7 +170,8 @@ namespace IDTechConfigReader
 
             if (_owner != null)
             {
-                _hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, _hookProc, IntPtr.Zero, AppDomain.GetCurrentThreadId());
+                //_hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, _hookProc, IntPtr.Zero, AppDomain.GetCurrentThreadId());
+                _hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, _hookProc, IntPtr.Zero, Process.GetCurrentProcess().Threads[0].Id);
             }
         }
 

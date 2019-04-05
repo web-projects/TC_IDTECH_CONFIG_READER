@@ -36,6 +36,8 @@ namespace IDTechConfigReader
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        const int CONFIG_PANEL_WIDTH = 50;
+
         // Always on TOP
         bool tc_always_on_top;
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
@@ -52,10 +54,7 @@ namespace IDTechConfigReader
         {
             InitializeComponent();
 
-            tabControl1.TabPages.Remove(tabPage2);
-            tabControl1.TabPages.Remove(tabPage3);
-            tabControl1.TabPages.Remove(tabPage4);
-            tabControl1.TabPages.Remove(tabPage5);
+            this.tabControlConfiguration.Width += CONFIG_PANEL_WIDTH;
 
             try
             {
@@ -276,7 +275,7 @@ namespace IDTechConfigReader
                         this.lblFirmwareVersion.Text = config[1];
                         this.btnFirmwareUpdate.Enabled = true;
                         this.btnFirmwareUpdate.Visible = true;
-                        this.progressBar1.Visible      = false;
+                        this.FirmwareprogressBar1.Visible      = false;
                     }
                 }
             }
@@ -366,8 +365,8 @@ namespace IDTechConfigReader
             {
                 MethodInvoker mi = () =>
                 {
-                    this.picBoxConfigWait1.Enabled = false;
-                    this.picBoxConfigWait1.Visible  = false;
+                    this.ApplicationpicBoxWait.Enabled = false;
+                    this.ApplicationpicBoxWait.Visible  = false;
                 };
 
                 if (InvokeRequired)
@@ -426,8 +425,8 @@ namespace IDTechConfigReader
             {
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    this.picBoxConfigWait1.Enabled = true;
-                    this.picBoxConfigWait1.Visible  = true;
+                    this.ApplicationpicBoxWait.Enabled = true;
+                    this.ApplicationpicBoxWait.Visible  = true;
                     this.btnFirmwareUpdate.Enabled = false;
                     this.lblFirmwareVersion.Text = "UNKNOWN";
                 }));
@@ -500,9 +499,9 @@ namespace IDTechConfigReader
                 try
                 {
                     string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
-                    this.button4.Text = data[0];
-                    this.button4.Enabled = true;
-                    this.button5.Enabled = (this.button4.Text.Equals(USK_DEVICE_MODE.USB_HID)) ? false : true;
+                    this.ConfigurationPanel1btnDeviceMode.Enabled = true;
+                    this.ConfigurationPanel1btnDeviceMode.Text = data[0];
+                    this.ConfigurationPanel1btnEMVMode.Enabled = (this.ConfigurationPanel1btnDeviceMode.Text.Equals(USK_DEVICE_MODE.USB_HID)) ? false : true;
                 }
                 catch (Exception exp)
                 {
@@ -527,61 +526,71 @@ namespace IDTechConfigReader
             {
                 try
                 {
-                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                    string [] data = ((IEnumerable) payload)?.Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray() ?? null;
 
                     // Remove previous entries
-                    if(listView1.Items.Count > 0)
+                    if(ConfigurationTerminalDatalistView.Items.Count > 0)
                     {
-                        listView1.Items.Clear();
+                        ConfigurationTerminalDatalistView.Items.Clear();
                     }
 
-                    // Check for ERRORS
-                    if(!data[0].Equals("NO FIRMWARE VERSION MATCH"))
-                    {
-                        foreach(string val in data)
+                    if(data != null)
+                    { 
+                        // Check for ERRORS
+                        if(!data[0].Equals("NO FIRMWARE VERSION MATCH"))
                         {
-                            string [] tlv = val.Split(':');
-                            ListViewItem item1 = new ListViewItem(tlv[0], 0);
-                            item1.SubItems.Add(tlv[1]);
-                            listView1.Items.Add(item1);
-                        }
+                            foreach(string val in data)
+                            {
+                                string [] tlv = val.Split(':');
+                                ListViewItem item1 = new ListViewItem(tlv[0], 0);
+                                item1.SubItems.Add(tlv[1]);
+                                ConfigurationTerminalDatalistView.Items.Add(item1);
+                            }
 
-                        // TAB 2
-                        if(!tabControl1.Contains(tabPage2))
-                        {
-                            tabControl1.TabPages.Add(tabPage2);
+                            // TAB 0
+                            if(!tabControlConfiguration.Contains(ConfigurationTerminalDatatabPage))
+                            {
+                                tabControlConfiguration.TabPages.Add(ConfigurationTerminalDatatabPage);
+                            }
+                            this.ConfigurationTerminalDatatabPage.Enabled = true;
+                            tabControlConfiguration.SelectedTab = this.ConfigurationTerminalDatatabPage;
+                            // TAB 1
+                            if(!tabControlConfiguration.Contains(ConfigurationAIDStabPage))
+                            {
+                                tabControlConfiguration.TabPages.Add(ConfigurationAIDStabPage);
+                            }
+                            this.ConfigurationAIDStabPage.Enabled = true;
+                            // TAB 2
+                            if(!tabControlConfiguration.Contains(ConfigurationCAPKStabPage))
+                            {
+                                tabControlConfiguration.TabPages.Add(ConfigurationCAPKStabPage);
+                            }
+                            this.ConfigurationCAPKStabPage.Enabled = true;
+                            // TAB 3
+                            if(!tabControlConfiguration.Contains(ConfigurationGROUPStabPage))
+                            {
+                                tabControlConfiguration.TabPages.Add(ConfigurationGROUPStabPage);
+                            }
+                            this.ConfigurationGROUPStabPage.Enabled = true;
                         }
-                        this.tabPage2.Enabled = true;
-                        tabControl1.SelectedTab = this.tabPage2;
-                        // TAB 3
-                        if(!tabControl1.Contains(tabPage3))
+                        else
                         {
-                            tabControl1.TabPages.Add(tabPage3);
+                            ListViewItem item1 = new ListViewItem("ERROR", 0);
+                            item1.SubItems.Add(data[0]);
+                            ConfigurationTerminalDatalistView.Items.Add(item1);
                         }
-                        this.tabPage3.Enabled = true;
-                        // TAB 4
-                        if(!tabControl1.Contains(tabPage4))
-                        {
-                            tabControl1.TabPages.Add(tabPage4);
-                        }
-                        this.tabPage4.Enabled = true;
-                        // TAB 5
-                        if(!tabControl1.Contains(tabPage5))
-                        {
-                            tabControl1.TabPages.Add(tabPage5);
-                        }
-                        this.tabPage5.Enabled = true;
                     }
                     else
                     {
                         ListViewItem item1 = new ListViewItem("ERROR", 0);
-                        item1.SubItems.Add(data[0]);
-                        listView1.Items.Add(item1);
+                        item1.SubItems.Add("*** NO DATA ***");
+                        ConfigurationTerminalDatalistView.Items.Add(item1);
                     }
-                    listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                    listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-                    this.picBoxConfigWait2.Enabled = false;
-                    this.picBoxConfigWait2.Visible  = false;
+
+                    ConfigurationTerminalDatalistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    ConfigurationTerminalDatalistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                    this.ConfigurationTerminalDatapicBoxWait.Enabled = false;
+                    this.ConfigurationTerminalDatapicBoxWait.Visible  = false;
                 }
                 catch (Exception exp)
                 {
@@ -609,9 +618,9 @@ namespace IDTechConfigReader
                     string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
 
                     // Remove previous entries
-                    if(listView2.Items.Count > 0)
+                    if(ConfigurationAIDSlistView.Items.Count > 0)
                     {
-                        listView2.Items.Clear();
+                        ConfigurationAIDSlistView.Items.Clear();
                     }
 
                     foreach(string item in data)
@@ -621,19 +630,19 @@ namespace IDTechConfigReader
                         {
                             ListViewItem item1 = new ListViewItem(components[0], 0);
                             item1.SubItems.Add(components[1]);
-                            listView2.Items.Add(item1);
+                            ConfigurationAIDSlistView.Items.Add(item1);
                         }
                     }
 
-                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                    listView2.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                    ConfigurationAIDSlistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    ConfigurationAIDSlistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
-                    if(!tabControl1.Contains(tabPage3))
+                    if(!tabControlConfiguration.Contains(ConfigurationAIDStabPage))
                     {
-                        tabControl1.TabPages.Add(tabPage3);
+                        tabControlConfiguration.TabPages.Add(ConfigurationAIDStabPage);
                     }
-                    this.tabPage3.Enabled = true;
-                    tabControl1.SelectedTab = this.tabPage3;
+                    this.ConfigurationAIDStabPage.Enabled = true;
+                    tabControlConfiguration.SelectedTab = this.ConfigurationAIDStabPage;
                 }
                 catch (Exception exp)
                 {
@@ -641,8 +650,8 @@ namespace IDTechConfigReader
                 }
                 finally
                 {
-                    this.picBoxConfigWait3.Enabled = false;
-                    this.picBoxConfigWait3.Visible  = false;
+                    this.ConfigurationAIDSpicBoxWait.Enabled = false;
+                    this.ConfigurationAIDSpicBoxWait.Visible  = false;
                 }
             };
 
@@ -663,67 +672,76 @@ namespace IDTechConfigReader
             {
                 try
                 {
-                    string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
+                    string [] data = ((IEnumerable) payload)?.Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray() ?? null;
 
                     // Remove previous entries
-                    if(listView3.Items.Count > 0)
+                    if(ConfigurationCAPKSlistView.Items.Count > 0)
                     {
-                        listView3.Items.Clear();
+                        ConfigurationCAPKSlistView.Items.Clear();
                     }
 
-                    foreach(string item in data)
-                    {
-                        string [] components = item.Split('#');
-                        if(components.Length == 2)
+                    if(data != null)
+                    { 
+                        foreach(string item in data)
                         {
-                            ListViewItem item1 = new ListViewItem(components[0], 0);
-                            string [] keyvalue = components[1].Split(' ');
-                            if(keyvalue.Length > 2)
+                            string [] components = item.Split('#');
+                            if(components.Length == 2)
                             {
-                                // RID
-                                //string [] ridvalue = keyvalue[0].Split(':');
-                                //if(ridvalue.Length == 2)
-                                //{
-                                //    item1.SubItems.Add(ridvalue[1]);
-                                //}
-                                // INDEX
-                                //string [] indexvalue = keyvalue[1].Split(':');
-                                //if(indexvalue.Length == 2)
-                                //{
-                                //    item1.SubItems.Add(indexvalue[1]);
-                                //}
-                                // MODULUS
-                                string [] modvalues = keyvalue[2].Split(':');
-                                if(modvalues.Length == 2)
+                                ListViewItem item1 = new ListViewItem(components[0], 0);
+                                string [] keyvalue = components[1].Split(' ');
+                                if(keyvalue.Length > 2)
                                 {
-                                    item1.SubItems.Add(modvalues[1]);
+                                    // RID
+                                    //string [] ridvalue = keyvalue[0].Split(':');
+                                    //if(ridvalue.Length == 2)
+                                    //{
+                                    //    item1.SubItems.Add(ridvalue[1]);
+                                    //}
+                                    // INDEX
+                                    //string [] indexvalue = keyvalue[1].Split(':');
+                                    //if(indexvalue.Length == 2)
+                                    //{
+                                    //    item1.SubItems.Add(indexvalue[1]);
+                                    //}
+                                    // MODULUS
+                                    string [] modvalues = keyvalue[2].Split(':');
+                                    if(modvalues.Length == 2)
+                                    {
+                                        item1.SubItems.Add(modvalues[1]);
+                                    }
+                                    // EXPONENT: FILE ONLY
+                                    //string [] expvalues = keyvalue[3].Split(':');
+                                    //if(expvalues.Length == 2)
+                                    //{
+                                    //    item1.SubItems.Add(expvalues[1]);
+                                    //}
+                                    // CHECKSUM: FILE ONLY
+                                    //string [] checksumvalues = keyvalue[4].Split(':');
+                                    //if(checksumvalues.Length == 2)
+                                    //{
+                                    //    item1.SubItems.Add(checksumvalues[1]);
+                                    //}
+                                    ConfigurationCAPKSlistView.Items.Add(item1);
                                 }
-                                // EXPONENT: FILE ONLY
-                                //string [] expvalues = keyvalue[3].Split(':');
-                                //if(expvalues.Length == 2)
-                                //{
-                                //    item1.SubItems.Add(expvalues[1]);
-                                //}
-                                // CHECKSUM: FILE ONLY
-                                //string [] checksumvalues = keyvalue[4].Split(':');
-                                //if(checksumvalues.Length == 2)
-                                //{
-                                //    item1.SubItems.Add(checksumvalues[1]);
-                                //}
-                                listView3.Items.Add(item1);
                             }
                         }
                     }
-
-                    listView3.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                    listView3.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
-                    if(!tabControl1.Contains(tabPage4))
+                    else
                     {
-                        tabControl1.TabPages.Add(tabPage4);
+                        ListViewItem item1 = new ListViewItem("N/A", 0);
+                        item1.SubItems.Add("*** NO DATA ****");
+                        ConfigurationCAPKSlistView.Items.Add(item1);
                     }
-                    this.tabPage4.Enabled = true;
-                    tabControl1.SelectedTab = this.tabPage4;
+
+                    ConfigurationCAPKSlistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    ConfigurationCAPKSlistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    if(!tabControlConfiguration.Contains(ConfigurationCAPKStabPage))
+                    {
+                        tabControlConfiguration.TabPages.Add(ConfigurationCAPKStabPage);
+                    }
+                    this.ConfigurationCAPKStabPage.Enabled = true;
+                    tabControlConfiguration.SelectedTab = this.ConfigurationCAPKStabPage;
                 }
                 catch (Exception exp)
                 {
@@ -731,8 +749,8 @@ namespace IDTechConfigReader
                 }
                 finally
                 {
-                    this.picBoxConfigWait4.Enabled = false;
-                    this.picBoxConfigWait4.Visible  = false;
+                    this.ConfigurationCAPKSpicBoxWait.Enabled = false;
+                    this.ConfigurationCAPKSpicBoxWait.Visible  = false;
                 }
             };
 
@@ -754,9 +772,9 @@ namespace IDTechConfigReader
                 try
                 {
                     // Remove previous entries
-                    if(listView4.Items.Count > 0)
+                    if(ConfigurationGROUPSlistView.Items.Count > 0)
                     {
-                        listView4.Items.Clear();
+                        ConfigurationGROUPSlistView.Items.Clear();
                     }
 
                     if(payload != null)
@@ -781,41 +799,41 @@ namespace IDTechConfigReader
                                     {
                                         // TAG
                                         item1.SubItems.Add(keyvalue);
-                                        listView4.Items.Add(item1);
+                                        ConfigurationGROUPSlistView.Items.Add(item1);
                                     }
                                 }
                             }
                         }
 
-                        if(!tabControl1.Contains(tabPage5))
+                        if(!tabControlConfiguration.Contains(ConfigurationGROUPStabPage))
                         {
-                            tabControl1.TabPages.Add(tabPage5);
+                            tabControlConfiguration.TabPages.Add(ConfigurationGROUPStabPage);
                         }
-                        this.tabPage5.Enabled = true;
-                        tabControl1.SelectedTab = this.tabPage5;
+                        this.ConfigurationGROUPStabPage.Enabled = true;
+                        tabControlConfiguration.SelectedTab = this.ConfigurationGROUPStabPage;
                     }
                     else
                     {
                         ListViewItem item1 = new ListViewItem("INFO", 0);
                         item1.SubItems.Add("UNDEFINED");
                         item1.SubItems.Add("NO GROUP DEFINITIONS IN CONFIG");
-                        listView4.Items.Add(item1);
+                        ConfigurationGROUPSlistView.Items.Add(item1);
                     }
-                    listView4.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                    listView4.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-                    this.picBoxConfigWait5.Enabled = false;
-                    this.picBoxConfigWait5.Visible  = false;
+                    ConfigurationGROUPSlistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    ConfigurationGROUPSlistView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                    this.ConfigurationGROUPSpicBoxWait.Enabled = false;
+                    this.ConfigurationGROUPSpicBoxWait.Visible  = false;
                 }
                 catch (Exception exp)
                 {
                     Logger.error("main: ShowConfigGroup() - exception={0}", (object) exp.Message);
-                    this.picBoxConfigWait5.Enabled = false;
-                    this.picBoxConfigWait5.Visible  = false;
+                    this.ConfigurationGROUPSpicBoxWait.Enabled = false;
+                    this.ConfigurationGROUPSpicBoxWait.Visible  = false;
                 }
                 finally
                 {
-                    this.picBoxConfigWait4.Enabled = false;
-                    this.picBoxConfigWait4.Visible  = false;
+                    this.ConfigurationGROUPSpicBoxWait.Enabled = false;
+                    this.ConfigurationGROUPSpicBoxWait.Visible  = false;
                 }
             };
 
@@ -833,12 +851,10 @@ namespace IDTechConfigReader
         {
             MethodInvoker mi = () =>
             {
-                this.button1.Enabled = true;
-                this.button2.Enabled = true;
-                this.button3.Enabled = true;
-
-                this.picBoxConfigWait1.Enabled = false;
-                this.picBoxConfigWait1.Visible  = false;
+                this.ConfigurationPanel1btnDeviceMode.Enabled = true;
+                this.ConfigurationPanel1btnEMVMode.Enabled = true;
+                this.ConfigurationPanel1pictureBox1.Enabled = false;
+                this.ConfigurationPanel1pictureBox1.Visible = false;
             };
 
             if (InvokeRequired)
@@ -857,10 +873,10 @@ namespace IDTechConfigReader
             {
                 string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
 
-                this.button5.Text = data[0];
-                this.button5.Enabled = true;
-                this.picBoxConfigWait1.Enabled = false;
-                this.picBoxConfigWait1.Visible  = false;
+                this.ConfigurationPanel1btnDeviceMode.Text = data[0];
+                this.ConfigurationPanel1btnDeviceMode.Enabled = true;
+                this.ApplicationpicBoxWait.Enabled = false;
+                this.ApplicationpicBoxWait.Visible  = false;
             };
 
             if (InvokeRequired)
@@ -878,7 +894,7 @@ namespace IDTechConfigReader
             MethodInvoker mi = () =>
             {
                 string [] data = ((IEnumerable) payload).Cast<object>().Select(x => x == null ? "" : x.ToString()).ToArray();
-                this.progressBar1.PerformStep();
+                this.FirmwareprogressBar1.PerformStep();
             };
 
             if (InvokeRequired)
@@ -890,6 +906,7 @@ namespace IDTechConfigReader
                 Invoke(mi);
             }
         }
+
         private void FirmwareUpdateStatus(object payload)
         {
             MethodInvoker mi = () =>
@@ -917,9 +934,9 @@ namespace IDTechConfigReader
                 Thread.Sleep(3000);
                 this.btnFirmwareUpdate.Visible = true;
                 this.btnFirmwareUpdate.Enabled = true;
-                this.picBoxConfigWait1.Enabled = false;
-                this.picBoxConfigWait1.Visible = false;
-                this.progressBar1.Visible      = false;
+                this.ApplicationpicBoxWait.Enabled = false;
+                this.ApplicationpicBoxWait.Visible = false;
+                this.FirmwareprogressBar1.Visible      = false;
             };
 
             if (InvokeRequired)
@@ -941,9 +958,9 @@ namespace IDTechConfigReader
                 this.lblFirmwareVersion.Text = data[0];
                 this.btnFirmwareUpdate.Visible = true;
                 this.btnFirmwareUpdate.Enabled = false;
-                this.picBoxConfigWait1.Enabled = false;
-                this.picBoxConfigWait1.Visible = false;
-                this.progressBar1.Visible      = false;
+                this.ApplicationpicBoxWait.Enabled = false;
+                this.ApplicationpicBoxWait.Visible = false;
+                this.FirmwareprogressBar1.Visible      = false;
             };
 
             if (InvokeRequired)
@@ -956,124 +973,199 @@ namespace IDTechConfigReader
             }
         }
 
+        private void ConfigurationResetLoadFromButtons()
+        {
+            foreach (RadioButton radio in ConfigurationGroupBox1.Controls.OfType<RadioButton>().ToList())
+            {
+                if (radio.Checked == true)
+                {
+                    radio.Checked = false;
+                    break;
+                }
+            }
+        }
+
         private void OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab.Name.Equals("tabPage1"))
+            if (tabControlMain.SelectedTab?.Name.Equals("ApplicationtabPage") ?? false)
             {
                 // Configuration Mode
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    if(tabControl1.Contains(tabPage2))
-                    {
-                        tabControl1.TabPages.Remove(tabPage2);
-                    }
-                    if(tabControl1.Contains(tabPage3))
-                    {
-                        tabControl1.TabPages.Remove(tabPage3);
-                    }
-                    if(tabControl1.Contains(tabPage4))
-                    {
-                        tabControl1.TabPages.Remove(tabPage4);
-                    }
-                    if(tabControl1.Contains(tabPage5))
-                    {
-                        tabControl1.TabPages.Remove(tabPage5);
-                    }
+                    ConfigurationGROUPStabPagecomboBox1.SelectedIndex = -1;
                 }));
             }
-            else if (tabControl1.SelectedTab.Name.Equals("tabPage2"))
+            else if (tabControlMain.SelectedTab?.Name.Equals("ConfigurationtabPage") ?? false)
+            {
+                ConfigurationResetLoadFromButtons();
+
+                if(this.ConfigurationCollapseButton.Visible)
+                {
+                    this.ConfigurationCollapseButton.Visible = false;
+                    this.ConfigurationPanel2.Visible = false;
+                }
+            }
+            else if (tabControlMain.SelectedTab?.Name.Equals("FirmwaretabPage") ?? false)
             {
                 // Configuration Mode
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    this.picBoxConfigWait2.Visible = true;
-                    this.picBoxConfigWait2.Enabled = true;
-                    System.Windows.Forms.Application.DoEvents();
-                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetTerminalData(); } ).Start();
+                    ConfigurationGROUPStabPagecomboBox1.SelectedIndex = -1;
                 }));
             }
-            else if (tabControl1.SelectedTab.Name.Equals("tabPage3"))
+        }
+
+        private void OnConfigurationListItemSelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControlConfiguration.SelectedTab?.Name.Equals("ConfigurationTerminalDatatabPage") ?? false)
+            {
+                // Configuration Mode
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.ConfigurationTerminalDatapicBoxWait.Visible = true;
+                    this.ConfigurationTerminalDatapicBoxWait.Enabled = true;
+                    System.Windows.Forms.Application.DoEvents();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetTerminalData(); }).Start();
+                }));
+
+                ConfigurationGROUPStabPagecomboBox1.SelectedIndex = -1;
+            }
+            else if (tabControlConfiguration.SelectedTab?.Name.Equals("ConfigurationAIDStabPage") ?? false)
             {
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    this.picBoxConfigWait3.Visible = true;
-                    this.picBoxConfigWait3.Enabled = true;
+                    this.ConfigurationTerminalDatapicBoxWait.Visible = true;
+                    this.ConfigurationTerminalDatapicBoxWait.Enabled = true;
                     System.Windows.Forms.Application.DoEvents();
-                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetAIDList(); } ).Start();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetAIDList(); }).Start();
                 }));
+
+                ConfigurationGROUPStabPagecomboBox1.SelectedIndex = -1;
             }
-            else if (tabControl1.SelectedTab.Name.Equals("tabPage4"))
+            else if (tabControlConfiguration.SelectedTab?.Name.Equals("ConfigurationCAPKStabPage") ?? false)
             {
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    this.picBoxConfigWait4.Visible = true;
-                    this.picBoxConfigWait4.Enabled = true;
+                    this.ConfigurationCAPKSpicBoxWait.Visible = true;
+                    this.ConfigurationCAPKSpicBoxWait.Enabled = true;
                     System.Windows.Forms.Application.DoEvents();
-                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetCapKList(); } ).Start();
+                    new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.GetCapKList(); }).Start();
                 }));
+
+                ConfigurationGROUPStabPagecomboBox1.SelectedIndex = -1;
             }
-            else if (tabControl1.SelectedTab.Name.Equals("tabPage5"))
+            else if (tabControlConfiguration.SelectedTab?.Name.Equals("ConfigurationGROUPStabPage") ?? false)
             {
-                comboBox1.SelectedIndex = 0;
+                ConfigurationGROUPStabPagecomboBox1.SelectedIndex = 0;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OnConfigurationTabControlVisibilityChanged(object sender, EventArgs e)
         {
-            // Load Configuration from FILE
-            new Thread(() => devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_CONFIG)).Start();
+            if (this.ConfigurationTerminalDatatabPage.Visible == true)
+            {
+                this.tabControlConfiguration.SelectedIndex = -1;
+                this.tabControlConfiguration.SelectedTab = this.ConfigurationTerminalDatatabPage;
+                this.tabControlConfiguration.SelectedIndex = 0;
+            }
+        }
 
+        private void OnCollapseConfigurationView(object sender, EventArgs e)
+        {
+            this.ConfigurationPanel1.Visible = false;
+            this.ConfigurationExpandButton.Visible = true;
+            this.tabControlConfiguration.Width -= CONFIG_PANEL_WIDTH;
+            this.tabControlConfiguration.Width *= 2;
+        }
+
+        private void OnExpandConfigurationView(object sender, EventArgs e)
+        {
+            this.ConfigurationPanel1.Visible = true;
+            this.ConfigurationExpandButton.Visible = false;
+            this.tabControlConfiguration.Width /= 2;
+            this.tabControlConfiguration.Width += CONFIG_PANEL_WIDTH;
+        }
+
+        private void OnLoadFromFile(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                // Load Configuration from FILE
+                new Thread(() => devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_CONFIG)).Start();
+
+                if (this.ConfigurationCollapseButton.Visible == false)
+                {
+                    this.ConfigurationCollapseButton.Visible = true;
+                    this.ConfigurationPanel2.Visible = true;
+                    this.tabControlConfiguration.SelectedTab = this.ConfigurationTerminalDatatabPage;
+                }
+
+                if (this.tabControlConfiguration.SelectedIndex == 0)
+                {
+                    this.tabControlConfiguration.SelectedIndex = -1;
+                    this.tabControlConfiguration.SelectedTab = this.ConfigurationTerminalDatatabPage;
+                    this.tabControlConfiguration.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void OnLoadFromDevice(object sender, EventArgs e)
+        {
+            if(((RadioButton)sender).Checked)
+            {
+                // Load Configuration from DEVICE
+                new Thread(() => devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_DEVICE)).Start();
+
+                if (this.ConfigurationCollapseButton.Visible == false)
+                {
+                    this.ConfigurationCollapseButton.Visible = true;
+                    this.ConfigurationPanel2.Visible = true;
+                    this.tabControlConfiguration.SelectedTab = this.ConfigurationTerminalDatatabPage;
+                }
+
+                if (this.tabControlConfiguration.SelectedIndex == 0)
+                {
+                    this.tabControlConfiguration.SelectedIndex = -1;
+                    this.tabControlConfiguration.SelectedTab = this.ConfigurationTerminalDatatabPage;
+                    this.tabControlConfiguration.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void OnLoadFactory(object sender, EventArgs e)
+        {
             this.Invoke(new MethodInvoker(() =>
             {
-                if(!tabControl1.Contains(tabPage2))
+                this.ConfigurationPanel1btnDeviceMode.Enabled = false;
+                this.ConfigurationPanel1btnEMVMode.Enabled = false;
+                if (this.ConfigurationCollapseButton.Visible)
                 {
-                    tabControl1.TabPages.Add(tabPage2);
+                    this.ConfigurationCollapseButton.Visible = false;
+                    this.ConfigurationPanel2.Visible = false;
                 }
-                this.tabPage2.Enabled = true;
-                tabControl1.SelectedTab = this.tabPage2;
-                // FILE load modifies DEVICE configuration
-                this.button2.Enabled = false;
-                this.picBoxConfigWait2.Visible = true;
-                this.picBoxConfigWait2.Enabled = true;
+                ConfigurationResetLoadFromButtons();
+                this.ConfigurationPanel1pictureBox1.Enabled = true;
+                this.ConfigurationPanel1pictureBox1.Visible = true;
                 System.Windows.Forms.Application.DoEvents();
             }));
-        }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            // Load Configuration from DEVICE
-            new Thread(() => devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_DEVICE)).Start();
-
-            this.Invoke(new MethodInvoker(() =>
-            {
-                if(!tabControl1.Contains(tabPage2))
+            // Reset Configuration to Factory defaults AND load from device
+            new Thread(() => 
+            { 
+                Thread.CurrentThread.IsBackground = true; 
+                devicePlugin.FactoryReset();
+                // Load Configuration from DEVICE
+                devicePlugin.SetConfigurationMode(IPA.Core.Shared.Enums.ConfigurationModes.FROM_DEVICE);
+                this.Invoke(new MethodInvoker(() =>
                 {
-                    tabControl1.TabPages.Add(tabPage2);
-                }
-                this.tabPage2.Enabled = true;
-                tabControl1.SelectedTab = this.tabPage2;
-            }));
+                    radioLoadFromDevice.Checked = true;
+                }));
+            }).Start();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void OnSetDeviceMode(object sender, EventArgs e)
         {
-            // Reset Configuration to Factory defaults
-            new Thread(() => { Thread.CurrentThread.IsBackground = true; devicePlugin.FactoryReset(); } ).Start();
-
-            this.Invoke(new MethodInvoker(() =>
-            {
-                this.button1.Enabled = false;
-                this.button2.Enabled = false;
-                this.button3.Enabled = false;
-                this.picBoxConfigWait1.Enabled = true;
-                this.picBoxConfigWait1.Visible  = true;
-                System.Windows.Forms.Application.DoEvents();
-            }));
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            string mode = this.button4.Text;
+            string mode = this.ConfigurationPanel1btnDeviceMode.Text;
             new Thread(() =>
             {
                 try
@@ -1089,11 +1181,11 @@ namespace IDTechConfigReader
             }).Start();
 
             // Disable Buttons
-            this.button4.Enabled = false;
-            this.button5.Enabled = false;
+            this.ConfigurationPanel1btnEMVMode.Enabled = false;
+            this.btnFirmwareUpdate.Enabled = false;
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void OnEMVModeDisable(object sender, EventArgs e)
         {
             new Thread(() =>
             {
@@ -1110,52 +1202,55 @@ namespace IDTechConfigReader
             }).Start();
 
             // Disable Button
-            this.button5.Enabled = false;
+            this.ConfigurationPanel1btnEMVMode.Enabled = false;
         }
 
         private void OnConfigGroupSelectionChanged(object sender, EventArgs e)
         {
-            this.picBoxConfigWait5.Visible = true;
-            this.picBoxConfigWait5.Enabled = true;
-            int group = Convert.ToInt16(comboBox1.SelectedItem.ToString());
-            new Thread(() =>
+            if(ConfigurationGROUPStabPagecomboBox1.SelectedItem != null)
             {
-                try
+                this.ConfigurationGROUPSpicBoxWait.Visible = true;
+                this.ConfigurationGROUPSpicBoxWait.Enabled = true;
+                int group = Convert.ToInt16(ConfigurationGROUPStabPagecomboBox1.SelectedItem.ToString());
+                new Thread(() =>
                 {
-                    Thread.CurrentThread.IsBackground = true; 
-                    devicePlugin.GetConfigGroup(group);
-                }
-                catch(Exception ex)
-                {
-                    Logger.error("main: exception={0}", (object)ex.Message);
-                }
+                    try
+                    {
+                        Thread.CurrentThread.IsBackground = true; 
+                        devicePlugin.GetConfigGroup(group);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.error("main: exception={0}", (object)ex.Message);
+                    }
 
-            }).Start();
+                }).Start();
+            }
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void OnFirmwareUpdate(object sender, EventArgs e)
         {
-            openFileDialog1.Title = "FIRMWARE UPDATE";
-            openFileDialog1.Filter = "NGA FW Files|*.fm";
-            openFileDialog1.InitialDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Assets";
+            FirmwareopenFileDialog1.Title = "FIRMWARE UPDATE";
+            FirmwareopenFileDialog1.Filter = "NGA FW Files|*.fm";
+            FirmwareopenFileDialog1.InitialDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Assets";
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (FirmwareopenFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                byte[] bytes = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                byte[] bytes = System.IO.File.ReadAllBytes(FirmwareopenFileDialog1.FileName);
                 if(bytes.Length > 0)
                 {
                     // Set the initial value of the ProgressBar.
-	                this.progressBar1.Value = 0;
-                    this.progressBar1.Maximum = bytes.Length / 1024;
-                    this.progressBar1.Step = 1;
+	                this.FirmwareprogressBar1.Value = 0;
+                    this.FirmwareprogressBar1.Maximum = bytes.Length / 1024;
+                    this.FirmwareprogressBar1.Step = 1;
 
                     this.Invoke(new MethodInvoker(() =>
                     {
-                        this.picBoxConfigWait1.Enabled = true;
-                        this.picBoxConfigWait1.Visible  = true;
+                        this.ApplicationpicBoxWait.Enabled = true;
+                        this.ApplicationpicBoxWait.Visible  = true;
                         this.lblFirmwareVersion.Text = "UPDATING FIRMWARE (PLEASE DON'T INTERRUPT)...";
                         this.btnFirmwareUpdate.Visible = false;
-                        this.progressBar1.Visible = true;
+                        this.FirmwareprogressBar1.Visible = true;
                         System.Windows.Forms.Application.DoEvents();
                     }));
 
@@ -1165,7 +1260,7 @@ namespace IDTechConfigReader
                         try
                         {
                             Thread.CurrentThread.IsBackground = true;
-                            devicePlugin.FirmwareUpdate(openFileDialog1.FileName, bytes);
+                            devicePlugin.FirmwareUpdate(FirmwareopenFileDialog1.FileName, bytes);
                         }
                         catch(Exception ex)
                         {
